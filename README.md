@@ -6,7 +6,7 @@
 
 An open-source productivity workspace for notes, plans, databases, and shared knowledge.
 
-[Lapis website](https://yashwanthdevelops.github.io/Lapis/) · Built and maintained by **YashwanthDevelops**
+[Lapis website](https://yashwanthdevelops.github.io/Lapis/) · Maintained by **YashwanthDevelops**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org)
@@ -71,7 +71,7 @@ bun run generate:brand
 
 ## About Lapis
 
-Lapis is an open-source productivity workspace created and maintained by YashwanthDevelops. This repository includes MIT-licensed software and preserves original copyright and third-party notices in [LICENSE](./LICENSE) and [NOTICE](./NOTICE).
+Lapis is an open-source productivity workspace maintained by YashwanthDevelops. This repository includes MIT-licensed software and preserves original copyright and third-party notices in [LICENSE](./LICENSE) and [NOTICE](./NOTICE).
 
 Lapis is independent of Notion Labs, Inc. and the makers of Obsidian. References to those products describe documented interoperability or familiar concepts; they do not imply endorsement. See [TRADEMARKS.md](./TRADEMARKS.md) and [NOTICE](./NOTICE).
 

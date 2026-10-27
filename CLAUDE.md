@@ -1,6 +1,6 @@
 # Lapis — Claude / Agent Conventions
 
-Lapis is an open-source productivity workspace created and maintained by
+Lapis is an open-source productivity workspace maintained by
 YashwanthDevelops. It uses Next 16 (App Router), React 19, and Convex 1.43.
 This repository includes MIT-licensed software; original attribution is
 preserved in README.md, LICENSE, and NOTICE.
