@@ -6,6 +6,8 @@
 
 An open-source productivity workspace for notes, plans, databases, and shared knowledge.
 
+[Lapis website](https://yashwanthdevelops.github.io/Lapis/) · Built and maintained by **YashwanthDevelops**
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org)
 [![React](https://img.shields.io/badge/React-19-61dafb?logo=react)](https://react.dev)
@@ -54,7 +56,7 @@ Google Analytics is disabled unless you set your own `NEXT_PUBLIC_GA_ID`. AI fea
 
 ## Project map
 
-- [Project analysis](./docs/project-analysis.md) describes the inherited codebase and the first customization opportunities.
+- [Project analysis](./docs/project-analysis.md) describes the codebase, current setup, and useful extension points.
 - [Architecture diagrams](./docs/architecture/diagrams.md) show the main data and frontend flows.
 - [API reference](./docs/api/README.md) documents slices, Convex functions, auth, imports, and integrations.
 - [Extension guide](./docs/extending.md) explains how to add blocks, properties, and database views.
@@ -67,12 +69,12 @@ The Lapis mark, wordmarks, icons, and share-card artwork are maintained as SVG s
 bun run generate:brand
 ```
 
-## Upstream and license
+## About Lapis
 
-Lapis is a customized fork of [open-silong](https://github.com/rahmanef63/open-silong). The original MIT license, copyright, and third-party notices remain in this repository. This Lapis customization adds a new product name, visual identity, and compatible naming for saved preferences and integrations.
+Lapis is an open-source productivity workspace created and maintained by YashwanthDevelops. This repository includes MIT-licensed software and preserves original copyright and third-party notices in [LICENSE](./LICENSE) and [NOTICE](./NOTICE).
 
 Lapis is independent of Notion Labs, Inc. and the makers of Obsidian. References to those products describe documented interoperability or familiar concepts; they do not imply endorsement. See [TRADEMARKS.md](./TRADEMARKS.md) and [NOTICE](./NOTICE).
 
 ## License
 
-Lapis is distributed under the [MIT License](./LICENSE), with the upstream copyright and attribution preserved.
+Lapis is distributed under the [MIT License](./LICENSE). See [NOTICE](./NOTICE) for copyright and third-party attribution.

@@ -1,8 +1,7 @@
-# Lapis roadmap — inherited baseline
+# Lapis roadmap
 
-This records the feature state inherited from upstream **as of 2026-08-30**
-(v1.2.0), before the Lapis customization. Use it as a codebase inventory; the
-product-specific priorities still need to be set. Derived from
+This records the feature state in the **2026-08-30** codebase (v1.2.0). Use it
+as a codebase inventory; product-specific priorities can be set as Lapis grows. Derived from
 `CHANGELOG.md`, the current audit
 (`docs/audit/2026-08-30-svelte-migration-plan.md`) and the pre-open-source backlog
 now archived at `docs/archive/notion-clone/`.

@@ -228,7 +228,7 @@ the two above imports from a directory that is not there.
   split (it never mentions it), `mcp.md` as documenting a stdio server (does
   not exist), and claims two rr-sync docs are referenced by
   `eslint.config.mjs` (one is).
-- **Rebrand rot**: `nosion` / `notion-page-clone` in 30 `.md` and 20 source
+- **Legacy naming debt**: `nosion` / `notion-page-clone` in 30 `.md` and 20 source
   files. Four *current* user-facing docs still greet the reader as Nosion —
   `docs/extending.md:1`, `docs/export-to-notion.md:3-9`,
   `docs/api/README.md:3`, `docs/api/mcp.md:1-5`. Distinct from the legitimate

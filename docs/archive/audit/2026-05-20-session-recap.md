@@ -12,8 +12,8 @@ file to reconstruct where work paused.
 | SHA | Wave | Headline |
 |---|---|---|
 | `cca38d4` | — | docs: rr BH/BI/BJ completion + pivot strategic record |
-| `4c560f2` | Phase 1 | rebrand to open-silong + OSS readiness docs (13 files) |
-| `cebf1d9` | Phase 2 | surface rebrand Nosion → Silong (18 files) |
+| `4c560f2` | Phase 1 | repository rename to open-silong + OSS readiness docs (13 files) |
+| `cebf1d9` | Phase 2 | product identity update: Nosion → Silong (18 files) |
 | `1f012ad` | Phase 3 | first-run demo seed — 3 welcome pages |
 | `abb17f6` | rr-sync round 1 | lift status audit — 6 synced + 31 blocked |
 | `8cbeec8` | — | regen convex api types + features doc |
@@ -74,7 +74,7 @@ grep "notion-like" lib/content/slices.ts
 ```
 Or rr's catalog UI search.
 
-## Brand-rebrand preserved scope (deferred to coordinated re-key)
+## Preserved brand scope (deferred to coordinated re-key)
 
 These remain `nosion`/`Nosion` for back-compat — DO NOT rename without
 migration plan:

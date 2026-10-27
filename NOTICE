@@ -1,4 +1,9 @@
-open-silong
+Lapis
+
+Lapis is created and maintained by YashwanthDevelops. This repository includes
+MIT-licensed software originally published as open-silong; the original
+copyright and license notices are retained below.
+
 Copyright (c) 2026 Rahman Effendi and open-silong contributors.
 
 This product is licensed under the MIT License (see LICENSE).
@@ -21,13 +26,10 @@ backlinks) or to document interoperability with published file formats
 (CSV, ZIP, JSON, Markdown). No claim of affiliation, endorsement, or
 origin is made or implied.
 
-Lapis is a customized fork of the MIT-licensed open-silong project. Its
-upstream implementation uses publicly available technologies (Convex, Next.js,
-React, Tailwind CSS, shadcn/ui, and the open-source d3-force layout). This
-customization adds the Lapis name, gemstone mark, wordmark, and blue palette.
-The upstream project states that it does not include proprietary Notion or
-Obsidian code, design files, brand assets, fonts, icons, trade secrets, or
-confidential information.
+Lapis uses publicly available technologies (Convex, Next.js, React, Tailwind
+CSS, shadcn/ui, and the open-source d3-force layout). It does not include
+proprietary Notion or Obsidian code, design files, brand assets, fonts, icons,
+trade secrets, or confidential information.
 
 A fuller plain-language explanation — inspiration, the idea/expression
 distinction, nominative fair use, and international (EU/CJEU) anchors —

@@ -1,9 +1,9 @@
 # Lapis — Claude / Agent Conventions
 
-Lapis is a flexible productivity workspace customized from the MIT-licensed
-open-silong project. It uses Next 16 (App Router), React 19, and Convex 1.43.
-The upstream license and attribution are preserved; see README.md, LICENSE,
-and NOTICE.
+Lapis is an open-source productivity workspace created and maintained by
+YashwanthDevelops. It uses Next 16 (App Router), React 19, and Convex 1.43.
+This repository includes MIT-licensed software; original attribution is
+preserved in README.md, LICENSE, and NOTICE.
 
 No shared production deployment is configured in this checkout. Configure
 your own site and Convex URLs from `.env.example`, then follow `DEPLOY.md`.

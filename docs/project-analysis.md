@@ -1,24 +1,23 @@
-# Project analysis and customization plan
+# Lapis project overview and development notes
 
-Reviewed on **15 October 2026** for Yashwanth. The selected direction is **a broader productivity app with custom branding and features**. The product is now branded **Lapis**, with a faceted sapphire mark and a blue-and-navy palette. Feature priorities remain to be selected; the changes so far cover the brand and backward-compatible naming migration.
+Reviewed on **15 October 2026** for Yashwanth. Lapis is a broader productivity workspace with a faceted sapphire mark and a blue-and-navy palette. The current focus is on developing useful workflows while keeping the app's existing data and integration contracts compatible.
 
 ## Download and review scope
 
-- Source: [rahmanef63/open-silong](https://github.com/rahmanef63/open-silong).
-- Checkout: `C:\Users\Yashwanth\College\Semester 5\Web Development\Lapis`.
+- Original MIT-licensed software and notices: [open-silong](https://github.com/rahmanef63/open-silong); see [LICENSE](../LICENSE) and [NOTICE](../NOTICE).
 - Snapshot: `3a1b0303bfc65ee02f1ad2be698bda18b545b3ef`, dated 9 September 2026, package version `1.2.0`.
 - Full Git clone, including history: 20 commits across the fetched refs; this is not a shallow checkout. There are no declared submodules or Git LFS attributes.
 - 1,166 tracked files, 40 frontend feature slices, and 32 explicitly declared application tables plus Convex Auth tables.
 - Approximately 101,000 lines across 1,020 TS/TSX/JS/MJS/CSS files, including tests and generated code. There are 90 test files: 58 frontend, 31 backend, and one tooling suite.
 - The upstream dependency set was installed successfully: 511 packages, using Bun `1.4.2` through a temporary npm executable. No global Bun installation was needed. The lockfile package name now matches the Lapis package metadata; dependency versions were not changed.
 
-This review covers the upstream baseline architecture, primary entry points and data flows, configuration, customization surfaces, selected implementation risks, and existing documentation. It is not a line-by-line audit of every source file or an authenticated end-to-end test of a deployed instance. The Lapis rebrand has since changed the app metadata, theme, brand assets, customer-facing copy, storage names, and compatible integration identifiers; core dependencies and feature architecture remain based on the upstream snapshot.
+This review covers the codebase architecture, primary entry points and data flows, configuration, extension surfaces, selected implementation risks, and existing documentation. It is not a line-by-line audit of every source file or an authenticated end-to-end test of a deployed instance. The current Lapis product identity, theme, brand assets, customer-facing copy, storage names, and compatible integration identifiers are layered on a codebase whose core dependencies and feature architecture are described below.
 
 ## What the app already provides
 
-The project is a substantial workspace foundation. Notes, structured data, and collaboration are already implemented; a customized productivity app can build on them.
+The project is a substantial workspace foundation. Notes, structured data, and collaboration are already implemented; Lapis can build on those existing capabilities.
 
-| Capability | Implementation | Relevance to our version |
+| Capability | Implementation | Relevance to Lapis |
 | --- | --- | --- |
 | Notes and documents | Block editor, nested blocks, slash menu, inline Markdown, code, equations, files, media, columns | Keep the editor as the writing foundation |
 | Structured work | Databases with Table, Board, List, Gallery, Calendar, Feed, Timeline, Chart, Map, Form, and Dashboard views | Reuse for tasks, projects, goals, trackers, and planning |
@@ -69,7 +68,7 @@ Important implementation details:
 - Sidebar/library data uses slim metadata queries; the editor subscribes to full page content separately. Preserve this separation as the app grows.
 - Real authorization belongs in Convex handlers. The Next proxy is a navigation gate, not the data-security boundary.
 
-## Where to customize
+## Existing extension points
 
 | Intended change | Main starting points |
 | --- | --- |
@@ -84,7 +83,7 @@ Important implementation details:
 | Onboarding and sample content | `app/(app)/setup/`, `convex/setup.ts`, template seeds, welcome seed helpers |
 | Localization and date/time preferences | UI strings across auth/setup/editor/settings plus shared date/format helpers; no centralized translation system was established in this review |
 
-Some legacy identifiers are persisted contracts. The Lapis rebrand migrates old browser preference keys before the app loads, accepts old `nosion://sync/` references and `nsn_` tokens, and sends both Lapis and legacy webhook headers while consumers transition.
+Some historical identifiers are persisted contracts. The app migrates earlier browser preference keys before loading, accepts `nosion://sync/` references and `nsn_` tokens, and sends both Lapis and legacy webhook headers so existing integrations continue to work.
 
 ## Verified baseline
 
@@ -109,7 +108,7 @@ Two environment compatibility problems need a permanent resolution before the de
 
 The skipped test documents a real existing issue: `invites.accept` may fail to switch a first-time user's active workspace when their profile has not been created. The matching implementation in `convex/invites.ts` calls `ensurePersonalWorkspace` and then only patches a profile if one exists. Resolve that bootstrap path and enable the test before relying on invitation onboarding.
 
-## Findings to address during customization
+## Items to check before hosting the full app
 
 These are findings and proposed work, not changes already made.
 
@@ -131,20 +130,21 @@ Existing auth/workspace tests provide useful coverage, but these checks do not e
 
 ## Suggested product roadmap
 
-The following is a proposed sequence for the selected broader productivity direction. It does not assume specific features have already been approved.
+The following is a proposed sequence for the broader productivity direction. It does not assume specific features have already been approved.
 
 1. **Establish the working base.** Choose cloud/local/self-hosted Convex, configure authentication and instance ownership, align tooling, resolve the two test compatibility issues, and verify core data persistence.
-2. **Create the product identity.** Choose the name and visual direction; update branding, icons, metadata, colors, typography, analytics behavior, language, and starter content. Centralize product configuration where repeated strings currently exist.
-3. **Build a useful daily home.** Possible elements: today's priorities, overdue tasks, upcoming deadlines, active projects, quick capture, recent notes, and a compact calendar. Base these on existing database/page data and add indexed server queries where needed.
-4. **Shape the core workflows.** Reuse task/project presets and template seeds for tasks, projects, notes, goals, habits, and reading. Distinguish a seeded tracker from additional behavior such as recurring tasks, reminders, or automatic progress calculations.
-5. **Personalize AI and integrations.** Select the first AI jobs and supported providers; configure key storage and limits; connect integrations only where they serve an agreed workflow.
-6. **Polish and release.** Test responsive layouts, keyboard use, editor persistence, backup/restore, workspace isolation, and chosen sharing flows. Configure the production domain and deployment after the customized app is reviewable.
+2. **Build a useful daily home.** Possible elements: today's priorities, overdue tasks, upcoming deadlines, active projects, quick capture, recent notes, and a compact calendar. Base these on existing database/page data and add indexed server queries where needed.
+3. **Shape the core workflows.** Reuse task/project presets and template seeds for tasks, projects, notes, goals, habits, and reading. Distinguish a seeded tracker from additional behavior such as recurring tasks, reminders, or automatic progress calculations.
+4. **Personalize AI and integrations.** Select the first AI jobs and supported providers; configure key storage and limits; connect integrations only where they serve an agreed workflow.
+5. **Polish and release.** Test responsive layouts, keyboard use, editor persistence, backup/restore, workspace isolation, and chosen sharing flows. Configure production hosting after the full app is reviewable.
 
 For an initial release, choose three workflows to make excellent. A Today screen, task/project workflow, and connected notes would reuse much of the existing foundation while making the result feel purpose-built.
 
 Offline mode is a separate project: `ServiceWorkerCleanup.tsx` actively unregisters service workers, and the upstream roadmap lists offline/PWA work as unfinished. A manifest or install prompt alone does not provide offline persistence. Collaborative cursors and CRDT editing also require separate decisions rather than being assumed from realtime subscriptions.
 
-## Running the project when the backend choice is made
+## Running the full app
+
+GitHub Pages publishes the static landing page from `site/`; it does not host the authenticated Next.js app or Convex backend. Running the full app still requires a Convex deployment and its environment variables.
 
 The local dependency install is complete. Bun can be invoked on this machine without a global install through:
 
@@ -158,14 +158,12 @@ For the cloud lane, configure an owned Convex development project with the Conve
 
 For self-hosting, the included Compose file defines the Convex backend and dashboard. Its `POSTGRES_URL` points to an externally supplied database: the file does **not** create a Postgres service or include the Next frontend. The frontend Dockerfile is separate, and the configuration needs its own secrets and correct backend/site origins.
 
-The Git remote still points to the original repository. This local download does not create a repository in your GitHub account. When we are ready to publish our changes, choose a fork or a new repository owned by you. Preserve the included `LICENSE` and upstream attribution during customization.
+The active GitHub repository is [YashwanthDevelops/Lapis](https://github.com/YashwanthDevelops/Lapis). Original copyright, license, and third-party attributions remain in [LICENSE](../LICENSE) and [NOTICE](../NOTICE).
 
 ## Decisions needed for the first implementation
 
-- Product name: keep `Lapis` or select another name.
 - First three workflows/features, and which existing surfaces should be prominent.
-- Visual direction and default language.
 - Personal use only or collaboration from the first release.
-- Preferred backend/deployment arrangement.
+- Preferred Convex backend arrangement for the interactive app.
 
-The source, installed dependencies, baseline measurements, and customization map are now available locally for the next iteration.
+The source, installed dependencies, baseline measurements, and extension map are available for the next iteration.

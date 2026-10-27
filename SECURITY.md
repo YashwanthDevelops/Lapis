@@ -2,8 +2,8 @@
 
 ## Reporting a vulnerability
 
-Please do not publish an unpatched vulnerability in a public issue. If this
-Lapis copy is hosted on GitHub, use the repository's **Report a vulnerability**
+Please do not publish an unpatched vulnerability in a public issue. If you
+are using the GitHub-hosted Lapis repository, use its **Report a vulnerability**
 link under Security to create a private advisory. For another hosting setup,
 contact the repository owner or deployment administrator privately.
 
@@ -23,4 +23,4 @@ details when reporting an issue.
 The active branch is the supported development version. Security fixes for
 older releases depend on the repository owner maintaining them.
 
-Lapis is customized from the MIT-licensed [open-silong project](https://github.com/rahmanef63/open-silong).
+Lapis includes MIT-licensed software. Original copyright and third-party notices are listed in [NOTICE](./NOTICE).

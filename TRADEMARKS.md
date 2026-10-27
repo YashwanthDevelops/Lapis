@@ -11,7 +11,7 @@
 
 ## TL;DR
 
-- Lapis is a **customized fork** of the open-source (MIT) [open-silong project](https://github.com/rahmanef63/open-silong). The original license and notices remain in this repository.
+- Lapis is an open-source productivity workspace maintained by YashwanthDevelops. This repository includes MIT-licensed software; original copyright and third-party notices remain in [`LICENSE`](./LICENSE) and [`NOTICE`](./NOTICE).
 - It is **inspired by** [Notion](https://notion.so) (block editor + lightweight
   databases) and [Obsidian](https://obsidian.md) (the local-first knowledge
   graph). "Inspired by" is a factual statement, not a claim of affiliation.
@@ -21,8 +21,8 @@
   icons, or confidential material** from either product. It is a clean-room
   reimplementation built on public technologies (Convex, Next.js, React,
   Tailwind, shadcn/ui).
-- The Lapis product name, gemstone mark, wordmark, and palette were created
-  for this customization and do not incorporate a third-party trademark.
+- The Lapis product name, gemstone mark, wordmark, and palette do not
+  incorporate a third-party trademark.
 
 ---
 
@@ -59,9 +59,9 @@ functional concepts — only the specific creative expression of them.
   (without copying its code) does not infringe.
 
 So: implementing a *block editor* or a *graph view* from scratch is
-reimplementing an idea/functionality, which is permitted. Lapis carries forward
-the upstream project's documented Notion and Obsidian interoperability and its
-MIT-licensed source; this customization contributes a separate visual identity.
+reimplementing an idea/functionality, which is permitted. Lapis supports
+documented Notion and Obsidian interoperability and includes MIT-licensed
+software; its visual identity is distinct.
 
 ### 2. Trademarks are used nominatively / descriptively only
 
@@ -126,10 +126,10 @@ Directive. See [`NOTICE`](./NOTICE).
 - Claim affiliation, partnership, or endorsement.
 - Scrape or redistribute their proprietary content or templates.
 
-**If you fork or self-host:** the same rules apply to you. If you rebrand,
-choose an original name that doesn't reference a third-party mark, and keep
-these notices intact (the MIT licence requires preserving the copyright and
-licence text).
+**If you create a derivative or self-host:** the same rules apply to you. Use
+an original name that does not reference a third-party mark, and keep these
+notices intact (the MIT licence requires preserving the copyright and licence
+text).
 
 ---
 

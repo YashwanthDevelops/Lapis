@@ -1,8 +1,7 @@
 # Changelog
 
-All notable changes to **Lapis**, customized from upstream **open-silong**
-(formerly `notion-page-clone` / `nosion`). Earlier entries retain the project
-name in use at the time. Format inspired by
+All notable changes to **Lapis**. Earlier entries retain historical project
+names where needed to identify the work at the time. Format inspired by
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); commits
 follow [Conventional Commits](https://www.conventionalcommits.org/).
 
@@ -13,7 +12,7 @@ notes under `docs/audit/`.
 
 ### Changed
 
-- Rebranded the app as **Lapis** across the app shell, theme, metadata, share
+- Established **Lapis** as the product identity across the app shell, theme, metadata, share
   cards, PWA assets, onboarding copy, and export filenames. Existing browser
   preferences migrate to the Lapis storage namespace. New MCP tokens use the
   `lps_` prefix, and Lapis webhook headers ship beside their legacy aliases.
@@ -636,9 +635,9 @@ Brand becomes "Silong" for display surfaces.
 - `package.json` — name = `open-silong`, license = MIT, author, repo,
   homepage, 10 keywords
 - `next.config.mjs` — default URLs → `silong.rahmanef.com`
-- `CLAUDE.md` — rebrand header + transition notes block
+- `CLAUDE.md` — product header + transition notes block
 
-### Phase 2 — Surface rebrand Nosion → Silong (commit `cebf1d9`)
+### Phase 2 — Product identity update: Nosion → Silong (commit `cebf1d9`)
 
 18 files touched. UI labels, OG image, sitemap, OAuth discovery,
 share view, install prompt, export filenames.
