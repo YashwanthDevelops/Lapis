@@ -5,8 +5,9 @@ YashwanthDevelops. It uses Next 16 (App Router), React 19, and Convex 1.43.
 This repository includes MIT-licensed software; original attribution is
 preserved in README.md, LICENSE, and NOTICE.
 
-No shared production deployment is configured in this checkout. Configure
-your own site and Convex URLs from `.env.example`, then follow `DEPLOY.md`.
+The static landing page is published on GitHub Pages. The interactive Next.js
+app has no shared production deployment; configure its site and Convex URLs
+from `.env.example`, then follow `DEPLOY.md`.
 Do not reuse upstream deployment credentials, project IDs, or domains.
 
 ## Stack baseline
