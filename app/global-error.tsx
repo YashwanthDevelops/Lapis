@@ -44,7 +44,7 @@ export default function GlobalError({
         >
           <div style={{ fontSize: 32, marginBottom: 8 }}>⚠️</div>
           <h2 style={{ margin: "0 0 4px", fontSize: 18, fontWeight: 600 }}>
-            Silong hit a fatal error
+            Lapis hit a fatal error
           </h2>
           <p style={{ margin: "0 0 16px", fontSize: 14, color: "#525252" }}>
             The root layout crashed. A reload usually clears it.

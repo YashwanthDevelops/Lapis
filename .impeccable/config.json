@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "app/globals.css"
+        ],
+        "createdAt": "2026-10-15T15:07:07.444Z",
+        "reason": "false positive: line 237 styles a standard blockquote, not a card accent"
+      }
+    ]
+  }
+}

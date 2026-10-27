@@ -1,4 +1,4 @@
-# Deploying open-silong
+# Deploying Lapis
 
 Three lanes, depending on what trade-off you want. All three run the
 same Next 16 frontend; what changes is **how Convex is hosted**.
@@ -7,7 +7,7 @@ same Next 16 frontend; what changes is **how Convex is hosted**.
 |---|---|---|---|---|---|
 | 1. Convex Cloud | Managed by Convex | Vercel / Netlify / Cloudflare | Low | Free tier covers <1k MAU | You want it running today |
 | 2. Self-hosted Docker | Your VPS via Docker Compose | Same VPS or split | Medium | $10–20/mo VPS | You want full data ownership |
-| 3. Public demo | (this repo's deploy) | silong-os.vercel.app | Zero | Free | Just want to try the UI |
+| 3. Local development | Convex dev deployment | localhost:3000 | Low | Free tier | Customize and preview your Lapis copy |
 
 ---
 
@@ -15,35 +15,43 @@ same Next 16 frontend; what changes is **how Convex is hosted**.
 
 ### Prerequisites
 
-- Node 20+, Bun 1.3+
+- Node.js 22 or 24, Bun 1.4.2+
 - A Convex Cloud account (sign up free at https://convex.dev)
 - A Vercel / Netlify / Cloudflare Pages account (or any Next 16 host)
 
 ### Steps
 
 ```bash
-git clone https://github.com/rahmanef63/open-silong.git
-cd open-silong
 bun install
 
-# 1. Create a Convex project (interactive)
+# 1. Create a Convex project (interactive; keep this running in terminal 1)
 bunx convex dev
 # → prints something like https://your-project-name.convex.cloud
 # → also creates .env.local with CONVEX_DEPLOYMENT and NEXT_PUBLIC_CONVEX_URL
+```
 
-# 2. Set your auth provider env vars
+In a second terminal, set your auth provider env vars while `convex dev`
+continues running in the first terminal:
+
+```bash
 # Magic-link is built in; add JWT_PRIVATE_KEY + JWKS via:
 bunx convex env set JWT_PRIVATE_KEY "$(cat /tmp/jwt-private.pem)"
 bunx convex env set JWKS "$(cat /tmp/jwks.json)"
 # Generation helpers documented in convex/auth-keys.md (TBD)
 
-# 3. (Optional) Unsplash cover picker
+# Optional: Unsplash cover picker
 bunx convex env set UNSPLASH_ACCESS_KEY <your-unsplash-key>
+```
 
-# 4. Local dev
+Then start the frontend in that second terminal:
+
+```bash
 bun run dev   # http://localhost:3000
+```
 
-# 5. Deploy frontend to Vercel
+When the local app works, deploy the frontend:
+
+```bash
 vercel --prod
 # Set env vars in Vercel dashboard:
 #   NEXT_PUBLIC_CONVEX_URL = (your Convex URL)
@@ -77,13 +85,11 @@ That's it. Convex Cloud handles scaling, backups, and TLS.
 ### Steps
 
 ```bash
-git clone https://github.com/rahmanef63/open-silong.git
-cd open-silong
 cp .env.example .env.local
 # Edit .env.local — fill in:
-#   INSTANCE_NAME=open-silong
+#   INSTANCE_NAME=lapis
 #   INSTANCE_SECRET=<openssl rand -hex 32>
-#   POSTGRES_URL=postgres://user:pass@host:5432/silong
+#   POSTGRES_URL=postgres://user:pass@host:5432/lapis
 #   CONVEX_CLOUD_ORIGIN=https://api.your-domain.com
 #   CONVEX_SITE_ORIGIN=https://api.your-domain.com
 #   JWT_PRIVATE_KEY=$(openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -outform PEM)
@@ -102,10 +108,10 @@ Sample Traefik label (Dokploy auto-generates these):
 ```yaml
 labels:
   - traefik.enable=true
-  - traefik.http.routers.silong-api.rule=Host(`api.your-domain.com`)
-  - traefik.http.routers.silong-api.tls=true
-  - traefik.http.routers.silong-api.tls.certresolver=letsencrypt
-  - traefik.http.services.silong-api.loadbalancer.server.port=3210
+  - traefik.http.routers.lapis-api.rule=Host(`api.your-domain.com`)
+  - traefik.http.routers.lapis-api.tls=true
+  - traefik.http.routers.lapis-api.tls.certresolver=letsencrypt
+  - traefik.http.services.lapis-api.loadbalancer.server.port=3210
 ```
 
 ### Push schema + functions to your Convex backend
@@ -219,22 +225,18 @@ S3) (files). Backup both:
 
 ```bash
 # Daily Postgres dump (cron)
-pg_dump $POSTGRES_URL | gzip > /backups/silong-$(date +%F).sql.gz
+pg_dump $POSTGRES_URL | gzip > /backups/lapis-$(date +%F).sql.gz
 
 # Convex snapshot export — manual or scheduled via convex/maintenance.ts
-bunx convex export --path /tmp/silong-snapshot.zip
+bunx convex export --path /tmp/lapis-snapshot.zip
 ```
 
 ---
 
-## Lane 3 — Use the public demo
+## Lane 3 — Preview locally
 
-[silong-os.vercel.app](https://silong-os.vercel.app) is the reference
-deploy (Vercel + Convex Cloud), maintained by the maintainers. Sign up
-with a magic link and start writing.
-
-⚠ The demo is for **evaluation**. Data persistence + uptime are
-best-effort. Don't rely on it for anything important.
+After setting up the Convex development deployment in Lane 1, run
+`bun run dev` from the Lapis project folder and open `http://localhost:3000`.
 
 ---
 
@@ -244,13 +246,13 @@ Cloud → self-hosted (or vice versa):
 
 ```bash
 # Export from the source Convex backend
-bunx convex export --path /tmp/silong-export.zip
+bunx convex export --path /tmp/lapis-export.zip
 
 # Point .env.local at the target Convex backend (re-run convex dev or
 # update CONVEX_URL/admin key for self-hosted)
 
 # Import
-bunx convex import --path /tmp/silong-export.zip
+bunx convex import --path /tmp/lapis-export.zip
 ```
 
 JSON workspace export from the UI (Settings → Backup) is **also** a

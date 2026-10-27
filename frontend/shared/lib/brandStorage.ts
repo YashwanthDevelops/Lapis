@@ -1,0 +1,2 @@
+/** Move browser preferences into the Lapis namespace before providers mount. */
+export const BRAND_STORAGE_MIGRATION_SCRIPT = `try{for(const store of [localStorage,sessionStorage]){const keys=Array.from({length:store.length},(_,i)=>store.key(i));for(const key of keys){if(!key)continue;const next=key==="icon-picker:style"?"lapis:iconStyle":key.replace(/^(?:nosion|silong)(?=[:._-])/,"lapis");if(next===key)continue;const oldValue=store.getItem(key);if(store.getItem(next)===null&&oldValue!==null)store.setItem(next,oldValue);store.removeItem(key)}}}catch{}`;

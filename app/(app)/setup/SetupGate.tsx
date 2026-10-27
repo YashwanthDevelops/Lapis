@@ -14,16 +14,16 @@ const CONVEX_URL = process.env.NEXT_PUBLIC_CONVEX_URL;
 export function SetupGate({ children }: { children: ReactNode }) {
   if (!CONVEX_URL || CONVEX_URL.includes("placeholder")) {
     return (
-      <Warn title="Hubungkan database (Convex)">
+      <Warn title="Connect your database (Convex)">
         <p className="text-sm text-muted-foreground">
-          Website belum tahu alamat database-nya. Di <b>Vercel → Settings →
-          Environment Variables</b>, isi dua ini lalu <b>Redeploy</b>:
+          The site does not have your database URL yet. In <b>Vercel → Settings →
+          Environment Variables</b>, add these two values, then <b>redeploy</b>:
         </p>
         <EnvBlock />
         <p className="text-xs text-muted-foreground">
-          Belum punya nilainya? Buat project di{" "}
+          Need these values? Create a project at{" "}
           <a className="underline" href="https://convex.dev" target="_blank" rel="noreferrer">convex.dev</a>{" "}
-          — URL ada di Settings, deploy key di Settings → Deploy Keys.
+          — find the URL under Settings and the deploy key under Settings → Deploy Keys.
         </p>
       </Warn>
     );
@@ -39,16 +39,16 @@ class BackendBoundary extends Component<{ children: ReactNode }, { failed: boole
   render() {
     if (this.state.failed) {
       return (
-        <Warn title="Backend belum ter-deploy">
+        <Warn title="Backend functions are not deployed">
           <p className="text-sm text-muted-foreground">
-            Database tersambung tapi fungsinya belum ada (error{" "}
-            <code>Server Error</code>). Pastikan <b>CONVEX_DEPLOY_KEY</b>{" "}
-            terisi di Vercel, lalu <b>Redeploy</b> — build otomatis push
-            fungsi &amp; tabel ke Convex.
+            The database is connected, but its functions are missing (error{" "}
+            <code>Server Error</code>). Make sure <b>CONVEX_DEPLOY_KEY</b>{" "}
+            is set in Vercel, then <b>redeploy</b>. The build will push the
+            functions and tables to Convex.
           </p>
           <EnvBlock />
           <Button size="sm" variant="outline" className="w-fit" onClick={() => location.reload()}>
-            Cek ulang
+            Check again
           </Button>
         </Warn>
       );
@@ -76,7 +76,7 @@ function EnvBlock() {
     <div className="relative">
       <pre className="overflow-x-auto rounded-md border bg-muted/40 p-3 text-xs">
         <code>
-          NEXT_PUBLIC_CONVEX_URL = https://NAMA.convex.cloud{"\n"}
+          NEXT_PUBLIC_CONVEX_URL = https://your-project.convex.cloud{"\n"}
           CONVEX_DEPLOY_KEY = (deploy key production)
         </code>
       </pre>
@@ -90,7 +90,7 @@ function EnvBlock() {
           setTimeout(() => setCopied(false), 1500);
         }}
         className="absolute right-2 top-2 size-7 text-muted-foreground"
-        aria-label="Salin nama variabel"
+        aria-label="Copy variable names"
       >
         {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
       </Button>

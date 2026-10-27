@@ -77,7 +77,7 @@ export const SKILL_CATALOG: Skill[] = [
     id: "pages.append_markdown",
     kind: "mutation",
     toolName: "pages_append_markdown",
-    description: "Append markdown content (headings, lists, tables, todos, callouts) to the END of a page. Use when the user says 'add to this page', 'write here', 'tambahkan ke halaman ini', etc. Pass the activePageId from USER_CONTEXT when the user refers to 'this page'. Markdown is parsed into proper blocks.",
+    description: "Append markdown content (headings, lists, tables, todos, callouts) to the END of a page. Use when the user says 'add to this page' or 'write here'. Pass the activePageId from USER_CONTEXT when the user refers to 'this page'. Markdown is parsed into proper blocks.",
     parameters: obj({
       pageId: { type: "string", description: "Target page id (use activePageId for 'this page')" },
       markdown: { type: "string", description: "Markdown content to append. Multi-paragraph + headings supported." },

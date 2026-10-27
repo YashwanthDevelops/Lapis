@@ -2,7 +2,7 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import type { Doc, Id } from "../_generated/dataModel";
 
-const FORBIDDEN = "Tidak berwenang";
+const FORBIDDEN = "Forbidden";
 
 function bootstrapEmails(): Set<string> {
   const raw = process.env.ADMIN_BOOTSTRAP_EMAILS ?? "";
@@ -18,7 +18,7 @@ function superAdminEmail(): string | null {
 
 export async function requireAuth(ctx: QueryCtx | MutationCtx): Promise<Id<"users">> {
   const userId = await getAuthUserId(ctx);
-  if (!userId) throw new Error("Belum login");
+  if (!userId) throw new Error("Not signed in");
   return userId;
 }
 
@@ -106,9 +106,9 @@ export async function requireOwned<T extends OwnedTable>(
 ): Promise<{ userId: Id<"users">; doc: Doc<T> }> {
   const userId = await requireAuth(ctx);
   const doc = await ctx.db.get(id);
-  if (!doc) throw new Error("Tidak ditemukan");
+  if (!doc) throw new Error("Not found");
   const ownerId = (doc as unknown as { userId: Id<"users"> }).userId;
-  if (ownerId !== userId) throw new Error("Tidak ditemukan");
+  if (ownerId !== userId) throw new Error("Not found");
   return { userId, doc: doc as Doc<T> };
 }
 
@@ -119,7 +119,7 @@ type WsRole = "owner" | "editor" | "viewer";
  *  the multi-workspace migration (no workspaceId stamped).
  *
  *  - `opts.write = true` rejects viewers (read-only role).
- *  - Throws "Tidak ditemukan" on missing doc / non-member to avoid
+ *  - Throws "Not found" on a missing doc or non-member to avoid
  *    leaking existence; throws FORBIDDEN when the role is too low.
  *
  *  Use this in place of `requireOwned` for any read/write that should
@@ -134,7 +134,7 @@ export async function requireWorkspaceAccess<T extends OwnedTable>(
 ): Promise<{ userId: Id<"users">; doc: Doc<T>; role: WsRole }> {
   const userId = await requireAuth(ctx);
   const doc = await ctx.db.get(id);
-  if (!doc) throw new Error("Tidak ditemukan");
+  if (!doc) throw new Error("Not found");
   const wsId = (doc as unknown as { workspaceId?: Id<"workspaces"> }).workspaceId;
   let role: WsRole | null = null;
   if (wsId) {
@@ -150,7 +150,7 @@ export async function requireWorkspaceAccess<T extends OwnedTable>(
     const ownerId = (doc as unknown as { userId: Id<"users"> }).userId;
     if (ownerId === userId) role = "owner";
   }
-  if (!role) throw new Error("Tidak ditemukan");
+  if (!role) throw new Error("Not found");
   if (opts.write && role === "viewer") throw new Error(FORBIDDEN);
   return { userId, doc: doc as Doc<T>, role };
 }

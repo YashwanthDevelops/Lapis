@@ -6,7 +6,7 @@ interface defined at
 [`frontend/slices/notion/adapter/types.ts`](../../frontend/slices/notion/adapter/types.ts).
 
 This doc is for **consumers** — anyone integrating the mega-slice
-into their own React project (open-silong itself, rr's demo, your
+into their own React project (Lapis itself, rr's demo, your
 own app). For the **integrator** view (how to refactor the slice
 internals to USE this contract), see the lift plan at
 [`docs/rr-sync/2026-05-21-notion-mega-lift-plan.md`](../rr-sync/2026-05-21-notion-mega-lift-plan.md).
@@ -48,7 +48,7 @@ image, etc.) is wired internally.
 
 ```
        ┌─────────────────────────────────────────────────────┐
-       │  Consumer app (open-silong / rr-demo / your project) │
+       │  Consumer app (Lapis / rr-demo / your project) │
        └─────────────────────────────────────────────────────┘
                                 │
                                 │ <NotionAppProvider adapter={...}>
@@ -175,7 +175,7 @@ Two ship in the slice:
 
 ### 1. `useConvexNotionAdapter()` — production
 
-Backed by self-hosted Convex (the open-silong reference backend).
+Backed by self-hosted Convex (the Lapis reference backend).
 Skip-listed in `rr-sync.json.skipFiles` so the rr-side lift never
 inherits a Convex import. Lives at
 `frontend/slices/notion/adapter/convexAdapter/`.
@@ -183,7 +183,7 @@ inherits a Convex import. Lives at
 Use this when:
 - Your app already runs Convex (cloud or self-hosted)
 - You want realtime updates without writing your own pub/sub
-- You're deploying open-silong as-shipped
+- You're deploying Lapis as-shipped
 
 ### 2. A localStorage adapter — NOT SHIPPED
 
@@ -253,7 +253,7 @@ import { NotionAppProvider } from "@/slices/notion";
 ```
 
 All three props are optional except `adapter`. `config` defaults to
-open-silong's own routes; `components` defaults to the bundled
+Lapis's own routes; `components` defaults to the bundled
 implementations.
 
 Inside the slice, sub-components consume via:

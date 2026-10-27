@@ -8,6 +8,8 @@ import { AnalyticsBeacon } from "@/shared/components/AnalyticsBeacon";
 import { GoogleAnalytics } from "@/shared/components/GoogleAnalytics";
 import "./globals.css";
 import { siteUrlFromEnv } from "@/shared/lib/siteUrl";
+import { BRAND_STORAGE_MIGRATION_SCRIPT } from "@/shared/lib/brandStorage";
+import Script from "next/script";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,12 +44,12 @@ const SITE_URL = siteUrlFromEnv() ?? "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Silong — Open-source collaborative workspace",
-    template: "%s · Silong",
+    default: "Lapis — Your workspace for clearer work",
+    template: "%s · Lapis",
   },
   description:
-    "An open-source Notion-inspired workspace for teams and personal use. Self-hostable, block-based, with multi-workspace, sharing, comments, snapshots, and a polished editor.",
-  authors: [{ name: "open-silong" }],
+    "An open-source workspace for personal and team productivity. Organize ideas, projects, and structured information with flexible pages, databases, sharing, and integrations.",
+  authors: [{ name: "Lapis" }],
   manifest: "/manifest.webmanifest",
   icons: {
     icon: [
@@ -55,29 +57,26 @@ export const metadata: Metadata = {
       { url: "/favicon.ico", sizes: "any" },
     ],
     apple: "/apple-touch-icon.png",
-    other: [{ rel: "mask-icon", url: "/logo-mark-fill-black.svg", color: "#f08a40" }],
+    other: [{ rel: "mask-icon", url: "/logo-mark-fill-black.svg", color: "#315cf5" }],
   },
   appleWebApp: {
     capable: true,
-    title: "Silong",
+    title: "Lapis",
     statusBarStyle: "default",
   },
   openGraph: {
-    title: "Silong — Open-source collaborative workspace",
-    description: "An open-source Notion-inspired workspace, built for everyone. Self-hostable, block-based, real-time.",
+    title: "Lapis — Your workspace for clearer work",
+    description: "A flexible workspace for notes, projects, databases, and the work that connects them.",
     type: "website",
     url: SITE_URL,
-    siteName: "Silong",
+    siteName: "Lapis",
     images: [{ url: "/banner-dark.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Silong — Open-source collaborative workspace",
-    description: "Open-source Notion-inspired workspace. Block editor, databases, sharing, MIT licensed.",
+    title: "Lapis — Your workspace for clearer work",
+    description: "Bring notes, projects, and team knowledge together in one flexible workspace.",
     images: ["/banner-dark.png"],
-  },
-  verification: {
-    google: "cIVgVzi0xUCpY-4p2HRfbJpvllEnbGu8poddkl3qFng",
   },
 };
 
@@ -86,8 +85,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f08a40" },
-    { media: "(prefers-color-scheme: dark)", color: "#1a1d24" },
+    { media: "(prefers-color-scheme: light)", color: "#315cf5" },
+    { media: "(prefers-color-scheme: dark)", color: "#111a30" },
   ],
 };
 
@@ -96,6 +95,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${fraunces.variable}`}>
       <HeadHints />
       <body>
+        <Script id="lapis-storage-migration" strategy="beforeInteractive">
+          {BRAND_STORAGE_MIGRATION_SCRIPT}
+        </Script>
         <div id="root">
           <RootProviders>
             <Suspense fallback={null}>{children}</Suspense>

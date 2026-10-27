@@ -14,7 +14,7 @@
 
 import { httpAction } from "../_generated/server";
 
-// open-silong is one-click cloned to arbitrary domains, so NEITHER origin
+// Lapis can be deployed to arbitrary domains, so NEITHER origin
 // may be hard-coded — a baked-in issuer fails the MCP client's issuer check
 // on every deployment that is not the upstream one.
 //

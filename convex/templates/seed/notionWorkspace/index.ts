@@ -1,6 +1,6 @@
 /** Notion Workspace — comprehensive seed template.
  *
- *  Demonstrates every Nosion building block in one place:
+ *  Demonstrates every Lapis building block in one place:
  *    - 7 databases (projects, tasks, notes, events, contacts, reading, locations)
  *    - All 25 block types (paragraph/h1-4/todo/bullet/numbered/quote/code/
  *      divider/callout/page/database/columns2-5/toggle/image/equation/table/

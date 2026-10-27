@@ -11,7 +11,7 @@ import type {
   TemplateJson, TplBlockT, TplDatabaseT, TplPageT, TplViewT,
 } from "./validate";
 
-/** Recursively build a Nosion block from a template block.
+/** Recursively build a Lapis block from a template block.
  *  Handles `columns: TplBlock[][]` (for columns2/3) and
  *  `children: TplBlock[]` (for toggle) so AI-generated templates
  *  can express nested column dashboards. */

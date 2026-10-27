@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { RefreshCw } from "lucide-react";
 
 const POLL_MS = 5 * 60 * 1000; // 5 minutes
-const TOAST_ID = "nosion:version-update";
+const TOAST_ID = "lapis:version-update";
 
 /** Polls `/api/version` and prompts the user to reload when the deployed
  *  build id no longer matches the build the client booted with. Prevents

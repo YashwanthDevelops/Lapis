@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useConvexConnectionState } from "convex/react";
 import { useNavigate } from "@/shared/lib/router";
 import { useStore } from "@/shared/lib/store";
-import { Plus, Star, Clock, FileText, Table2, Sparkles } from "lucide-react";
+import { Plus, Star, Clock, FileText, Table2, Sparkles, AlertTriangle } from "lucide-react";
 import { DynamicIcon, DEFAULT_DATABASE_ICON } from "@/shared/components/icon-picker";
 import { Button } from "@/shared/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/shared/ui/alert";
 import { formatRelTime as relTime } from "@/shared/lib/format";
 import { TemplateGalleryDialog } from "@/slices/templates";
 import { Section, Grid, ActionCard, PageCard, EmptyState } from "./dashboard/parts";
@@ -12,10 +14,36 @@ import { DatabasesList } from "./dashboard/DatabasesList";
 
 export function Dashboard() {
   const { pages, recents, childrenOf, createPage, createDatabase, databases, workspace, isInitialLoading } = useStore();
+  const connection = useConvexConnectionState();
   const navigate = useNavigate();
   const [tplOpen, setTplOpen] = useState(false);
+  const [loadingTimedOut, setLoadingTimedOut] = useState(false);
 
-  if (isInitialLoading) return <DashboardSkeleton />;
+  useEffect(() => {
+    if (!isInitialLoading) return;
+    const timeout = setTimeout(() => setLoadingTimedOut(true), 12_000);
+    return () => clearTimeout(timeout);
+  }, [isInitialLoading]);
+
+  if (isInitialLoading && !loadingTimedOut) return <DashboardSkeleton />;
+  if (isInitialLoading) {
+    const connectionMessage = connection.isWebSocketConnected
+      ? "The live connection is up, but the board data has not arrived yet. Retry the request or check the Convex backend logs."
+      : "Lapis cannot reach the live data connection. Make sure the Convex backend is running, then retry.";
+
+    return (
+      <div className="mx-auto max-w-3xl px-6 py-16 md:px-12">
+        <Alert>
+          <AlertTriangle className="size-4" />
+          <AlertTitle>Your board has not loaded yet</AlertTitle>
+          <AlertDescription className="space-y-4">
+            <p>{connectionMessage}</p>
+            <Button onClick={() => window.location.reload()}>Retry</Button>
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   const regularPages = pages.filter(p => !p.trashed && !p.rowOfDatabaseId);
   const favorites = regularPages.filter(p => p.favorite);

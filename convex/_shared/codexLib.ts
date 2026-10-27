@@ -42,7 +42,7 @@ function codexHeaders(bundle: CodexBundle): Record<string, string> {
   const h: Record<string, string> = {
     Authorization: `Bearer ${bundle.access}`,
     originator: "codex_cli_rs",
-    "User-Agent": "codex_cli_rs/0.0.0 (open-silong)",
+    "User-Agent": "codex_cli_rs/0.0.0 (Lapis)",
   };
   const accountId = bundle.accountId || decodeAccountId(bundle.access);
   if (accountId) h["ChatGPT-Account-ID"] = accountId;

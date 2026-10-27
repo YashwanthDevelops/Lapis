@@ -25,7 +25,7 @@ export const AI_PROMPTS: Record<AIPreset, { label: string; system: string; build
   },
   translate: {
     label: "Translate to English",
-    system: "Translate the user's text to English. If it is already English, translate to Indonesian instead. Output only the translation — no commentary.",
+    system: "Translate the user's text to English. If it is already English, return it unchanged. Output only the translation — no commentary.",
     build: (s) => s,
   },
 };

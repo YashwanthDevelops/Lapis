@@ -3,7 +3,7 @@
  *  > HTML headings map to Notion headings (H4+ becomes H3).
  *  > Lists and paragraphs map to Notion list and text blocks.
  *
- *  Block coverage (all 28 Nosion block types):
+ *  Block coverage (all 28 Lapis block types):
  *    paragraph/h1-h4    → <p> / <h1>-<h4>
  *    todo               → <ul><li>[x]/[ ] …</li>  (Notion → bullet on import)
  *    bullet/numbered    → <ul><li> / <ol><li>

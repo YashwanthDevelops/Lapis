@@ -1,7 +1,7 @@
-# open-silong MCP
+# Lapis MCP
 
 Notion-canonical Model Context Protocol surface — lets Claude Desktop,
-Claude Code, or any MCP-compatible client drive open-silong the same way
+Claude Code, or any MCP-compatible client drive Lapis the same way
 it drives Notion.
 
 ## Architecture
@@ -38,22 +38,26 @@ works for ad-hoc scripting.
 
 ## Tool catalog
 
+New clients should use the `lapis-*` names below. The former `nosion-*`
+names remain accepted as compatibility aliases on the legacy `/mcp/v1`
+route.
+
 | name | purpose | required params |
 |---|---|---|
-| `nosion-search` | Full-text search across pages | `query` |
-| `nosion-list-pages` | List pages, cursor pagination | — |
-| `nosion-list-databases` | List all databases | — |
-| `nosion-fetch` | Fetch any page (with blocks) or database by id | `id` |
-| `nosion-list-rows` | List rows of a database | `database_id` |
-| `nosion-create-page` | Create page; `children` is Notion-shape blocks array | — |
-| `nosion-update-page` | Patch title/icon/cover/children | `page_id` |
-| `nosion-move-page` | Reparent | `page_id` |
-| `nosion-trash-page` | Soft-delete | `page_id` |
-| `nosion-duplicate-page` | Deep-clone with fresh ids | `page_id` |
-| `nosion-create-database` | Create db (defaults to single Title column) | — |
-| `nosion-update-database` | Patch db title/icon/properties | `database_id` |
-| `nosion-create-row` | Insert row; `properties` is Notion-shape envelope map | `database_id` |
-| `nosion-update-row` | Patch row properties (partial merge) | `page_id` |
+| `lapis-search` | Full-text search across pages | `query` |
+| `lapis-list-pages` | List pages, cursor pagination | — |
+| `lapis-list-databases` | List all databases | — |
+| `lapis-fetch` | Fetch any page (with blocks) or database by id | `id` |
+| `lapis-list-rows` | List rows of a database | `database_id` |
+| `lapis-create-page` | Create page; `children` is Notion-shape blocks array | — |
+| `lapis-update-page` | Patch title/icon/cover/children | `page_id` |
+| `lapis-move-page` | Reparent | `page_id` |
+| `lapis-trash-page` | Soft-delete | `page_id` |
+| `lapis-duplicate-page` | Deep-clone with fresh ids | `page_id` |
+| `lapis-create-database` | Create db (defaults to single Title column) | — |
+| `lapis-update-database` | Patch db title/icon/properties | `database_id` |
+| `lapis-create-row` | Insert row; `properties` is Notion-shape envelope map | `database_id` |
+| `lapis-update-row` | Patch row properties (partial merge) | `page_id` |
 
 Tool discovery is served over JSON-RPC `tools/list` from the client
 catalog (`convex/mcp/jsonrpc.ts:98` — `TOOLS`, JSON Schema).
@@ -115,14 +119,14 @@ top of `mcpHandler`.
 curl $CONVEX_SITE_URL/mcp/v1 \
   -H "authorization: Bearer $TOKEN" \
   -H "content-type: application/json" \
-  -d '{"tool":"nosion-search","params":{"query":"meeting notes"}}'
+  -d '{"tool":"lapis-search","params":{"query":"meeting notes"}}'
 
 # Create a page
 curl $CONVEX_SITE_URL/mcp/v1 \
   -H "authorization: Bearer $TOKEN" \
   -H "content-type: application/json" \
   -d '{
-    "tool":"nosion-create-page",
+    "tool":"lapis-create-page",
     "params":{
       "parent_id": null,
       "title": "Hello from MCP",
@@ -142,7 +146,7 @@ curl $CONVEX_SITE_URL/mcp/v1 \
   -H "authorization: Bearer $TOKEN" \
   -H "content-type: application/json" \
   -d '{
-    "tool":"nosion-create-row",
+    "tool":"lapis-create-row",
     "params":{
       "database_id":"<dbId>",
       "properties":{
@@ -260,12 +264,12 @@ Covered by `convex/_test/mcp-structure-upsert.test.ts`.
 
 - **Comments / workspaces on the REST surface** — both ship as JSON-RPC
   tools (above). The Notion-canonical REST envelopes
-  (`nosion-get-comments`, `nosion-get-users`) are not written yet.
+  (`lapis-get-comments`, `lapis-get-users`) are not written yet.
 - **Files / uploads** — deliberately absent. Binary over JSON-RPC means
   base64 in a tool argument; the browser upload path stays the right one
   until there is a concrete agent use case.
 - **Database schema PATCH** via `properties` MAP (not array) on
-  `nosion-update-database`.
-- **`nosion-create-view` / `nosion-update-view`** — view CRUD.
+  `lapis-update-database`.
+- **`lapis-create-view` / `lapis-update-view`** — view CRUD.
 - **Streaming** — long fetches (full-tree dump) over Server-Sent
   Events instead of single-shot.

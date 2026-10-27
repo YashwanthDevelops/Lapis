@@ -4,7 +4,7 @@
  *  this directory into a standalone `rahman-shared` package (1.G.2)
  *  without losing portability.
  *
- *  Consumers (Silong: `lib/formula.ts`; future Convex adapter; tests):
+ *  Consumers (Lapis: `lib/formula.ts`; future Convex adapter; tests):
  *    1. Implement EngineHost<TProp, TVal, TPage, TDb>
  *    2. Build an EvalContext with `host` attached
  *    3. Call `evalFormulaCore(src, ctx)`

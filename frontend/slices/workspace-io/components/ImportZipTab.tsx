@@ -49,7 +49,7 @@ export const ImportZipTab = forwardRef<ImportZipTabHandle, Props>(function Impor
       const refStr = await upload(zipFile);
       const parsed = parseFileRef(refStr);
       const storageId = parsed.kind === "storage" ? parsed.storageId : undefined;
-      if (!storageId) throw new Error("Upload tidak menghasilkan storageId");
+      if (!storageId) throw new Error("Upload did not return a storage ID");
       return await importZip({ storageId, parentId: zipParentId });
     });
     if (result) setZipSummary(result);

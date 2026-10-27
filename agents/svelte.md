@@ -11,7 +11,7 @@ Verified against the official docs on **2026-08-30**. Sources at the bottom.
 If a rule here disagrees with `svelte.dev/docs`, the docs win — say so and fix
 this file.
 
-> **Status for this repo:** open-silong is React 19 + Next 16 today. Nothing
+> **Status for this repo:** Lapis is React 19 + Next 16 today. Nothing
 > here is live. Read this before writing *any* Svelte, and read
 > `docs/audit/2026-08-30-svelte-migration-plan.md` first for whether the
 > migration should happen at all (short answer: the numbers say no — 45k LOC
@@ -216,7 +216,7 @@ ones.
 
 ## 5. `contenteditable` — read this before touching the editor
 
-Directly load-bearing for open-silong, whose editor is a plain-text
+Directly load-bearing for Lapis, whose editor is a plain-text
 contenteditable with a decorator pass (`slices/editor/lib/inlineDecorator.ts`).
 
 **The documented gotcha:** a `contenteditable` node with a binding *and*

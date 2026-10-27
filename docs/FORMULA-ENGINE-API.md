@@ -359,7 +359,7 @@ unchanged.
   `./formulaEngine/index` → `rahman-shared/formulaEngine`
 - The local `lib/formulaEngine/` directory becomes a deleted artifact
   (kept on a branch for one release in case of rollback)
-- `silongHost` in `lib/formula.ts` stays in this repo (consumer side)
+- `lapisHost` in `lib/formula.ts` stays in this repo (consumer side)
 
 **Boundary gate stays:** test moves from `lib/formulaEngine/__boundary__.test.ts`
 to the rahman-shared repo's CI; locally we add a thin proxy test that

@@ -4,7 +4,7 @@
  *    tasks.assignee   → contacts
  *    projects.lead    → contacts
  *    events.attendees → contacts
- *  Covers every Nosion property type + every view type at least once. */
+ *  Covers every Lapis property type + every view type at least once. */
 
 export { projectsDb } from "./projects";
 export { tasksDb } from "./tasks";

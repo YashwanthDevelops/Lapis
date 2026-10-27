@@ -29,7 +29,7 @@ const NAV: NavItem[] = [
   { key: "pages",      label: "Pages",       icon: FileText,   description: "Sort + landing + editor" },
   { key: "backup",     label: "Backup",      icon: Save,       description: "Export + import workspace" },
   { key: "mcp-apps",   label: "MCP",         icon: Plug,       description: "Connect ChatGPT / Claude / others" },
-  { key: "mcp",        label: "Script tokens", icon: KeyRound, description: "nsn_ bearer for curl + Claude Desktop + Cursor" },
+  { key: "mcp",        label: "Script tokens", icon: KeyRound, description: "lps_ bearer for curl + Claude Desktop + Cursor" },
   { key: "webhooks",   label: "Webhooks",    icon: Webhook,    description: "Outbound delivery + log" },
   { key: "tickets",    label: "Tickets",     icon: LifeBuoy,   description: "Report bugs + feature requests" },
 ];

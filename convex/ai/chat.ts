@@ -239,7 +239,7 @@ export const complete = action({
     const cfg = await resolveAI(ctx, model);
     const cap = Math.min(maxTokens ?? 2048, MAX_TOKENS_HARD_CAP);
 
-    const baseSystem = system ?? "You are Silong, a calm and concise assistant inside a Notion-like notes workspace. You can call tools to read AND write the user's pages: list/search, read content, append markdown, create pages, rename, set icon. Prefer pages_search over pages_list when the user names a topic. Reply in markdown. Be direct and helpful.";
+    const baseSystem = system ?? "You are Lapis, a calm and concise assistant inside a flexible productivity workspace. You can call tools to read and update the user's pages: search, read, append notes, create pages, rename, and set icons. Prefer pages_search over pages_list when the user names a topic. Reply in markdown. Be direct and helpful.";
 
     let systemContent = baseSystem;
     if (context && (context.activePageId || context.userName || context.workspaceName)) {
@@ -250,7 +250,7 @@ export const complete = action({
       if (context.workspaceName) lines.push(`workspaceName: ${JSON.stringify(context.workspaceName)}`);
       lines.push("</USER_CONTEXT>");
       lines.push("");
-      lines.push("When the user says 'this page', 'current page', 'ini', 'halaman ini', 'di sini', use the activePageId from USER_CONTEXT directly — do NOT ask which page. For create-then-fill flows you can call pages_create then pass the returned pageId to pages_append_markdown in the SAME turn.");
+      lines.push("When the user says 'this page' or 'current page', use the activePageId from USER_CONTEXT directly — do NOT ask which page. For create-then-fill flows you can call pages_create then pass the returned pageId to pages_append_markdown in the SAME turn.");
       systemContent = `${baseSystem}\n\n${lines.join("\n")}`;
     }
 
@@ -258,8 +258,8 @@ export const complete = action({
     conversation.push({ role: "system", content: systemContent });
     for (const m of messages) conversation.push({ role: m.role, content: m.content });
 
-    const referer = process.env.OPENROUTER_REFERER ?? process.env.SITE_URL ?? "https://github.com/rahmanef63/open-silong";
-    const title = process.env.OPENROUTER_APP_NAME ?? "open-silong";
+    const referer = process.env.OPENROUTER_REFERER ?? process.env.SITE_URL;
+    const title = process.env.OPENROUTER_APP_NAME ?? "Lapis";
     const tools = toolsForLLM();
 
     const progress: Array<{ kind: string; label: string; skillId?: string; ms?: number; ok?: boolean }> = [];
@@ -334,7 +334,7 @@ export const complete = action({
         method: "POST",
         headers: {
           Authorization: `Bearer ${cfg.apiKey}`,
-          "HTTP-Referer": referer,
+          ...(referer ? { "HTTP-Referer": referer } : {}),
           "X-Title": title,
           "content-type": "application/json",
         },
@@ -458,7 +458,7 @@ export const complete = action({
     // If we queued any mutation proposals but the model didn't speak,
     // synthesize a brief confirmation so the user sees what's pending.
     if (proposals.length > 0 && !reply.trim()) {
-      reply = `Saya menyiapkan ${proposals.length} tindakan untuk persetujuan Anda — tinjau dan klik **Approve** di bawah.`;
+      reply = `I prepared ${proposals.length} actions for your review. Review them and click **Approve** below.`;
     }
 
     return {

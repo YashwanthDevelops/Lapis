@@ -13,7 +13,7 @@
  *        ...
  *      databases/
  *        <dbName>.csv
- *      _manifest.json     ← ID map + workspace metadata (Nosion-only,
+ *      _manifest.json     ← ID map + workspace metadata (Lapis-only,
  *                           Notion ignores it but downstream re-imports
  *                           can rebuild cross-refs)
  *
@@ -94,10 +94,10 @@ export async function buildWorkspaceZip(bundle: Bundle): Promise<Blob> {
     }
   }
 
-  // Manifest — Nosion-only, Notion ignores. Lets a re-import rebuild
+  // Manifest — Lapis-only, Notion ignores. Lets a re-import rebuild
   // cross-refs (page parent ids, database row links).
   zip.file("_manifest.json", JSON.stringify({
-    exporter: "nosion",
+    exporter: "lapis",
     exportedAt: new Date().toISOString(),
     pageCount: bundle.pages.length,
     databaseCount: bundle.databases.length,
@@ -109,6 +109,6 @@ export async function buildWorkspaceZip(bundle: Bundle): Promise<Blob> {
 }
 
 /** Trigger a browser download of the ZIP. Use from page action menus. */
-export async function downloadWorkspaceZip(bundle: Bundle, filename = "silong-export.zip"): Promise<void> {
+export async function downloadWorkspaceZip(bundle: Bundle, filename = "lapis-export.zip"): Promise<void> {
   downloadBlob(filename, await buildWorkspaceZip(bundle));
 }

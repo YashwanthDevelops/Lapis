@@ -44,7 +44,7 @@ function envSet(pair, label) {
     const out = `${e.stdout || ""}${e.stderr || ""}`;
     const denied = /403|Unauthorized|WriteEnvironmentVariables/i.test(out);
     console.error(
-      `[setup-auth] ✖ gagal set ${label}${denied ? " — deploy key tidak punya izin tulis env (WriteEnvironmentVariables)" : ""}`,
+      `[setup-auth] ✖ Failed to set ${label}${denied ? " — the deploy key cannot write environment variables (WriteEnvironmentVariables)" : ""}`,
     );
     const firstLines = out.trim().split("\n").slice(0, 2).join("\n");
     if (firstLines) console.error(firstLines);
@@ -101,16 +101,15 @@ if (ok) {
 if (!ok) {
   console.error(`
 [setup-auth] ──────────────────────────────────────────────────────────
-  Kunci login TIDAK terpasang. Penyebab paling umum:
-   1. Deploy key kamu tidak mencentang capability env — di UI deploy key
-      Convex terbaru, pastikan key punya: deployment:deploy +
-      deployment:env:view + deployment:env:write (atau pilih full access).
-      Generate: dashboard.convex.dev → project → Production → Settings →
-      Deploy Keys.
-   2. Akun pembuat key bukan admin / Project Admin di team Convex itu.
-  Build TETAP dilanjutkan — situs akan live, tapi daftar/login owner
-  gagal sampai key diganti di Vercel lalu Redeploy.
-  Buka /setup di situsmu — halaman itu memandu langkah perbaikannya.
+  Authentication keys were NOT configured. Common causes:
+   1. The Convex deploy key cannot write environment variables. In the Convex
+      dashboard, make sure it has deployment:deploy + deployment:env:view +
+      deployment:env:write capabilities (or choose full access). Find it under
+      dashboard.convex.dev → project → Production → Settings → Deploy Keys.
+   2. The account that created the key is not an admin or Project Admin on the team.
+  The build will continue and the site will go live, but owner sign-up and sign-in
+  will fail until you replace CONVEX_DEPLOY_KEY in Vercel and redeploy.
+  Open /setup on your site for guided instructions.
 ──────────────────────────────────────────────────────────────────────`);
   process.exit(0);
 }

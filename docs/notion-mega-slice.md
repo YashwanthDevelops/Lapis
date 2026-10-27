@@ -1,6 +1,6 @@
 # `notion` mega-slice — portable bundle
 
-Drop-in bundle that ships the full open-silong experience (block
+Drop-in bundle that ships the full Lapis experience (block
 editor + Notion-style databases + templates + workspace-io +
 sharing + comments + snapshots + AI agent) under one consumer
 import. Use it inside another React project to embed the whole
@@ -67,6 +67,6 @@ The mega-slice ships the **frontend** only. The Convex backend
 - Consumers may not use Convex; the slice's data interfaces (props on
   `NotionPage` / `NotionDatabase`) are storage-agnostic.
 
-Future work: publish `@nosion/convex-backend` as a separate npm
+Future work: publish `@lapis/convex-backend` as a separate npm
 package + a `convex-adapter` doc that maps `NotionPage` callbacks to
 arbitrary backends (Convex, Supabase, Prisma+REST, in-memory).

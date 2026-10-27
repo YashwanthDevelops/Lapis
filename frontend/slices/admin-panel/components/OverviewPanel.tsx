@@ -55,7 +55,7 @@ export function OverviewPanel() {
     return <div className="text-sm text-muted-foreground">Loading…</div>;
   }
   if (overview === null) {
-    return <div className="text-sm text-destructive">Tidak berwenang.</div>;
+    return <div className="text-sm text-destructive">You are not authorized to view this panel.</div>;
   }
 
   return (

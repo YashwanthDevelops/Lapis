@@ -25,7 +25,7 @@ export const upsertTemplate = mutation({
     const now = Date.now();
     if (id) {
       const existing = await ctx.db.get(id);
-      if (!existing) throw new Error("Template tidak ditemukan");
+      if (!existing) throw new Error("Template not found");
       await ctx.db.patch(id, {
         name, icon, category, description, images: safeImages, json, isPublished, updatedAt: now,
       });
@@ -50,7 +50,7 @@ export const deleteTemplate = mutation({
     const actorId = await requireAdmin(ctx);
     const doc = await ctx.db.get(id);
     if (!doc) return { ok: true };
-    if (doc.isSeed) throw new Error("Template seed tidak bisa dihapus — disable lewat unpublish");
+    if (doc.isSeed) throw new Error("Built-in templates cannot be deleted. Unpublish them to disable them.");
     await ctx.db.delete(id);
     await logAuditEventInternal(ctx, actorId, "template.delete", String(id), { name: doc.name });
     return { ok: true };
@@ -65,8 +65,8 @@ export const instantiate = mutation({
   handler: async (ctx, { templateId, parentPageId }) => {
     const userId = await requireAuth(ctx);
     const tpl = await ctx.db.get(templateId);
-    if (!tpl) throw new Error("Template tidak ditemukan");
-    if (!tpl.isPublished) throw new Error("Template belum dipublish");
+    if (!tpl) throw new Error("Template not found");
+    if (!tpl.isPublished) throw new Error("Template is not published.");
     const validated = validateTemplate(tpl.json);
     const result = await instantiateTemplate(ctx, validated, userId, parentPageId ?? null);
     return {

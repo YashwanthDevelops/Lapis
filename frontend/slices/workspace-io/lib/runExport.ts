@@ -1,5 +1,5 @@
 /** Pure dispatch layer over buildSelectionExport — picks the right
- *  serializer (JSON Nosion-native vs ZIP Notion-compatible) and
+ *  serializer (JSON Lapis-native vs ZIP Notion-compatible) and
  *  triggers the browser download. Component just wires inputs. */
 
 import { downloadFile } from "@/shared/lib/markdown";
@@ -21,7 +21,7 @@ export interface RunExportResult {
 export async function runExport(opts: RunExportOptions): Promise<RunExportResult> {
   const { format, stamp = new Date().toISOString().slice(0, 10), ...buildInput } = opts;
   const r = buildSelectionExport(buildInput);
-  const name = `silong-export-${stamp}`;
+  const name = `lapis-export-${stamp}`;
 
   if (format === "json") {
     downloadFile(`${name}.json`, r.json, "application/json");

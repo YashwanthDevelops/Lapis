@@ -92,7 +92,7 @@ export function WebhooksSection() {
           <input
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            placeholder="https://example.com/webhooks/silong"
+            placeholder="https://example.com/webhooks/lapis"
             className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-ring"
           />
           <div className="flex flex-wrap gap-2 rounded-md border border-border bg-muted/30 p-2">
@@ -115,9 +115,10 @@ export function WebhooksSection() {
           </Button>
         </div>
         <p className="mt-2 text-xs text-muted-foreground">
-          Each delivery POSTs JSON with <code>X-Nosion-Signature: sha256=&lt;hex&gt;</code>
-          HMAC of the body. Verify on your endpoint with the secret shown
-          once at create-time (it never re-displays).
+          Each delivery POSTs JSON with <code>X-Lapis-Signature: sha256=&lt;hex&gt;</code>
+          HMAC of the body. Legacy <code>X-Lapis-Signature</code> is sent as a
+          compatibility header. Verify the body with the secret shown once at
+          create-time (it never re-displays).
         </p>
       </Field>
 

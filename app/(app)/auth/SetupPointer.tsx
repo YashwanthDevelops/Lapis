@@ -20,7 +20,7 @@ export function SetupPointer() {
       className="flex items-center justify-center gap-2 rounded-xl border border-dashed p-3 text-sm text-muted-foreground transition hover:text-foreground"
     >
       <Wrench className="size-4" />
-      Instance baru? Jalankan wizard setup →
+      New instance? Run the setup wizard →
     </Link>
   );
 }

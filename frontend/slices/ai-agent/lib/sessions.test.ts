@@ -3,7 +3,7 @@ import type { ChatMessage } from "../hooks/useAIChat";
 import { SessionStore, deriveTitle } from "./sessions";
 
 // Matches STORAGE_KEY in sessions.ts (intentional storage contract).
-const KEY = "nosion.ai.sessions.v1";
+const KEY = "lapis.ai.sessions.v1";
 
 beforeEach(() => localStorage.clear());
 

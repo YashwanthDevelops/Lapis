@@ -40,7 +40,7 @@ export const claimSuperAdmin = mutation({
     // otherwise the first drive-by visitor claims the showcase deploy.
     const me = await ctx.db.get(userId);
     if (me?.isAnonymous) {
-      throw new Error("Akun tamu tidak bisa klaim — daftar dengan email dulu.");
+      throw new Error("Guest accounts cannot claim ownership. Sign up with an email first.");
     }
     // Cheap O(log n) probe via by_role — no full-table scan even on a
     // freshly-deployed instance. After the first claim, the if-throw fires
@@ -80,14 +80,14 @@ export const setUserRole = mutation({
   handler: async (ctx, { targetUserId, role }) => {
     const actorId = await requireAdmin(ctx);
     if (targetUserId === actorId && role !== "admin") {
-      throw new Error("Tidak bisa demote diri sendiri");
+      throw new Error("You cannot demote yourself.");
     }
     const profile = await ctx.db
       .query("userProfiles")
       .withIndex("by_user", (q) => q.eq("userId", targetUserId))
       .unique();
     if (profile?.role === "superadmin") {
-      throw new Error("Tidak bisa mengubah role superadmin");
+      throw new Error("The superadmin role cannot be changed.");
     }
     const now = Date.now();
     if (profile) {

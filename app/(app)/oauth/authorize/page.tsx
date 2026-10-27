@@ -92,7 +92,7 @@ export default function OAuthAuthorizePage() {
       if (params.state) url.searchParams.set("state", params.state);
       window.location.replace(url.toString());
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Authorize gagal");
+      toast.error(e instanceof Error ? e.message : "Authorization failed");
       setBusy(false);
     }
   };
@@ -112,7 +112,7 @@ export default function OAuthAuthorizePage() {
   if (isLoading || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6 bg-background text-foreground">
-        <p className="text-sm text-muted-foreground">Memeriksa sesi…</p>
+        <p className="text-sm text-muted-foreground">Checking your session…</p>
       </div>
     );
   }
@@ -122,11 +122,11 @@ export default function OAuthAuthorizePage() {
       <div className="w-full max-w-lg border border-border rounded-lg shadow-lg bg-card">
         <div className="border-b border-border p-6">
           <p className="text-xs uppercase tracking-wider text-muted-foreground">OAuth · ChatGPT App</p>
-          <h1 className="mt-2 text-xl font-semibold">Beri akses ke aplikasi eksternal?</h1>
+          <h1 className="mt-2 text-xl font-semibold">Give this external app access?</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Aplikasi <strong>{params.clientId || "(tidak diketahui)"}</strong> minta akses
-            ke workspace Silong kamu. Akses berlaku 1 tahun sampai kamu revoke manual
-            dari Admin → MCP Tokens.
+            The app <strong>{params.clientId || "(unknown)"}</strong> is requesting access
+            to your Lapis workspace. Access lasts one year unless you revoke it
+            under Admin → MCP Tokens.
           </p>
         </div>
 
@@ -162,16 +162,16 @@ export default function OAuthAuthorizePage() {
 
               <div className="border border-border rounded-md bg-muted/30 p-3 text-xs text-muted-foreground space-y-2">
                 <p>
-                  <strong className="text-foreground">Tidak perlu paste token apapun.</strong>{" "}
-                  Klik <strong>Allow</strong> di bawah, Silong auto-mint token + kirim
-                  balik ke ChatGPT. Script token (nsn_) buat client lain (Claude
-                  Desktop / Cursor / curl), bukan untuk flow ini.
+                  <strong className="text-foreground">You do not need to paste a token.</strong>{" "}
+                  Click <strong>Allow</strong> below and Lapis will create a token and
+                  return it to ChatGPT. Script tokens (lps_) are for other clients
+                  such as Claude Desktop, Cursor, or curl.
                 </p>
                 <p>
-                  Sekali allow, aplikasi bisa <strong>read / create / update</strong>{" "}
-                  pages dan databases lewat MCP tools (pages_list, pages_search,
-                  pages_get, pages_create, pages_append_markdown). Token aktif 1
-                  tahun — revoke kapan saja di Settings → MCP.
+                  After you allow access, the app can <strong>read, create, and update</strong>{" "}
+                  pages and databases through MCP tools (pages_list, pages_search,
+                  pages_get, pages_create, pages_append_markdown). The token is active
+                  for one year. Revoke it anytime under Settings → MCP.
                 </p>
               </div>
 
@@ -186,7 +186,7 @@ export default function OAuthAuthorizePage() {
 
           <div className="pt-4 border-t border-border text-xs text-muted-foreground">
             <Link href="/dashboard" className="underline underline-offset-4">
-              ← Kembali ke dashboard
+              ← Back to dashboard
             </Link>
           </div>
         </div>

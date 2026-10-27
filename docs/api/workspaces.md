@@ -61,7 +61,7 @@ workspaces are user-created via `workspaces.create`.
 `requireWorkspaceAccess(ctx, table, id, { write? })` is the gate for
 every page/database read or write that should be reachable by invited
 members. Resolves the doc's `workspaceId`, looks up the viewer's
-`workspaceMembers` row, and throws `"Tidak ditemukan"` for non-members
+`workspaceMembers` row, and throws `"Not found"` for non-members
 (no leak) or FORBIDDEN if `write: true` and role is `viewer`.
 
 Legacy rows (no `workspaceId` stamped) fall back to owner-only access.
@@ -158,7 +158,7 @@ when the active workspace is the viewer's personal one.
 
 ## Portability into a host platform
 
-open-silong is designed to be embeddable inside larger multi-tenant
+Lapis is designed to be embeddable inside larger multi-tenant
 host platforms. To keep the workspace interface portable, the contract
 on the frontend `Workspace` type is deliberately minimal:
 
@@ -177,7 +177,7 @@ Rules to keep the surface portable:
 
 1. **No app-specific fields on `Workspace`** — e.g. don't put
    `defaultPageId` or `wikiRootId` here. Those belong on a per-app
-   config row (`nosionWorkspaceConfig.workspaceId`) so a host can
+   config row (the legacy `nosionWorkspaceConfig.workspaceId` schema field) so a host can
    reuse the same `Workspace` shape for unrelated apps (sheets,
    whiteboards, etc.).
 2. **Roles are an open union** — when a host introduces extra roles

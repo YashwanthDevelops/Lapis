@@ -18,7 +18,7 @@ export interface EvalResult {
 
 /** Engine entry point. Generic over the host's domain shape — the host
  *  is the SOLE boundary between this pure engine and any consumer's
- *  domain types (Silong's Page/Database/Property, a Convex Doc-shape
+ *  domain types (Lapis's Page/Database/Property, a Convex Doc-shape
  *  adapter, etc). Errors flow back as `{ error }`; never thrown to the
  *  caller (parse + eval phases both wrap throws). */
 export function evalFormulaCore<TProp, TVal, TPage, TDb>(

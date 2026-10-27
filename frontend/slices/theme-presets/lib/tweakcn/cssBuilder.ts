@@ -32,7 +32,7 @@ export function buildBlock(
   return `${selector} {\n${lines.join("\n")}\n}`;
 }
 
-/** Mirror primary into Nosion's `--brand*` aliases so existing `bg-brand`
+/** Mirror primary into Lapis's `--brand*` aliases so existing `bg-brand`
  *  utilities follow the preset. */
 export function buildBrandBridge(light: Record<string, string>): string | null {
   const primary = light.primary?.trim();

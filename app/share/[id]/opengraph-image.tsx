@@ -3,7 +3,7 @@ import { fetchQuery } from "convex/nextjs";
 import { api } from "@convex/_generated/api";
 import { siteUrlFromEnv } from "@/shared/lib/siteUrl";
 
-export const alt = "Shared via Silong";
+export const alt = "Shared via Lapis";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -15,13 +15,13 @@ interface Props {
  *  a baked-in one. Falls back to the product name when env is unset. */
 const brandHost = (() => {
   const u = siteUrlFromEnv();
-  if (!u) return "Silong";
-  try { return new URL(u).host; } catch { return "Silong"; }
+  if (!u) return "Lapis";
+  try { return new URL(u).host; } catch { return "Lapis"; }
 })();
 
 export default async function OG({ params }: Props) {
   const { id } = await params;
-  let title = "Shared on Silong";
+  let title = "Shared on Lapis";
   let icon = "📄";
   let cover: string | null = null;
   try {
@@ -60,7 +60,7 @@ export default async function OG({ params }: Props) {
       >
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <div style={{ fontSize: 28, opacity: 0.7, letterSpacing: 4, textTransform: "uppercase" }}>
-            Silong
+            Lapis
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>

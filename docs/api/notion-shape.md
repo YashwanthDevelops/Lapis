@@ -1,14 +1,14 @@
 # Notion-canonical JSON adapter
 
 `convex/_shared/notionShape.ts` — bidirectional pure module that
-translates between Nosion's internal shapes and Notion's API JSON
+translates between Lapis's internal shapes and Notion's API JSON
 shape. Used by:
 
 - **MCP HTTP surface** (`convex/mcp/http.ts`) — emits Notion-shape
-  JSON so an LLM client can drive Nosion the same way it drives
+  JSON so an LLM client can drive Lapis the same way it drives
   Notion.
 - **Future `notion-import` action** — accepts Notion API JSON and
-  writes it as Nosion blocks/properties/pages.
+  writes it as Lapis blocks/properties/pages.
 - **Anywhere a downstream consumer prefers Notion shape** — exports,
   third-party integrations, AI prompts.
 
@@ -19,13 +19,13 @@ client, or any test. **44 unit tests** (`notionShape.test.ts`).
 
 ## Why this layer exists
 
-Nosion stores blocks as flat plain-strings with markdown markers
+Lapis stores blocks as flat plain-strings with markdown markers
 (Slack model), properties as ordered arrays, and 8-char base36 ids.
 Notion uses rich_text segment arrays, name-keyed property maps, and
 UUIDs. This module is the translation seam so neither side has to
 change to satisfy the other.
 
-| | Nosion internal | Notion API |
+| | Lapis internal | Notion API |
 |---|---|---|
 | Block text | `"**hi** world"` (plain) | `[{type:"text",text:{content:"hi"},annotations:{bold:true},...},{...content:" world"}]` |
 | Block id | 8-char base36 (`a3kf91qz`) | UUIDv4 |
@@ -72,7 +72,7 @@ blockFromNotion({ object:"block", type:"heading_2", heading_2:{ rich_text:[{...}
 // → { id, type:"h2", text:"..." }
 ```
 
-| Nosion type | Notion type |
+| Lapis type | Notion type |
 |---|---|
 | `paragraph` | `paragraph` |
 | `h1` / `h2` / `h3` | `heading_1` / `heading_2` / `heading_3` |
@@ -106,14 +106,14 @@ propertyToNotionSchema({ id:"p1", name:"Price", type:"number", numberFormat:"cur
 // → { id:"p1", name:"Price", type:"number", number:{ format:"euro" } }
 ```
 
-Only the Nosion → Notion emit direction ships today. The reverse
+Only the Lapis → Notion emit direction ships today. The reverse
 mapper (`propertyFromNotionSchema`) was removed — it had no production
 caller.
 
 22 of Notion's 23 types covered (no `verification` yet — pending
-matching Nosion implementation). Currency format mapping:
+matching Lapis implementation). Currency format mapping:
 
-| Notion `number.format` | Nosion `numberCurrencyCode` |
+| Notion `number.format` | Lapis `numberCurrencyCode` |
 |---|---|
 | `dollar` / `euro` / `pound` / `yen` / `yuan` / `ruble` / `rupee` / `won` / `real` / `rupiah` | `USD` / `EUR` / `GBP` / `JPY` / `CNY` / `RUB` / `INR` / `KRW` / `BRL` / `IDR` |
 | any other named currency (frank, peso, …) | falls back to `dollar` on emit; preserved verbatim on import |
@@ -143,7 +143,7 @@ valueFromNotion({ type:"date", date:{ start:"2026-05-09" } }, { id:"d", name:"D"
 // → { date: "2026-05-09" }
 ```
 
-| Nosion type | Notion envelope key | Raw shape |
+| Lapis type | Notion envelope key | Raw shape |
 |---|---|---|
 | `text` | `rich_text` | string (with markdown markers) |
 | `number` | `number` | number / null |
@@ -162,17 +162,17 @@ valueFromNotion({ type:"date", date:{ start:"2026-05-09" } }, { id:"d", name:"D"
 ## Round-trip guarantees
 
 `inlineMdToRichText` ⇄ `richTextToInlineMd`: lossless for the marker
-forms Nosion's tokenizer produces (single-annotation per segment).
+forms Lapis's tokenizer produces (single-annotation per segment).
 Cross-annotation stacking (`***bold-italic***`) is NOT round-tripped
-in v1 — Nosion doesn't emit it.
+in v1 — Lapis doesn't emit it.
 
-`blockToNotion` ⇄ `blockFromNotion`: lossless for the Nosion-native
+`blockToNotion` ⇄ `blockFromNotion`: lossless for the Lapis-native
 types in the table above. Foreign Notion types degrade to
 `paragraph`.
 
-`propertyToNotionSchema`: emit-only (Nosion → Notion). The reverse
+`propertyToNotionSchema`: emit-only (Lapis → Notion). The reverse
 mapper was removed for lack of a production caller; reintroduce it if
-a Notion → Nosion schema importer is ever built.
+a Notion → Lapis schema importer is ever built.
 
 `valueToNotion` ⇄ `valueFromNotion`: lossless except `person` array
 data on reverse from a foreign workspace (user ids are meaningless
@@ -187,5 +187,5 @@ across workspaces — see `_shared/idRemap.ts`).
 | Emit Notion-shape JSON to a third party | `*ToNotion*` |
 | Accept Notion API JSON from a third party | `*FromNotion*` |
 | Build a "Show as Notion JSON" preview in the UI | `pageDoc → blockToNotion` per block |
-| Build a Notion → Nosion importer | `blockFromNotion` per block + `valueFromNotion` per cell (property-schema reverse mapper not shipped) |
+| Build a Notion → Lapis importer | `blockFromNotion` per block + `valueFromNotion` per cell (property-schema reverse mapper not shipped) |
 | Test rich_text round-trip in isolation | `inlineMdToRichText(richTextToInlineMd(arr))` |

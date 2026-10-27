@@ -14,7 +14,7 @@ import { siteUrl, mcpUrl } from "@/shared/lib/siteUrl";
  *  Tabs per client (ChatGPT / Claude / Others) — each shows that
  *  client's specific setup recipe. Token table shared at the bottom;
  *  tokens minted via OAuth are bearer-equivalent and resolved by the
- *  MCP route just like nsn_ script tokens. */
+ *  MCP route just like lps_ script tokens (legacy nsn_ tokens still work). */
 
 type Row = {
   _id: Id<"oauthAccessTokens">;
@@ -49,15 +49,15 @@ const CHATGPT_GROUPS: Group[] = [
     title: "Connection",
     fields: [
       { label: "MCP Server URL", value: MCP, copyable: true },
-      { label: "Authentication", value: "OAuth", copyable: false, hint: "pilih dari dropdown" },
-      { label: "Registration method", value: "User-Defined OAuth Client", copyable: false, hint: "pilih dari dropdown" },
+      { label: "Authentication", value: "OAuth", copyable: false, hint: "Select from the dropdown" },
+      { label: "Registration method", value: "User-Defined OAuth Client", copyable: false, hint: "Select from the dropdown" },
     ],
   },
   {
     title: "OAuth Client",
     fields: [
-      { label: "OAuth Client ID", value: "chatgpt-silong", copyable: true, hint: "bebas — string apa pun" },
-      { label: "OAuth Client Secret", value: "(leave empty)", copyable: false, hint: "public client — kosongkan" },
+      { label: "OAuth Client ID", value: "chatgpt-lapis", copyable: true, hint: "Any string you choose" },
+      { label: "OAuth Client Secret", value: "(leave empty)", copyable: false, hint: "Public client — leave this empty" },
       { label: "Token endpoint auth method", value: "none", copyable: false },
     ],
   },
@@ -73,8 +73,8 @@ const CHATGPT_GROUPS: Group[] = [
   {
     title: "Optional",
     fields: [
-      { label: "Registration URL", value: "(leave empty)", copyable: false, hint: "DCR tidak diadvertise" },
-      { label: "Scope", value: "(leave empty)", copyable: false, hint: "mcp.read mcp.write tersedia" },
+      { label: "Registration URL", value: "(leave empty)", copyable: false, hint: "Dynamic client registration is not advertised" },
+      { label: "Scope", value: "(leave empty)", copyable: false, hint: "mcp.read and mcp.write are available" },
     ],
   },
 ];
@@ -83,7 +83,7 @@ const CLAUDE_WEB_GROUPS: Group[] = [
   {
     title: "Custom Connector (claude.ai → Settings → Connectors)",
     fields: [
-      { label: "Name", value: "Silong", copyable: true },
+      { label: "Name", value: "Lapis", copyable: true },
       { label: "Remote MCP server URL", value: MCP, copyable: true },
     ],
   },
@@ -91,7 +91,7 @@ const CLAUDE_WEB_GROUPS: Group[] = [
 
 const formatTime = (ms: number | null): string => {
   if (!ms) return "—";
-  return new Date(ms).toLocaleString("id-ID", {
+  return new Date(ms).toLocaleString("en-US", {
     day: "numeric", month: "short", year: "numeric",
     hour: "2-digit", minute: "2-digit",
   });
@@ -121,7 +121,7 @@ function CopyRow({ field }: { field: Field }) {
       setTimeout(() => setCopied(false), 1200);
       toast.success(`${field.label} copied`, { id: `copy-${field.label}` });
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Clipboard tidak tersedia");
+      toast.error(e instanceof Error ? e.message : "Clipboard is unavailable");
     }
   };
   return (
@@ -161,7 +161,7 @@ function GroupCard({ group }: { group: Group }) {
       await navigator.clipboard.writeText(text);
       toast.success(`${group.title} copied`);
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Clipboard tidak tersedia");
+      toast.error(e instanceof Error ? e.message : "Clipboard is unavailable");
     }
   };
   const copyableCount = group.fields.filter((f) => f.copyable).length;
@@ -191,7 +191,7 @@ function CopySnippet({ title, code }: { title: string; code: string }) {
       setTimeout(() => setCopied(false), 1200);
       toast.success(`${title} copied`);
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Clipboard tidak tersedia");
+      toast.error(e instanceof Error ? e.message : "Clipboard is unavailable");
     }
   };
   return (
@@ -229,10 +229,10 @@ function ChatGPTTab() {
     <div className="space-y-6">
       <div className="rounded-md border border-warning/40 bg-warning/10 p-3 text-xs text-foreground/90">
         <p>
-          <strong>OAuth — bukan paste token.</strong> Token auto-minted setelah kamu
-          klik <em>Allow</em> di consent page. <strong>JANGAN</strong> paste nsn_
-          script token di form ChatGPT. Script tokens cuma untuk Claude Desktop /
-          Cursor / curl (tab Script tokens di sidebar).
+          <strong>OAuth — do not paste a token.</strong> A token is created when you
+          click <em>Allow</em> on the consent page. <strong>Do not</strong> paste an lps_
+          script token into ChatGPT. Script tokens are for Claude Desktop, Cursor,
+          or curl (see Script Tokens in the sidebar).
         </p>
       </div>
       <Step n={1} title="Buka ChatGPT → Settings → Connectors → New App">
@@ -257,7 +257,7 @@ function ChatGPTTab() {
 function ClaudeTab() {
   const desktopJson = `{
   "mcpServers": {
-    "silong": {
+    "lapis": {
       "command": "npx",
       "args": [
         "-y",
@@ -272,8 +272,8 @@ function ClaudeTab() {
   return (
     <div className="space-y-6">
       <div className="rounded-md border border-border bg-muted/30 p-3 text-xs text-muted-foreground">
-        Claude punya dua product:{" "}
-        <strong className="text-foreground">claude.ai (web)</strong> pakai OAuth flow seperti ChatGPT;{" "}
+        Claude has two products:{" "}
+        <strong className="text-foreground">claude.ai (web)</strong> uses an OAuth flow like ChatGPT;{" "}
         <strong className="text-foreground">Claude Desktop</strong> pakai JSON config + bridge stdio.
       </div>
 
@@ -286,7 +286,7 @@ function ClaudeTab() {
         <Step n={2} title="Klik Connect → Allow">
           <p>
             Claude auto-discover <code>/.well-known/oauth-authorization-server</code>, bounce ke
-            consent page Silong. Setelah Allow, token aktif 1 tahun.
+            Lapis consent page. After you allow access, the token is active for one year.
           </p>
         </Step>
       </section>
@@ -294,8 +294,8 @@ function ClaudeTab() {
       <section className="space-y-3">
         <p className="text-sm font-semibold">Claude Desktop — stdio bridge</p>
         <p className="text-xs text-muted-foreground">
-          Issue nsn_ token dulu di <strong>Script tokens</strong> (sidebar settings). Tempel ke{" "}
-          <code>YOUR_TOKEN_HERE</code> di JSON. Letakkan di:
+          Create an lps_ token under <strong>Script Tokens</strong> in the settings sidebar. Paste it into{" "}
+          <code>YOUR_TOKEN_HERE</code> in the JSON file. Save the file at:
         </p>
         <ul className="text-xs text-muted-foreground list-disc pl-5 space-y-0.5">
           <li>macOS: <code>~/Library/Application Support/Claude/claude_desktop_config.json</code></li>
@@ -313,7 +313,7 @@ function ClaudeTab() {
 function OthersTab() {
   const cursorJson = `{
   "mcpServers": {
-    "silong": {
+    "lapis": {
       "url": "${MCP}",
       "headers": {
         "Authorization": "Bearer YOUR_TOKEN_HERE"
@@ -328,8 +328,8 @@ function OthersTab() {
   return (
     <div className="space-y-6">
       <p className="text-sm text-muted-foreground">
-        Cursor / Cline / Windsurf / Continue dll — semua pakai JSON config standar. Issue nsn_
-        token dulu di <strong>Script tokens</strong>, tempel ke <code>YOUR_TOKEN_HERE</code>.
+        Cursor, Cline, Windsurf, Continue, and other clients use a standard JSON config. Create an lps_
+        token under <strong>Script Tokens</strong>, then paste it into <code>YOUR_TOKEN_HERE</code>.
       </p>
       <CopySnippet title="Cursor / Cline / Windsurf — mcp config" code={cursorJson} />
       <CopySnippet title="Test via curl" code={curlSnippet} />
@@ -337,7 +337,7 @@ function OthersTab() {
           as raw JSON, not app routes — next/link would prefetch them as RSC
           payloads, and they are meant to open in a new tab. */}
       <div className="rounded-md border border-border bg-muted/30 p-3 text-xs text-muted-foreground space-y-1">
-        <p className="font-semibold text-foreground">Discovery (untuk MCP-aware client baru)</p>
+        <p className="font-semibold text-foreground">Discovery (for new MCP-aware clients)</p>
         <p>
           {/* rules-allow: raw-internal-link — RFC 8414 discovery JSON, not an app route */}
           <a href="/.well-known/oauth-authorization-server" target="_blank" rel="noopener" className="inline-flex items-center gap-1 underline underline-offset-4 hover:text-foreground">
@@ -362,21 +362,21 @@ export function MCPSection() {
   const revoke = useMutation(api.oauth.mutations.revokeToken);
 
   const onRevoke = async (id: Id<"oauthAccessTokens">, label: string) => {
-    if (!window.confirm(`Revoke "${label}"? Aplikasi yang pakai token ini langsung kehilangan akses.`)) return;
+    if (!window.confirm(`Revoke "${label}"? Apps using this token will lose access immediately.`)) return;
     try {
       await revoke({ id });
       toast.success("Token revoked");
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Revoke gagal");
+      toast.error(e instanceof Error ? e.message : "Could not revoke the token");
     }
   };
 
   return (
     <div className="space-y-8">
       <p className="text-sm text-muted-foreground max-w-2xl">
-        Hubungkan workspace kamu ke MCP-aware client (ChatGPT, Claude, Cursor, dll) via OAuth
-        2.1 + PKCE atau static bearer token. Token scoped per-user — client cuma bisa lihat /
-        edit page kamu.
+        Connect your workspace to an MCP-aware client (ChatGPT, Claude, Cursor, and others) with OAuth
+        2.1 + PKCE or a static bearer token. Tokens are scoped per user, so clients can only view or
+        edit your pages.
       </p>
 
       <Tabs defaultValue="chatgpt">
@@ -393,14 +393,14 @@ export function MCPSection() {
       <section className="space-y-2">
         <h3 className="text-sm font-semibold">My OAuth tokens</h3>
         <p className="text-xs text-muted-foreground">
-          Token dari OAuth flow (ChatGPT / Claude.ai web). Untuk nsn_ script tokens (Cursor /
-          Claude Desktop / curl), buka tab <strong>Script tokens</strong> di sidebar.
+          Tokens created through OAuth (ChatGPT or Claude.ai web). For lps_ script tokens (Cursor,
+          Claude Desktop, or curl), open <strong>Script Tokens</strong> in the sidebar.
         </p>
         {rows === undefined ? (
-          <div className="border border-border rounded-lg p-6 text-sm text-muted-foreground">Memuat…</div>
+          <div className="border border-border rounded-lg p-6 text-sm text-muted-foreground">Loading…</div>
         ) : rows.length === 0 ? (
           <div className="border border-border rounded-lg p-8 text-center text-sm text-muted-foreground">
-            Belum ada OAuth token. Connect via tab di atas untuk mint token pertama.
+            No OAuth tokens yet. Connect using a tab above to create your first token.
           </div>
         ) : (
           <div className="overflow-x-auto border border-border rounded-lg">
@@ -410,7 +410,7 @@ export function MCPSection() {
                   <th className="px-3 py-3 text-left text-xs font-medium">Status</th>
                   <th className="px-3 py-3 text-left text-xs font-medium">Label / Client</th>
                   <th className="px-3 py-3 text-left text-xs font-medium">Token</th>
-                  <th className="px-3 py-3 text-left text-xs font-medium">Dibuat</th>
+                  <th className="px-3 py-3 text-left text-xs font-medium">Created</th>
                   <th className="px-3 py-3 text-left text-xs font-medium">Last used</th>
                   <th className="px-3 py-3 text-left text-xs font-medium">Expires</th>
                   <th className="px-3 py-3" />

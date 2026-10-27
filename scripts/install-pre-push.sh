@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install the open-silong pre-push hook into .git/hooks/pre-push.
+# Install the Lapis pre-push hook into .git/hooks/pre-push.
 #
 # What the hook does (in order):
 #   1. sc-git ci (typecheck + relevant tests) — blocks push on fail

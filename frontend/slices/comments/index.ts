@@ -29,25 +29,25 @@ export { CommentComposer } from "./components/CommentComposer";
 // Domain-neutral types.
 export type { Comment, TargetRef } from "./types";
 
-// ─── Nosion-bound consumer adapters (excluded from kitab UP-sync) ───────────
+// ─── Lapis-bound consumer adapters (excluded from kitab UP-sync) ───────────
 
 export {
   PageCommentsProvider,
   useBlockComments,
   BlockCommentsPopover,
-} from "./adapters/nosion";
+} from "./adapters/lapis";
 
 export { PageCommentsPanel } from "./adapters/PageCommentsPanel";
 
-// Nosion standalone hook (no Provider needed) — re-exported with both
+// Lapis standalone hook (no Provider needed) — re-exported with both
 // the legacy `useComments` name (back-compat) and the disambiguated
 // `useStandaloneComments` name.
 export {
   useComments,
   useStandaloneComments,
-} from "./adapters/nosionStandalone";
+} from "./adapters/lapisStandalone";
 
-// Nosion alias preserving the legacy `usePageComments` name. Outside the
+// Lapis alias preserving the legacy `usePageComments` name. Outside the
 // dashboard editor only `useStandaloneComments` is used; inside the editor
 // `useComments` (the context hook above, exported as `useCommentsContext`)
 // gates render — `usePageComments` is the historical name for that.

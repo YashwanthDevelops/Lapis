@@ -92,7 +92,7 @@ export function AIAgentConsole({ open, onOpenChange, context, activeContext }: P
         <div className="px-4 py-3 border-b border-border space-y-1.5">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 text-base font-semibold min-w-0">
-              <Sparkles className="h-4 w-4 text-brand shrink-0" /> Silong AI
+              <Sparkles className="h-4 w-4 text-brand shrink-0" /> Lapis AI
               <span className="text-[10px] rounded border border-border bg-muted/40 px-1.5 py-0 text-muted-foreground truncate font-normal">
                 {agent.glyph} {agent.label}
               </span>
@@ -309,7 +309,7 @@ export function AIAgentConsole({ open, onOpenChange, context, activeContext }: P
       <Suspense fallback={null}>
         <Drawer open={open} onOpenChange={onOpenChange}>
           <DrawerContent className="flex max-h-[92dvh] flex-col p-0">
-            <DrawerTitle className="sr-only">Silong AI</DrawerTitle>
+            <DrawerTitle className="sr-only">Lapis AI</DrawerTitle>
             {body}
           </DrawerContent>
         </Drawer>
@@ -320,7 +320,7 @@ export function AIAgentConsole({ open, onOpenChange, context, activeContext }: P
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-full sm:max-w-md p-0 flex flex-col">
-        <SheetTitle className="sr-only">Silong AI</SheetTitle>
+        <SheetTitle className="sr-only">Lapis AI</SheetTitle>
         {body}
       </SheetContent>
     </Sheet>

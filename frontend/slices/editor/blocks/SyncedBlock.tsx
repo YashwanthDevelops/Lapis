@@ -82,7 +82,7 @@ function SyncedSourceView({
 
   const convertToRef = () => {
     const v = pasteValue.trim();
-    const m = v.match(/^(?:nosion:\/\/sync\/)?([a-z0-9]{6,})$/i);
+    const m = v.match(/^(?:(?:lapis|nosion):\/\/sync\/)?([a-z0-9]{6,})$/i);
     if (!m) return;
     const targetSyncId = m[1];
     if (targetSyncId === block.syncId) {
@@ -103,7 +103,7 @@ function SyncedSourceView({
   const copyLink = async () => {
     if (!block.syncId) return;
     try {
-      await navigator.clipboard.writeText(`nosion://sync/${block.syncId}`);
+      await navigator.clipboard.writeText(`lapis://sync/${block.syncId}`);
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch {
@@ -156,7 +156,7 @@ function SyncedSourceView({
               autoFocus
               value={pasteValue}
               onChange={(e) => setPasteValue(e.target.value)}
-              placeholder="nosion://sync/<id>"
+              placeholder="lapis://sync/<id>"
               className="rounded border border-border bg-background px-2 py-0.5 text-xs outline-none focus:border-brand"
             />
             <Button type="submit" className="h-auto rounded bg-brand px-2 py-0.5 text-xs text-brand-foreground hover:bg-brand/90">Mirror</Button>

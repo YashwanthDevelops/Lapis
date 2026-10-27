@@ -26,8 +26,7 @@ you expect, what did you actually see? -->
 
 ## Environment
 
-- **Lane:** Convex Cloud / Self-hosted Docker / Public demo
-  (silong-os.vercel.app)
+- **Lane:** Convex Cloud / Self-hosted Docker / Local
 - **Browser + version:**
 - **OS:**
 - **Commit SHA** (`git rev-parse --short HEAD`):

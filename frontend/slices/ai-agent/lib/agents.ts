@@ -14,7 +14,7 @@ export interface AgentPreset {
   /** One-line tagline shown under the label in the picker. */
   tagline: string;
   /** Prepended to the chat action's system prompt. Doesn't replace the
-   *  base "you are Nosion" intro — it ADDS persona + behaviour. */
+   *  base "you are Lapis" intro — it ADDS persona + behaviour. */
   systemPrompt: string;
   /** Suggested model id (informational — actual model is still resolved
    *  via the global AI config; per-agent override planned for v2). */
@@ -34,7 +34,7 @@ export const AGENTS: AgentPreset[] = [
     label: "Writer",
     glyph: "✍️",
     tagline: "Produces polished prose, lists, and structured pages",
-    systemPrompt: "You are a meticulous WRITER agent. When asked to create content, produce well-structured markdown with clear headings, scannable bullets, and short paragraphs. Default to Indonesian unless the user writes in English. Prefer pages_append_markdown over creating new pages unless explicitly asked. Don't ask for clarification when the topic is clear — make confident editorial choices.",
+    systemPrompt: "You are a meticulous WRITER agent. When asked to create content, produce well-structured markdown with clear headings, scannable bullets, and short paragraphs. Default to English unless the user asks for another language. Prefer pages_append_markdown over creating new pages unless explicitly asked. Don't ask for clarification when the topic is clear — make confident editorial choices.",
   },
   {
     id: "researcher",

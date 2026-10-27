@@ -1,13 +1,13 @@
-/* Formula engine — Silong-flavored barrel.
+/* Formula engine — Lapis-flavored barrel.
  *
  * Re-exports the PURE engine surface from `./formulaEngine/` PLUS the
- * Silong-bound `evalFormula` from `./formula.ts` so existing call sites
+ * Lapis-bound `evalFormula` from `./formula.ts` so existing call sites
  * (tests, slices/databases) keep working without code changes.
  *
  * After 1.G.1 the directory `./formulaEngine/` is portable (zero domain
  * imports — enforced by the grep gate test). 1.G.2 will lift that
  * directory into the `rahman-shared` npm package; this barrel will
- * switch its imports to point at the package, and the Silong host stays
+ * switch its imports to point at the package, and the Lapis host stays
  * in this file (consumer side). */
 
 // Pure-engine re-exports (lifted from the engine package barrel).
@@ -24,7 +24,7 @@ export {
   HIGHER_ORDER_NAMES, collectDeps, inferType,
 } from "./formulaEngine/index";
 
-// Silong-bound `evalFormula` — accepts partial ctx + auto-injects silongHost.
+// Lapis-bound `evalFormula` — accepts partial ctx + auto-injects lapisHost.
 // Existing callers (tests, FormulaCell, etc.) pass `{ row, db, pages }` without
 // touching the host param.
-export { evalFormula, silongHost } from "./formula";
+export { evalFormula, lapisHost, silongHost } from "./formula";

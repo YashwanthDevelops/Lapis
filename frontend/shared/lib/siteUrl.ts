@@ -1,6 +1,6 @@
 /** Where is this deployment actually served from?
  *
- *  open-silong is meant to be one-click cloned to Vercel, so the domain is
+ *  Lapis can be deployed to any host, so the domain is
  *  NOT known at author time and MUST NOT be hard-coded. Every absolute URL
  *  the app emits — OAuth discovery documents, the MCP endpoint shown in
  *  Settings, sitemap entries, share links, OG images — resolves through here.

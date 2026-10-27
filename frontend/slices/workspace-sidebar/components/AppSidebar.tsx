@@ -41,7 +41,7 @@ import { ROUTE_BASE } from "@/shared/lib/routes";
 
 const path = (p: string) => (p === "/" ? ROUTE_BASE : `${ROUTE_BASE}${p}`);
 
-const TOUR_SEEN_KEY = "silong:tour:v1";
+const TOUR_SEEN_KEY = "lapis:tour:v1";
 
 export function AppSidebar({ onOpenSearch }: Props) {
   const router = useRouter();

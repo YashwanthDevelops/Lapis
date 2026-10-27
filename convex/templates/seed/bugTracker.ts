@@ -102,7 +102,7 @@ export const bugTracker: TemplateJson = {
           { id: "v8", type: "dashboard", name: "Health", payload: { dashboardKPIs: ["severity"], dashboardBreakdowns: ["severity", "status", "env"], dashboardRecentLimit: 10 } },
         ],
         seedRows: [
-          { props: { name: "Calendar grid renders vertically", severity: "high", status: "closed", env: "prod", reporter: "Rahman", assignee: "Alex", found: "2026-05-13", fixed: "2026-05-14" } },
+          { props: { name: "Calendar grid renders vertically", severity: "high", status: "closed", env: "prod", reporter: "Casey", assignee: "Alex", found: "2026-05-13", fixed: "2026-05-14" } },
           { props: { name: "Date editor wipes time on toggle", severity: "medium", status: "fixing", env: "staging", reporter: "Sam", assignee: "Alex", found: "2026-05-14" } },
           { props: { name: "Sidebar collapses on iOS Safari", severity: "low", status: "triaged", env: "prod", reporter: "User", assignee: "Riya", found: "2026-05-12" } },
         ],

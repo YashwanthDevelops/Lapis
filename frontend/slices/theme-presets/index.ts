@@ -1,5 +1,5 @@
 // Tweakcn registry-based preset system. Loads ~36 presets from
-// /r/registry.json. localStorage key: `nosion:theme-preset`.
+// /r/registry.json. localStorage key: `lapis:theme-preset`, migrated from the old key on first visit.
 export { TweakcnSwitcher } from "./components/TweakcnSwitcher";
 export { ThemeColorSync } from "./components/ThemeColorSync";
 export { WorkspaceThemePicker } from "./components/WorkspaceThemePicker";

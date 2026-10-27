@@ -15,18 +15,21 @@ import { IS_DEMO } from "@/shared/lib/demoMode";
  *  on desktop the nav is hidden so it drops back to bottom-4. One button
  *  (was two, which overlapped the mobile navbar) with a smooth wiggle to
  *  draw the eye. Deploy + source collapse into the dropdown. */
-const REPO = "https://github.com/rahmanef63/open-silong";
+const REPO = process.env.NEXT_PUBLIC_REPOSITORY_URL;
 // Only CONVEX_DEPLOY_KEY is asked for — the build (vercel.json →
 // build:auto) deploys Convex functions, provisions auth keys
 // (scripts/setup-auth.mjs), and injects NEXT_PUBLIC_CONVEX_URL itself.
-const CLONE_URL =
-  `https://vercel.com/new/clone?repository-url=${REPO}` +
-  `&env=CONVEX_DEPLOY_KEY` +
-  `&envDescription=${encodeURIComponent("Convex production deploy key — WAJIB capability deploy + env:view + env:write (atau full access)")}` +
-  `&envLink=${encodeURIComponent("https://dashboard.convex.dev")}`;
+const CLONE_URL = REPO
+  ? `https://vercel.com/new/clone?${new URLSearchParams({
+      "repository-url": REPO,
+      env: "CONVEX_DEPLOY_KEY",
+      envDescription: "Convex production deploy key",
+      envLink: "https://dashboard.convex.dev",
+    })}`
+  : null;
 
 export function DemoRibbon() {
-  if (!IS_DEMO) return null;
+  if (!IS_DEMO || !REPO || !CLONE_URL) return null;
   return (
     <>
       <style>{WIGGLE_CSS}</style>

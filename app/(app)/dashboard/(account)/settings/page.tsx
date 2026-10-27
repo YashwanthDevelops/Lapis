@@ -32,7 +32,7 @@ function SectionForKey({ k }: { k: SettingsKey }) {
     );
     case "mcp":        return (
       <div className="rounded-xl border border-border bg-card p-5 space-y-4">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Script tokens (nsn_)</h2>
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Script tokens (lps_)</h2>
         <McpTokensSection />
       </div>
     );

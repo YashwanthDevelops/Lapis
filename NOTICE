@@ -21,12 +21,13 @@ backlinks) or to document interoperability with published file formats
 (CSV, ZIP, JSON, Markdown). No claim of affiliation, endorsement, or
 origin is made or implied.
 
-This project is **inspired by** Notion and Obsidian but is an
-**independent, clean-room implementation**. It has been built from
-scratch using publicly available technologies (Convex, Next.js, React,
-Tailwind CSS, shadcn/ui, and the open-source d3-force layout) and
-contains **no proprietary Notion or Obsidian code, design files, brand
-assets, fonts, icons, trade secrets, or confidential information**.
+Lapis is a customized fork of the MIT-licensed open-silong project. Its
+upstream implementation uses publicly available technologies (Convex, Next.js,
+React, Tailwind CSS, shadcn/ui, and the open-source d3-force layout). This
+customization adds the Lapis name, gemstone mark, wordmark, and blue palette.
+The upstream project states that it does not include proprietary Notion or
+Obsidian code, design files, brand assets, fonts, icons, trade secrets, or
+confidential information.
 
 A fuller plain-language explanation — inspiration, the idea/expression
 distinction, nominative fair use, and international (EU/CJEU) anchors —

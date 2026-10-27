@@ -21,7 +21,7 @@ export default function RootProviders({ children }: { children: ReactNode }) {
         defaultTheme="system"
         enableSystem
         disableTransitionOnChange={false}
-        storageKey="silong-theme"
+        storageKey="lapis-theme"
       >
         <GlobalErrorListeners />
         <ServiceWorkerCleanup />

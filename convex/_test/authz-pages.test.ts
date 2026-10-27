@@ -15,9 +15,9 @@
 // AFTER writing would still fail the test.
 //
 // Gate literals (convex/_shared/auth.ts + _shared/pageGrants.ts):
-//   "Tidak ditemukan"  = NOT_FOUND — not a member / hidden, never leak existence
-//   "Tidak berwenang"  = FORBIDDEN — can read, role too low to write
-//   "Belum login"      = requireAuth, no identity
+//   "Not found"  = NOT_FOUND — not a member / hidden, never leak existence
+//   "Forbidden"  = FORBIDDEN — can read, role too low to write
+//   "Not signed in"      = requireAuth, no identity
 import { expect, test } from "vitest";
 import { api } from "../_generated/api";
 import type { Id } from "../_generated/dataModel";
@@ -79,7 +79,7 @@ test("update: owner patches; a stranger is hidden; unauthenticated rejects", asy
   // (b) a different authenticated user cannot — NOT_FOUND, never leaks existence.
   await expect(
     stranger.asUser.mutation(api.pages.update, { pageId, patch: { title: "hijacked" } }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
 
   // (c) anonymous cannot.
   await expect(
@@ -102,7 +102,7 @@ test("trash: owner can; stranger cannot; unauthenticated cannot; page stays live
   // (b) + (c) first, so the assertion "still not trashed" is meaningful.
   await expect(
     stranger.asUser.mutation(api.pages.trash, { pageId }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
   await expect(t.mutation(api.pages.trash, { pageId })).rejects.toThrow();
   expect((await t.run(async (ctx) => ctx.db.get(pageId)))?.trashed).toBe(false);
 
@@ -122,7 +122,7 @@ test("trash: a viewer-role workspace member is FORBIDDEN even though it can read
 
   await expect(
     viewer.asUser.mutation(api.pages.trash, { pageId }),
-  ).rejects.toThrow(/Tidak berwenang/);
+  ).rejects.toThrow(/Forbidden/);
   expect((await t.run(async (ctx) => ctx.db.get(pageId)))?.trashed).toBe(false);
 });
 
@@ -152,10 +152,10 @@ test("restore: only a writable member of the page's workspace can un-trash it", 
   // (b) stranger + viewer-role member cannot resurrect it.
   await expect(
     stranger.asUser.mutation(api.pages.restore, { pageId }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
   await expect(
     viewer.asUser.mutation(api.pages.restore, { pageId }),
-  ).rejects.toThrow(/Tidak berwenang/);
+  ).rejects.toThrow(/Forbidden/);
   // (c) anonymous cannot.
   await expect(t.mutation(api.pages.restore, { pageId })).rejects.toThrow();
   expect((await t.run(async (ctx) => ctx.db.get(pageId)))?.trashed).toBe(true);
@@ -178,10 +178,10 @@ test("permanentlyDelete: stranger / viewer / anonymous cannot destroy the page",
 
   await expect(
     stranger.asUser.mutation(api.pages.permanentlyDelete, { pageId }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
   await expect(
     viewer.asUser.mutation(api.pages.permanentlyDelete, { pageId }),
-  ).rejects.toThrow(/Tidak berwenang/);
+  ).rejects.toThrow(/Forbidden/);
   await expect(t.mutation(api.pages.permanentlyDelete, { pageId })).rejects.toThrow();
 
   // Row + its blocks survive all three attempts.
@@ -204,7 +204,7 @@ test("setPublic: a stranger cannot publish another user's page", async () => {
 
   await expect(
     stranger.asUser.mutation(api.pages.setPublic, { pageId, isPublic: true }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
   await expect(
     t.mutation(api.pages.setPublic, { pageId, isPublic: true }),
   ).rejects.toThrow();
@@ -226,7 +226,7 @@ test("setPublic: a viewer-role member cannot flip the public bit", async () => {
 
   await expect(
     viewer.asUser.mutation(api.pages.setPublic, { pageId, isPublic: true }),
-  ).rejects.toThrow(/Tidak berwenang/);
+  ).rejects.toThrow(/Forbidden/);
   expect((await t.run(async (ctx) => ctx.db.get(pageId)))?.isPublic).toBe(false);
 });
 
@@ -246,10 +246,10 @@ test("setShareIndexable: stranger / viewer / anonymous cannot expose the page to
 
   await expect(
     stranger.asUser.mutation(api.pages.setShareIndexable, { pageId, indexable: true }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
   await expect(
     viewer.asUser.mutation(api.pages.setShareIndexable, { pageId, indexable: true }),
-  ).rejects.toThrow(/Tidak berwenang/);
+  ).rejects.toThrow(/Forbidden/);
   await expect(
     t.mutation(api.pages.setShareIndexable, { pageId, indexable: true }),
   ).rejects.toThrow();
@@ -348,7 +348,7 @@ test("update: reparenting under a foreign page is rejected", async () => {
       pageId: attackerPageId,
       patch: { parentId: victimPageId },
     }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
 
   expect((await t.run(async (ctx) => ctx.db.get(attackerPageId)))?.parentId).toBeNull();
 });

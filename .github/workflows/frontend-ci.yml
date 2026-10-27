@@ -1,8 +1,6 @@
 name: CI
 
-# open-silong is a PUBLIC repository, so GitHub-hosted runners are free and
-# unmetered. That is why this runs on every push and PR rather than being
-# workflow_dispatch-only like the private repos in this account.
+# Lapis frontend CI runs on pushes and pull requests.
 on:
   push:
     branches: [main]
@@ -25,7 +23,7 @@ jobs:
       NEXT_TELEMETRY_DISABLED: "1"
       # Build-time only. The client bundle needs a URL to inline; no secret
       # is involved and no deploy happens from CI.
-      NEXT_PUBLIC_CONVEX_URL: https://canny-flamingo-7.convex.cloud
+      NEXT_PUBLIC_CONVEX_URL: http://127.0.0.1:3210
     steps:
       - name: Checkout
         uses: actions/checkout@v4

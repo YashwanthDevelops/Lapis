@@ -25,7 +25,7 @@ export const status = query({
       seeded: !!template,
       // JWT auth keys present? (setup-auth.mjs provisions them at build; a
       // deploy key without WriteEnvironmentVariables leaves them missing.)
-      authReady: !!process.env.JWT_PRIVATE_KEY,
+      authReady: !!process.env.JWT_PRIVATE_KEY && !!process.env.JWKS,
     };
   },
 });

@@ -1,12 +1,12 @@
 /**
- * Tweakcn theme preset loader for Nosion — barrel.
+ * Tweakcn theme preset loader for Lapis — barrel.
  * Implementation lives in ./tweakcn/. Public API preserved verbatim:
  *   applyTweakcnPreset / previewTweakcnPreset / restoreTweakcnPreset
  *   getSavedTweakcnPreset / clearTweakcnPreset / bootTweakcnPreset
  *   loadTweakcnRegistry / findTweakcnPreset / tweakcnSwatches
  *   groupTweakcnPresets / TWEAKCN_PRESET_GROUPS
  *
- * Architecture notes (Nosion-specific):
+ * Architecture notes (Lapis-specific):
  *   - Tailwind 4 `@theme inline` maps `--color-X: hsl(var(--X))`. We KEEP
  *     the registry's `oklch(...)` wrapper intact and override `--color-*`
  *     directly so utility classes (`bg-primary`, etc.) follow the preset.

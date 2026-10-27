@@ -33,9 +33,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const data = await loadSite(ws);
   if (!data) return { title: "Workspace not found" };
   const name = data.workspace.name || "Workspace";
-  const description = `${data.workspace.emoji ?? "🌐"} ${name} · public pages on Silong`;
+  const description = `${data.workspace.emoji ?? "🌐"} ${name} · public pages on Lapis`;
   return {
-    title: `${name} — Silong`,
+    title: `${name} — Lapis`,
     description,
     openGraph: { title: name, description, type: "website" },
     twitter: { card: "summary", title: name, description },
@@ -90,7 +90,7 @@ export default async function WorkspaceSitePage({ params }: Props) {
       </ul>
       <footer className="mt-8 flex items-center justify-center gap-1.5 text-[10px] text-muted-foreground/60">
         <FileText className="h-3 w-3" />
-        Powered by Silong
+        Powered by Lapis
       </footer>
     </div>
   );

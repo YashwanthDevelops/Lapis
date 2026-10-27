@@ -11,10 +11,10 @@
 // unchanged, so a handler that throws *after* writing still fails.
 //
 // The gate is `requireWorkspaceAccess` (convex/_shared/auth.ts). Its
-// error literals: "Tidak ditemukan" (NOT_FOUND — missing doc or
-// non-member, existence is never leaked) and "Tidak berwenang"
+// error literals: "Not found" (NOT_FOUND — missing doc or
+// non-member, existence is never leaked) and "Forbidden"
 // (FORBIDDEN — member, but role too low). Unauthenticated bottoms out
-// in `requireAuth` → "Belum login".
+// in `requireAuth` → "Not signed in".
 import { expect, test } from "vitest";
 import { api } from "../_generated/api";
 import { testCtx, seedUser } from "../testHarness.test";
@@ -51,12 +51,12 @@ test("update: owner patches schema; stranger and anon cannot", async () => {
       dbId,
       patch: { name: "pwned", properties: [] },
     }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
 
   // (c) Anonymous.
   await expect(
     t.mutation(api.databases.update, { dbId, patch: { name: "pwned" } }),
-  ).rejects.toThrow(/Belum login/);
+  ).rejects.toThrow(/Not signed in/);
 
   // Neither denial mutated anything.
   const final = (await alice.asUser.query(api.databases.list, {})).find((d) => d._id === dbId)!;
@@ -80,10 +80,10 @@ test("update(views): stranger cannot flip another tenant's view to a public form
 
   await expect(
     mallory.asUser.mutation(api.databases.update, { dbId, patch: { views: hijackedViews } }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
   await expect(
     t.mutation(api.databases.update, { dbId, patch: { views: hijackedViews } }),
-  ).rejects.toThrow(/Belum login/);
+  ).rejects.toThrow(/Not signed in/);
 
   const after = (await alice.asUser.query(api.databases.list, {})).find((d) => d._id === dbId)!;
   expect(after.hasPublicForm).not.toBe(true);
@@ -105,8 +105,8 @@ test("trash/restore: owner can; stranger and anon cannot", async () => {
   const dbId = await alice.asUser.mutation(api.databases.create, { name: "Keep" });
 
   // (b) + (c) denied.
-  await expect(mallory.asUser.mutation(api.databases.trash, { dbId })).rejects.toThrow(/Tidak ditemukan/);
-  await expect(t.mutation(api.databases.trash, { dbId })).rejects.toThrow(/Belum login/);
+  await expect(mallory.asUser.mutation(api.databases.trash, { dbId })).rejects.toThrow(/Not found/);
+  await expect(t.mutation(api.databases.trash, { dbId })).rejects.toThrow(/Not signed in/);
 
   let db = (await alice.asUser.query(api.databases.list, {})).find((d) => d._id === dbId)!;
   expect(db.trashed).not.toBe(true);
@@ -117,8 +117,8 @@ test("trash/restore: owner can; stranger and anon cannot", async () => {
   expect(db.trashed).toBe(true);
 
   // …and a stranger cannot un-trash it back into view either.
-  await expect(mallory.asUser.mutation(api.databases.restore, { dbId })).rejects.toThrow(/Tidak ditemukan/);
-  await expect(t.mutation(api.databases.restore, { dbId })).rejects.toThrow(/Belum login/);
+  await expect(mallory.asUser.mutation(api.databases.restore, { dbId })).rejects.toThrow(/Not found/);
+  await expect(t.mutation(api.databases.restore, { dbId })).rejects.toThrow(/Not signed in/);
 
   await alice.asUser.mutation(api.databases.restore, { dbId });
   db = (await alice.asUser.query(api.databases.list, {})).find((d) => d._id === dbId)!;
@@ -138,10 +138,10 @@ test("permanentlyDelete: stranger and anon cannot nuke another tenant's db + row
 
   await expect(
     mallory.asUser.mutation(api.databases.permanentlyDelete, { dbId }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
   await expect(
     t.mutation(api.databases.permanentlyDelete, { dbId }),
-  ).rejects.toThrow(/Belum login/);
+  ).rejects.toThrow(/Not signed in/);
 
   // Database and its row page both survived the two rejected calls.
   expect((await alice.asUser.query(api.databases.list, {})).some((d) => d._id === dbId)).toBe(true);
@@ -170,18 +170,18 @@ test("deleteRow: stranger cannot delete another tenant's row, even via their own
   // (b) Straight cross-tenant call — first gate (the database) rejects.
   await expect(
     mallory.asUser.mutation(api.databases.deleteRow, { dbId: aliceDb, rowPageId: aliceRow }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
 
   // (b') Confused deputy: Mallory owns the dbId she passes, so the first
   // gate passes. The SECOND gate (the row page) is what must stop her.
   await expect(
     mallory.asUser.mutation(api.databases.deleteRow, { dbId: malloryDb, rowPageId: aliceRow }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
 
   // (c) Anonymous.
   await expect(
     t.mutation(api.databases.deleteRow, { dbId: aliceDb, rowPageId: aliceRow }),
-  ).rejects.toThrow(/Belum login/);
+  ).rejects.toThrow(/Not signed in/);
 
   // Row is alive, untrashed, and still linked to Alice's database.
   const row = await alice.asUser.query(api.pages.getById, { id: aliceRow });
@@ -226,7 +226,7 @@ test("duplicateWithRows: stranger cannot copy another tenant's rows into their o
       srcDbId: aliceDb,
       targetDbId: malloryDb,
     }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
 
   // …and the reverse direction (write into Alice's db) is denied too.
   await expect(
@@ -234,12 +234,12 @@ test("duplicateWithRows: stranger cannot copy another tenant's rows into their o
       srcDbId: malloryDb,
       targetDbId: aliceDb,
     }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
 
   // (c) Anonymous.
   await expect(
     t.mutation(api.databases.duplicateWithRows, { srcDbId: aliceDb, targetDbId: malloryDb }),
-  ).rejects.toThrow(/Belum login/);
+  ).rejects.toThrow(/Not signed in/);
 
   // Nothing landed in Mallory's database.
   const mDb = (await mallory.asUser.query(api.databases.list, {})).find((d) => d._id === malloryDb)!;
@@ -299,10 +299,10 @@ test("setRowValue: stranger and anon cannot write another tenant's row props", a
 
   await expect(
     mallory.asUser.mutation(api.databases.setRowValue, { dbId, rowPageId: rowId, propId, value: "pwned" }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
   await expect(
     t.mutation(api.databases.setRowValue, { dbId, rowPageId: rowId, propId, value: "pwned" }),
-  ).rejects.toThrow(/Belum login/);
+  ).rejects.toThrow(/Not signed in/);
 
   expect((await alice.asUser.query(api.pages.getById, { id: rowId }))?.rowProps?.[propId]).toBe("mine");
 });
@@ -317,8 +317,8 @@ test("create/addRow reject anonymous callers", async () => {
   const { alice } = await twoTenants(t);
   const dbId = await alice.asUser.mutation(api.databases.create, { name: "X" });
 
-  await expect(t.mutation(api.databases.create, { name: "anon db" })).rejects.toThrow(/Belum login/);
-  await expect(t.mutation(api.databases.addRow, { dbId })).rejects.toThrow(/Belum login/);
+  await expect(t.mutation(api.databases.create, { name: "anon db" })).rejects.toThrow(/Not signed in/);
+  await expect(t.mutation(api.databases.addRow, { dbId })).rejects.toThrow(/Not signed in/);
 
   // No row was appended by the rejected anonymous call.
   const db = (await alice.asUser.query(api.databases.list, {})).find((d) => d._id === dbId)!;

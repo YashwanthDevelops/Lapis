@@ -1,7 +1,7 @@
 # `notion` mega-slice
 
 Drop-in **block editor + database views + templates + workspace IO**
-bundle for embedding the Notion-inspired open-silong UI inside any
+bundle for embedding the Notion-inspired Lapis UI inside any
 React project. Backend-agnostic via the `NotionAdapter` contract.
 
 Lift status: ✅ standalone-ready (Phase 4 of the mega-lift plan, see
@@ -12,7 +12,7 @@ Lift status: ✅ standalone-ready (Phase 4 of the mega-lift plan, see
 ## Quick start (4 steps)
 
 ```bash
-# 1. Install the slice (currently via the open-silong source repo;
+# 1. Install the slice (currently via the Lapis source repo;
 #    npm publish pending). Copy `frontend/slices/notion/` +
 #    `frontend/slices/editor/` + `frontend/slices/databases/` +
 #    `frontend/slices/files/` + the shared deps they import into
@@ -192,4 +192,4 @@ Contract changes follow semver:
 - [Mega-slice lift plan (6 phases)](../../../docs/rr-sync/2026-05-21-notion-mega-lift-plan.md)
 - [Site map of every coupling site](../../../docs/rr-sync/2026-05-21-adapter-site-map.md)
 - [Files adapter precedent](../files/adapter/)
-- [open-silong root README](../../../README.md)
+- [Lapis root README](../../../README.md)

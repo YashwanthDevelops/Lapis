@@ -3,13 +3,13 @@ import type { FormulaValue, PageEntity } from "./types";
 /** Pure-engine host interface. The engine accesses ANY domain-shaped
  *  data (properties, databases, page metadata, formula recursion, rollup
  *  computation) exclusively through these callbacks. Consumers implement
- *  one of these — Silong does so in `lib/formula.ts::silongHost`; a
+ *  one of these — Lapis does so in `lib/formula.ts::lapisHost`; a
  *  Convex-side adapter for 1.G.3 will be a second implementation; tests
  *  for the engine itself can stub a minimal one.
  *
  *  The four type parameters are bundled in every method's signature so
  *  the host's call sites stay strongly typed end-to-end:
- *    - TProp — the consumer's property shape (Silong's `Property`)
+ *    - TProp — the consumer's property shape (Lapis's `Property`)
  *    - TVal  — the consumer's per-row value shape (`PropertyValue`)
  *    - TPage — the consumer's row shape (`Page`)
  *    - TDb   — the consumer's database shape (`Database`)

@@ -12,7 +12,7 @@ import { DEFAULT_SEARCH_LABELS, type SearchModalLabels } from "../lib/types";
 interface Props {
   open: boolean;
   onOpenChange: (o: boolean) => void;
-  /** Override copy strings. Defaults preserve the legacy Nosion strings. */
+  /** Override copy strings. Defaults preserve the legacy Lapis strings. */
   labels?: SearchModalLabels;
 }
 

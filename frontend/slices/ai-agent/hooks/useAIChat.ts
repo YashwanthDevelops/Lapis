@@ -60,11 +60,11 @@ export function useAIChat(activeContext?: ActiveContext) {
   // complete() as `model`; the backend resolveAI parses it into an
   // explicit BYOK selection. Persisted so the choice survives reloads.
   const [selectedModel, setSelectedModelState] = useState<string>(() => {
-    try { return localStorage.getItem("silong:ai-model") ?? ""; } catch { return ""; }
+    try { return localStorage.getItem("lapis:ai-model") ?? ""; } catch { return ""; }
   });
   const setSelectedModel = useCallback((m: string) => {
     setSelectedModelState(m);
-    try { localStorage.setItem("silong:ai-model", m); } catch { /* ignore */ }
+    try { localStorage.setItem("lapis:ai-model", m); } catch { /* ignore */ }
   }, []);
 
   // Refresh sessions list from store. Called after any mutation.
@@ -181,7 +181,7 @@ export function useAIChat(activeContext?: ActiveContext) {
         ? { ...activeContext, activePageId: lastCreatedPageId, activePageTitle: undefined }
         : activeContext;
       const recentActionsNote = appliedNotes.length
-        ? `<RECENT_ACTIONS>\n${appliedNotes.join("\n")}\n</RECENT_ACTIONS>\n\nWhen the user references "this page", "halaman ini", "isi", or "tambahkan":\n- If RECENT_ACTIONS contains a successful pages.create, use THAT pageId as the target — NOT activePageId. The URL hasn't navigated to the new page yet.\n- Otherwise fall back to activePageId from USER_CONTEXT.\nAlways reuse ids from RECENT_ACTIONS instead of re-creating.`
+        ? `<RECENT_ACTIONS>\n${appliedNotes.join("\n")}\n</RECENT_ACTIONS>\n\nWhen the user references "this page", "fill it", or "add to it":\n- If RECENT_ACTIONS contains a successful pages.create, use THAT pageId as the target — NOT activePageId. The URL hasn't navigated to the new page yet.\n- Otherwise fall back to activePageId from USER_CONTEXT.\nAlways reuse ids from RECENT_ACTIONS instead of re-creating.`
         : "";
       const systemParts = [currentAgent.systemPrompt, recentActionsNote, built.system].filter(Boolean);
       const apiMessages = [

@@ -8,8 +8,8 @@
 //                                     pages.create / databases.create / …)
 //
 // Assertions track real handler behavior read back from the store; error
-// strings are the literals thrown by the gate ("Tidak ditemukan" = not a
-// member / not found, "Tidak berwenang" = viewer role forbidden).
+// strings are the literals thrown by the gate ("Not found" = not a
+// member / not found, "Forbidden" = viewer role forbidden).
 import { expect, test } from "vitest";
 import { api } from "../_generated/api";
 import { testCtx, seedUser } from "../testHarness.test";
@@ -49,7 +49,7 @@ test("owner member passes requireWorkspaceMember and renames the workspace", asy
 
 // ---------------------------------------------------------------------------
 // (2) Non-member rejection — a second user cannot touch the first user's
-//     workspace-scoped entity. requireWorkspaceMember throws "Tidak ditemukan".
+//     workspace-scoped entity. requireWorkspaceMember throws "Not found".
 // ---------------------------------------------------------------------------
 
 test("non-member is rejected when renaming another user's workspace", async () => {
@@ -66,7 +66,7 @@ test("non-member is rejected when renaming another user's workspace", async () =
       workspaceId,
       name: "Hijacked",
     }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
 
   // State unchanged — the write never landed.
   const ws = await t.run(async (ctx) => ctx.db.get(workspaceId));
@@ -92,7 +92,7 @@ test("unauthenticated caller is rejected by the membership gate", async () => {
 // ---------------------------------------------------------------------------
 // (4) Viewer-role rejection — a viewer member of the ACTIVE workspace is
 //     blocked from writes. requireActiveWorkspaceWritable throws
-//     "Tidak berwenang" (FORBIDDEN) for role "viewer".
+//     "Forbidden" (FORBIDDEN) for role "viewer".
 // ---------------------------------------------------------------------------
 
 test("viewer-role member is rejected by requireActiveWorkspaceWritable", async () => {
@@ -125,7 +125,7 @@ test("viewer-role member is rejected by requireActiveWorkspaceWritable", async (
 
   await expect(
     viewer.asUser.mutation(api.pages.create, { parentId: null, title: "nope" }),
-  ).rejects.toThrow(/Tidak berwenang/);
+  ).rejects.toThrow(/Forbidden/);
 
   // No page was inserted into the shared workspace by the viewer.
   const pageCount = await t.run(async (ctx) => {

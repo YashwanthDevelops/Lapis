@@ -10,7 +10,7 @@ Source: `convex/_shared/auth.ts`. Underlying auth: `@convex-dev/auth`
 
 ## `requireAuth(ctx) → Id<"users">`
 
-Throws `"Belum login"` if no auth. Returns the user id. Use for
+Throws `"Not signed in"` if no auth. Returns the user id. Use for
 mutations/queries that don't have a per-doc owner check (e.g.
 inbox.create, recents.push).
 
@@ -25,7 +25,7 @@ Works in both `MutationCtx` and `QueryCtx`.
 ## `requireOwned(ctx, table, id) → {userId, doc}`
 
 The workhorse. Resolves a doc by id, enforces `doc.userId === userId`,
-returns both. **Throws `"Tidak ditemukan"`** on miss — never leaks
+returns both. **Throws `"Not found"`** on miss — never leaks
 existence (so attackers can't probe ids).
 
 ```ts
@@ -50,7 +50,7 @@ prefer this over manual auth checks.
 - `admin` if email matches `ADMIN_BOOTSTRAP_EMAILS` env (comma-separated)
 - `user` otherwise
 
-Throws `"Tidak berwenang"` if final role is `user`. Returns user id.
+Throws `"Forbidden"` if final role is `user`. Returns user id.
 
 ```ts
 const userId = await requireAdmin(ctx);
@@ -85,7 +85,7 @@ pre-multi-workspace data and fall back to owner-only.
 Returns the caller's `role` so the handler can branch on
 viewer/editor/owner. Pass `{ write: true }` for mutating paths.
 
-Throws `Tidak ditemukan` for a missing row — the same
+Throws `Not found` for a missing row — the same
 existence-vs-permission collapse as `requireOwned`.
 
 ---
@@ -104,7 +104,7 @@ admin *and* superadmin**, and every admin mutation goes through those.
 So superadmin is currently a *label*, not an extra permission tier.
 `admin/mutations.ts:setUserRole` is gated by plain `requireAdmin`; its
 only extra protection is a self-demotion guard
-(`Tidak bisa demote diri sendiri`). The one genuinely superadmin-shaped
+(`You cannot demote yourself`). The one genuinely superadmin-shaped
 path is the first-deployer escape hatch (`admin/mutations.ts:26`),
 which promotes the caller only when no superadmin exists anywhere and
 is race-guarded by a re-query on the `by_role` index.
@@ -128,7 +128,7 @@ exist before a query reads it.
 
 ## Bootstrapping a fresh deployment
 
-A self-hosted Nosion has zero admins on day 0. Three paths to promote
+A self-hosted Lapis has zero admins on day 0. Three paths to promote
 the first one — pick whichever fits the install:
 
 ### 1. Env-var auto-promotion (preferred for prod)
@@ -231,19 +231,19 @@ display. Don't use for authorization — that's the role's job.
 
 ## Error semantics
 
-All helpers throw plain `Error` instances with user-facing messages
-(Indonesian for the auth-lifecycle errors, since the bootstrap email
-list is admin-only):
+All helpers throw plain `Error` instances with user-facing messages.
+Missing documents and documents the caller cannot access share the same
+message so callers cannot probe whether a document exists:
 
 | message | meaning | thrown by |
 |---|---|---|
-| `Belum login` | No auth token | `requireAuth` (and downstream) |
-| `Tidak berwenang` | Authed but not admin, or workspace role too low | `requireAdmin*` / `requireWorkspaceAccess` |
-| `Tidak ditemukan` | Doc missing OR not owned | `requireOwned` |
+| `Not signed in` | No auth token | `requireAuth` (and downstream) |
+| `Forbidden` | Authenticated but not an admin, or workspace role too low | `requireAdmin*` / `requireWorkspaceAccess` |
+| `Not found` | Document missing or not owned | `requireOwned` |
 
-Frontend `sanitizeError` recognizes these and maps them to friendly
-toasts. Don't add new strings without updating the allowlist in
-`frontend/shared/lib/error.ts`.
+The frontend `sanitizeError` helper categorizes these messages and maps
+them to safe, user-friendly toasts. Update its matching rules when adding
+new auth or permission error messages.
 
 ---
 
@@ -265,5 +265,5 @@ toasts. Don't add new strings without updating the allowlist in
    `null` / `[]` when missing. Document the anonymous path in the
    fn's JSDoc.
 4. **Existence vs ownership**: `requireOwned` collapses both into one
-   "Tidak ditemukan" — don't branch on which it was. The caller
+   "Not found" — don't branch on which it was. The caller
    should not be able to probe whether a doc exists at all.

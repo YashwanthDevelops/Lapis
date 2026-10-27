@@ -171,11 +171,11 @@ export const exchangeCode = mutation({
 export const revokeToken = mutation({
   args: { id: v.id("oauthAccessTokens") },
   handler: async (ctx, { id }) => {
-    // Owner-only revoke. Throw "Tidak ditemukan" rather than a
+    // Owner-only revoke. Throw "Not found" rather than a
     // forbidden so we don't leak existence of other users' tokens.
     const userId = await requireAuth(ctx);
     const row = await ctx.db.get(id);
-    if (!row || row.userId !== userId) throw new Error("Tidak ditemukan");
+    if (!row || row.userId !== userId) throw new Error("Not found");
     if (row.revokedAt) return { success: true };
     await ctx.db.patch(id, { revokedAt: Date.now() });
     return { success: true };

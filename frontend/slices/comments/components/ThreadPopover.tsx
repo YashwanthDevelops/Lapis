@@ -43,7 +43,7 @@ interface Props {
 
 /** Domain-neutral comments thread popover. Renderless w/ respect to host
  *  semantics — receives a `threadId` (sub-target) + viewer info + an
- *  adapter-built create-args builder. The Nosion-flavoured wrapper lives
+ *  adapter-built create-args builder. The Lapis-flavoured wrapper lives
  *  in `adapters/BlockCommentsPopover.tsx`. */
 export function ThreadPopover({
   threadId,

@@ -7,8 +7,8 @@
  * optional sub-anchor matches their domain.
  *
  * - notion: `{ kind: "page", id: <page-uid>, subId: <block-uid> }`
- * - rahmanef.com blog: `{ kind: "blog", id: <post-slug> }`
- * - rahmanef.com portfolio: `{ kind: "portfolio", id: <work-slug> }`
+ * - External blog content: `{ kind: "blog", id: <post-slug> }`
+ * - External portfolio content: `{ kind: "portfolio", id: <work-slug> }`
  *
  * See kitab `docs/contract-negotiations-2026-05-15.md` §1.
  */

@@ -47,7 +47,7 @@ export const setStatus = mutation({
   handler: async (ctx, { id, status }) => {
     const actorId = await requireAdmin(ctx);
     const doc = await ctx.db.get(id);
-    if (!doc) throw new Error("Ticket tidak ditemukan");
+    if (!doc) throw new Error("Ticket not found");
     const terminal = status === "resolved" || status === "closed";
     await ctx.db.patch(id, {
       status,
@@ -70,7 +70,7 @@ export const replyToFeedback = mutation({
   handler: async (ctx, { id, reply, nextStatus }) => {
     const actorId = await requireAdmin(ctx);
     const doc = await ctx.db.get(id);
-    if (!doc) throw new Error("Ticket tidak ditemukan");
+    if (!doc) throw new Error("Ticket not found");
     const trimmed = reply.trim();
     if (trimmed.length > 8000) throw new Error("Balasan terlalu panjang");
     const patch: Record<string, unknown> = {

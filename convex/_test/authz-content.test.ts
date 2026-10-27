@@ -12,7 +12,7 @@
 // throwing) the test asserts the victim's data survived instead of
 // asserting a rejection — the observable guarantee is what matters.
 //
-// Gate error literals: "Tidak ditemukan" / "Belum login" (from
+// Gate error literals: "Not found" / "Not signed in" (from
 // convex/_shared/auth.ts), "Not found" / "Not authenticated" /
 // "Not authorized" (the older per-feature gates in features/*).
 import { expect, test } from "vitest";
@@ -52,14 +52,14 @@ test("comments.create: owner can; stranger and anon cannot", async () => {
     mallory.asUser.mutation(api.features.comments.mutations.create, {
       pageId, text: "injected", ...COMMENT,
     }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
 
   // (c)
   await expect(
     t.mutation(api.features.comments.mutations.create, {
       pageId, text: "injected", ...COMMENT,
     }),
-  ).rejects.toThrow(/Belum login/);
+  ).rejects.toThrow(/Not signed in/);
 
   const rows = await alice.asUser.query(api.features.comments.queries.listForPage, { pageId });
   expect(rows.length).toBe(1);
@@ -151,7 +151,7 @@ test("comments.update: author can; stranger and anon cannot, even on a public pa
   // (c)
   await expect(
     t.mutation(api.features.comments.mutations.update, { id: cid, text: "defaced" }),
-  ).rejects.toThrow(/Belum login/);
+  ).rejects.toThrow(/Not signed in/);
 
   expect((await alice.asUser.query(api.features.comments.queries.listForPage, { pageId }))[0].text)
     .toBe("original");
@@ -185,10 +185,10 @@ test("comments.remove/resolve: stranger and anon cannot destroy or moderate", as
   // (c)
   await expect(
     t.mutation(api.features.comments.mutations.resolve, { id: cid, resolved: true }),
-  ).rejects.toThrow(/Belum login/);
+  ).rejects.toThrow(/Not signed in/);
   await expect(
     t.mutation(api.features.comments.mutations.remove, { id: cid }),
-  ).rejects.toThrow(/Belum login/);
+  ).rejects.toThrow(/Not signed in/);
 
   const survived = await alice.asUser.query(api.features.comments.queries.listForPage, { pageId });
   expect(survived.length).toBe(1);
@@ -348,7 +348,7 @@ test("snapshots.create/list: owner can; stranger and anon cannot write or read",
     mallory.asUser.mutation(api.snapshots.create, {
       pageId, title: "forged", blocks: [{ id: "b2", type: "paragraph", text: "forged" }], ...SNAP,
     }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
 
   // …and read denied (fail-closed empty, no existence leak).
   expect(await mallory.asUser.query(api.snapshots.listForPage, { pageId })).toEqual([]);
@@ -359,7 +359,7 @@ test("snapshots.create/list: owner can; stranger and anon cannot write or read",
     t.mutation(api.snapshots.create, {
       pageId, title: "forged", blocks: [], ...SNAP,
     }),
-  ).rejects.toThrow(/Belum login/);
+  ).rejects.toThrow(/Not signed in/);
   expect(await t.query(api.snapshots.listForPage, { pageId })).toEqual([]);
   expect(await t.query(api.snapshots.listAll, {})).toEqual([]);
 
@@ -389,10 +389,10 @@ test("snapshots.restore: owner can roll back; stranger and anon cannot", async (
   // (b) + (c) cannot roll it back.
   await expect(
     mallory.asUser.mutation(api.snapshots.restore, { snapshotId: snapId }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
   await expect(
     t.mutation(api.snapshots.restore, { snapshotId: snapId }),
-  ).rejects.toThrow(/Belum login/);
+  ).rejects.toThrow(/Not signed in/);
 
   expect((await alice.asUser.query(api.pages.getById, { id: pageId }))?.title).toBe("v2 current");
 

@@ -65,10 +65,10 @@ test("comments refuse an empty body and another user's page", async () => {
 
   await expect(
     t.mutation(internal.mcp.internal.createComment, { userId: strangerId, pageId, text: "hi" }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
   await expect(
     t.query(internal.mcp.internal.listComments, { userId: strangerId, pageId }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
 });
 
 test("the page owner can moderate a comment they did not author", async () => {
@@ -155,10 +155,10 @@ test("snapshots of another user's page are invisible and unrestorable", async ()
 
   await expect(
     t.query(internal.mcp.internal.listSnapshots, { userId: strangerId, pageId }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
   await expect(
     t.mutation(internal.mcp.internal.restoreSnapshot, { userId: strangerId, snapshotId }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
 });
 
 // ── workspaces ────────────────────────────────────────────────────────

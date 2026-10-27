@@ -1,22 +1,15 @@
 {
-  "name": "open-silong",
+  "name": "lapis",
   "private": true,
   "version": "1.2.0",
-  "description": "An open-source, self-hostable workspace inspired by Notion & Obsidian — block editor, databases, and a knowledge graph.",
+  "description": "A flexible productivity workspace for notes, databases, planning, and shared knowledge.",
   "license": "MIT",
   "author": "Rahman Effendi",
-  "homepage": "https://silong-os.vercel.app",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rahmanef63/open-silong.git"
-  },
-  "bugs": {
-    "url": "https://github.com/rahmanef63/open-silong/issues"
-  },
   "keywords": [
-    "notion-inspired",
-    "notion-alternative",
+    "productivity",
     "workspace",
+    "team-workspace",
+    "knowledge-management",
     "block-editor",
     "block-based",
     "wiki",
@@ -45,7 +38,8 @@
     "test:watch": "vitest",
     "convex:dev": "convex dev",
     "convex:deploy": "convex deploy",
-    "capture:screenshots": "node scripts/capture-screenshots.mjs"
+    "capture:screenshots": "node scripts/capture-screenshots.mjs",
+    "generate:brand": "node scripts/generate-brand-assets.mjs"
   },
   "dependencies": {
     "@auth/core": "^0.37.4",

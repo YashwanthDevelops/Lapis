@@ -1,4 +1,4 @@
-# open-silong — architecture diagrams
+# Lapis — architecture diagrams
 
 Living, source-controlled diagrams. All rendered with
 [Mermaid](https://mermaid.js.org/), which GitHub renders inline — no image

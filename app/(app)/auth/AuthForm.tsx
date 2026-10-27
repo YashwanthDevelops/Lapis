@@ -45,16 +45,16 @@ export function AuthForm() {
       <div className="text-center space-y-2">
         <Image
           src="/logo-wordmark-light.svg"
-          alt="Silong"
-          width={140}
+          alt="Lapis"
+          width={156}
           height={40}
           className="mx-auto h-10 w-auto dark:hidden"
           priority
         />
         <Image
           src="/logo-wordmark-dark.svg"
-          alt="Silong"
-          width={140}
+          alt="Lapis"
+          width={156}
           height={40}
           className="mx-auto hidden h-10 w-auto dark:block"
           priority

@@ -45,7 +45,7 @@ export const revoke = mutation({
   handler: async (ctx, { tokenId }) => {
     const userId = await requireAuth(ctx);
     const t = await ctx.db.get(tokenId);
-    if (!t || t.userId !== userId) throw new Error("Token tidak ditemukan");
+    if (!t || t.userId !== userId) throw new Error("Token not found");
     if (t.revoked) return { ok: true };
     await ctx.db.patch(tokenId, { revoked: true });
     return { ok: true };

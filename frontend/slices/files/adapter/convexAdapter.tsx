@@ -2,7 +2,7 @@
 
 /**
  * Production adapter — backs the `files` slice with self-hosted Convex
- * file storage. Wired into nosion at app/providers.tsx. This file is
+ * file storage. Wired into Lapis at app/providers.tsx. This file is
  * skip-listed in scripts/sync-to-rr.mjs (rr-sync.json.skipFiles) so the
  * rr-side lift never inherits a Convex import.
  */

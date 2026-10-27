@@ -15,7 +15,7 @@ export const COLOR_TOKENS = [
   "sidebar-border", "sidebar-ring",
 ] as const;
 
-/** Registry uses bare `sidebar`; Nosion's @theme inline maps
+/** Registry uses bare `sidebar`; Lapis's @theme inline maps
  *  `--color-sidebar` from `--sidebar-background`. Emit both alias names
  *  so either resolves. */
 export const COLOR_ALIAS: Readonly<Record<string, string>> = {

@@ -43,8 +43,8 @@ async function authenticate(
   const token = auth.slice("Bearer ".length).trim();
   if (!token) return { error: 401, message: "Empty token" };
 
-  // 1. Per-user issued nsn_ tokens (preferred for scripts).
-  if (token.startsWith("nsn_")) {
+  // 1. Per-user issued Lapis tokens (legacy nsn_ tokens remain valid).
+  if (token.startsWith("lps_") || token.startsWith("nsn_")) {
     const tokenHash = await sha256Hex(token);
     const found = await ctx.runQuery(internal.mcp.tokens.lookupByHash, { tokenHash });
     if (!found) return { error: 401, message: "Invalid or revoked token" };
@@ -229,7 +229,7 @@ const TOOLS: ToolDef[] = [
   },
   {
     name: "databases_create_inline",
-    description: "ONE-SHOT: create a Notion-style database AND embed it as an inline block at the end of an existing page. Use this when the user says 'tambahkan database / table / tracker DI halaman ini' — NOT pages_append_markdown with a markdown table (which creates a static table block, NOT a real database). Same `properties` shape as databases_create. Returns dbId + the embed blockId.",
+    description: "ONE-SHOT: create a Notion-style database AND embed it as an inline block at the end of an existing page. Use this when the user asks to add a database, table, or tracker to the current page — NOT pages_append_markdown with a markdown table (which creates a static table block, NOT a real database). Same `properties` shape as databases_create. Returns dbId + the embed blockId.",
     inputSchema: obj({
       pageId: { type: "string" },
       name: { type: "string" },
@@ -624,7 +624,7 @@ async function dispatchTool(
       if (!markdown) return errResult("markdown is required");
       try {
         // Internal mutation — public api.pages.appendMarkdown calls
-        // requireAuth which throws "Belum login" since MCP has no
+        // requireAuth which throws "Not signed in" since MCP has no
         // Convex session (auth is bearer-resolved upstream).
         const appendedBlockCount = await ctx.runMutation(internal.mcp.internal.appendMarkdownAs, {
           userId, pageId, markdown,
@@ -1217,8 +1217,8 @@ async function dispatchTool(
 
 // ────────────── Property schema helpers ──────────────
 
-/** Map user-facing type alias → Nosion internal type. Notion uses
- *  `title`, Nosion stores it as `text` (the first text property doubles
+/** Map user-facing type alias → Lapis internal type. Notion uses
+ *  `title`, Lapis stores it as `text` (the first text property doubles
  *  as title). Other types pass through. */
 const TYPE_ALIASES: Record<string, string> = {
   title: "text",
@@ -1318,7 +1318,7 @@ async function dispatchRpc(
         result: {
           protocolVersion: PROTOCOL_VERSION,
           capabilities: { tools: { listChanged: false } },
-          serverInfo: { name: "nosion-mcp", version: "1.0.0" },
+          serverInfo: { name: "lapis-mcp", version: "1.0.0" },
         },
       };
     }
@@ -1378,7 +1378,7 @@ export const mcpRpcHandler = httpAction(async (ctx, req) => {
       headers: {
         "content-type": "application/json",
         ...CORS_HEADERS,
-        "www-authenticate": `Bearer realm="silong-mcp", resource_metadata="${process.env.SITE_URL ?? ""}/.well-known/oauth-protected-resource"`,
+        "www-authenticate": `Bearer realm="lapis-mcp", resource_metadata="${process.env.SITE_URL ?? ""}/.well-known/oauth-protected-resource"`,
       },
     });
   }

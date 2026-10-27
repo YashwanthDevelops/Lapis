@@ -7,8 +7,8 @@ import {
   type EngineHost, type EvalContext, type EvalResult, type FormulaError, type FormulaValue, type PageEntity,
 } from "./formulaEngine";
 
-/** Project a Silong domain Page → engine PageEntity. Drops references to
- *  Silong-only fields so the entity is engine-safe (used inside the
+/** Project a Lapis domain Page → engine PageEntity. Drops references to
+ *  Lapis-only fields so the entity is engine-safe (used inside the
  *  FormulaValue.page kind). */
 function toEntity(p: Page): PageEntity {
   return {
@@ -20,10 +20,10 @@ function toEntity(p: Page): PageEntity {
   };
 }
 
-type SilongCtx = EvalContext<Property, PropertyValue, Page, Database>;
+type LapisCtx = EvalContext<Property, PropertyValue, Page, Database>;
 
-/** The Silong-specific resolvePropertyValue. Owns ALL knowledge of how
- *  Silong's property types (select / multi_select / relation / formula /
+/** The Lapis-specific resolvePropertyValue. Owns ALL knowledge of how
+ *  Lapis's property types (select / multi_select / relation / formula /
  *  rollup / …) lift into the engine's FormulaValue kinds. Engine never
  *  sees a `Property["type"]` discriminant — only this function does.
  *
@@ -33,7 +33,7 @@ type SilongCtx = EvalContext<Property, PropertyValue, Page, Database>;
 function resolvePropertyValue(
   v: PropertyValue | undefined,
   prop: Property,
-  ctx: SilongCtx,
+  ctx: LapisCtx,
 ): FormulaValue {
   // Formula recursion — needs the host's eval re-entry so the cycle
   // guard + cache live in engine-managed state but the recursion logic
@@ -45,7 +45,7 @@ function resolvePropertyValue(
       throw { message: `Circular reference via prop("${prop.name}")`, pos: 0 } as FormulaError;
     }
     if (ctx.cache?.has(key)) return ctx.cache.get(key)!;
-    const childCtx: SilongCtx = {
+    const childCtx: LapisCtx = {
       ...ctx,
       visited: new Set(visited).add(key),
       cache: ctx.cache ?? new Map(),
@@ -108,7 +108,7 @@ function resolvePropertyValue(
 /** Typed rollup compute. Mirrors the aggregate set in the display-side
  *  `computeRollup` below but returns FormulaValue so downstream math /
  *  compare / format / higher-order ops compose. */
-function computeRollupValue(prop: Property, ctx: SilongCtx): FormulaValue {
+function computeRollupValue(prop: Property, ctx: LapisCtx): FormulaValue {
   const relationProps = ctx.db.properties.filter((p) => p.type === "relation");
   const relationProp = prop.rollupRelationPropertyId
     ? relationProps.find((p) => p.id === prop.rollupRelationPropertyId)
@@ -133,7 +133,7 @@ function computeRollupValue(prop: Property, ctx: SilongCtx): FormulaValue {
 
   if (aggregate === "count") return num(total);
 
-  const targetCtx: SilongCtx = targetProp ? { ...ctx, db: targetDb } : ctx;
+  const targetCtx: LapisCtx = targetProp ? { ...ctx, db: targetDb } : ctx;
   const sourceValues: FormulaValue[] = linkedPages.map((p) => {
     if (!targetProp) return str(p.title || "Untitled");
     return resolvePropertyValue(
@@ -186,9 +186,9 @@ function computeRollupValue(prop: Property, ctx: SilongCtx): FormulaValue {
   return NULL_VALUE;
 }
 
-/** Concrete EngineHost binding for Silong's domain shapes. Constructed
+/** Concrete EngineHost binding for Lapis's domain shapes. Constructed
  *  once per call — pure functions, no closure state. */
-export const silongHost: EngineHost<Property, PropertyValue, Page, Database> = {
+export const lapisHost: EngineHost<Property, PropertyValue, Page, Database> = {
   getRowId: (row) => row.id,
   getRowTitle: (row) => row.title,
   getRowProp: (row, propId) => row.rowProps?.[propId],
@@ -202,15 +202,18 @@ export const silongHost: EngineHost<Property, PropertyValue, Page, Database> = {
   resolvePropertyValue,
 };
 
-/** Silong-bound entry point — replaces the old direct `evalFormula(src,
+/** @deprecated Use `lapisHost`; retained for existing direct imports. */
+export const silongHost = lapisHost;
+
+/** Lapis-bound entry point — replaces the old direct `evalFormula(src,
  *  ctx)` call site. Accepts a PARTIAL context (just row/db/pages +
- *  optional databases) and auto-injects silongHost. Existing test
+ *  optional databases) and auto-injects lapisHost. Existing test
  *  fixtures continue to work without modification. */
 export function evalFormula(
   src: string,
-  partial: Omit<SilongCtx, "host">,
+  partial: Omit<LapisCtx, "host">,
 ): EvalResult {
-  return evalFormulaCore(src, { ...partial, host: silongHost });
+  return evalFormulaCore(src, { ...partial, host: lapisHost });
 }
 
 /** Display-side wrapper. New typed engine evaluates internally; we still

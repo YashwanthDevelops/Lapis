@@ -65,7 +65,7 @@ export function BackupSection() {
     };
     const stamp = new Date().toISOString().slice(0, 10);
     downloadFile(
-      `silong-backup-${stamp}.json`,
+      `lapis-backup-${stamp}.json`,
       JSON.stringify(payload, null, 2),
       "application/json",
     );

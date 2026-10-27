@@ -10,8 +10,8 @@ import { useEffect, useState, useSyncExternalStore } from "react";
  *  and a single storage-event listener. Previous implementation attached
  *  one listener per icon — which exploded to 800+ in the picker grid. */
 
-const KEY = "icon-picker:style";
-const LEGACY_KEYS = ["nosion:iconStyle"] as const;
+const KEY = "lapis:iconStyle";
+const LEGACY_KEYS = ["icon-picker:style", "nosion:iconStyle"] as const;
 const DEFAULT: Style = "twemoji";
 
 export type Style = "twemoji" | "native";

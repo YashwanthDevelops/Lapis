@@ -9,7 +9,7 @@ import { SetupPointer } from "./SetupPointer";
 
 export const metadata: Metadata = {
   title: "Sign in",
-  description: "Sign in or create a Silong workspace",
+  description: "Sign in or create a Lapis workspace",
   robots: { index: false, follow: false },
 };
 
@@ -22,7 +22,7 @@ export default function AuthPage() {
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition hover:text-foreground"
         >
           <ArrowLeft className="size-3.5" />
-          Kembali ke beranda
+          Back to home
         </Link>
         <div className="space-y-6 rounded-xl border p-8 shadow-sm">
           <DemoGuestEntry />

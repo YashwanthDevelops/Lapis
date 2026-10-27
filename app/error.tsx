@@ -23,7 +23,7 @@ export default function Error({
   useEffect(() => {
     logError("RouteError", error, { digest: error.digest });
     if (isStaleChunk) {
-      const FLAG = "nosion:chunk-reloaded-at";
+      const FLAG = "lapis:chunk-reloaded-at";
       try {
         const last = Number(sessionStorage.getItem(FLAG) ?? "0");
         if (Date.now() - last > 60_000) {

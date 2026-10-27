@@ -1,7 +1,8 @@
 # Changelog
 
-All notable changes to **open-silong** (formerly `notion-page-clone` /
-`nosion`). Format inspired by
+All notable changes to **Lapis**, customized from upstream **open-silong**
+(formerly `notion-page-clone` / `nosion`). Earlier entries retain the project
+name in use at the time. Format inspired by
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); commits
 follow [Conventional Commits](https://www.conventionalcommits.org/).
 
@@ -9,6 +10,13 @@ For granular per-commit history see `git log` or the per-wave audit
 notes under `docs/audit/`.
 
 ## [Unreleased]
+
+### Changed
+
+- Rebranded the app as **Lapis** across the app shell, theme, metadata, share
+  cards, PWA assets, onboarding copy, and export filenames. Existing browser
+  preferences migrate to the Lapis storage namespace. New MCP tokens use the
+  `lps_` prefix, and Lapis webhook headers ship beside their legacy aliases.
 
 ### Changed
 

@@ -1,12 +1,12 @@
 /** Notion-canonical JSON adapter.
  *
- *  Bidirectional translation between Nosion's internal shapes and the
+ *  Bidirectional translation between Lapis's internal shapes and the
  *  Notion API JSON shape. Used by:
  *    - The MCP HTTP surface (`convex/http.ts`) — emits Notion-shaped
- *      JSON so an LLM client can drive Nosion the same way it drives
+ *      JSON so an LLM client can drive Lapis the same way it drives
  *      Notion.
  *    - The future `notion-import` action — accepts Notion API JSON
- *      and writes it as Nosion blocks/properties/pages.
+ *      and writes it as Lapis blocks/properties/pages.
  *
  *  PURE — no Convex / React / DOM deps. Safe to import from server,
  *  client, or any test.
@@ -15,7 +15,7 @@
  *  https://developers.notion.com/reference/property-schema-object
  *
  *  ─── Coverage ─────────────────────────────────────────────────
- *  Block types (Nosion ⇄ Notion):
+ *  Block types (Lapis ⇄ Notion):
  *    paragraph ⇄ paragraph
  *    h1/h2/h3 ⇄ heading_1/2/3
  *    todo ⇄ to_do
@@ -121,9 +121,9 @@ function push(
 
 // ─── inline-md ⇄ rich_text ─────────────────────────────────────────
 
-/** Convert Nosion plain-text-with-markers into a Notion rich_text
+/** Convert Lapis plain-text-with-markers into a Notion rich_text
  *  array. Single-annotation per segment (no bold+italic stacking) —
- *  matches what Nosion's tokenizer produces. */
+ *  matches what Lapis's tokenizer produces. */
 export function inlineMdToRichText(text: string): RichTextSegment[] {
   const toks = tokenize(text ?? "");
   return toks.map<RichTextSegment>((t) => {
@@ -145,7 +145,7 @@ export function inlineMdToRichText(text: string): RichTextSegment[] {
   });
 }
 
-/** Reverse — convert a Notion rich_text array into Nosion's
+/** Reverse — convert a Notion rich_text array into Lapis's
  *  plain-text-with-markers source. Marker stacking order: code →
  *  bold → italic → strike (outermost first). */
 export function richTextToInlineMd(rt: RichTextSegment[] | undefined): string {
@@ -193,7 +193,7 @@ interface BlockLike {
   [k: string]: unknown;
 }
 
-const NOSION_TO_NOTION_TYPE: Record<string, string> = {
+const LAPIS_TO_NOTION_TYPE: Record<string, string> = {
   paragraph: "paragraph",
   h1: "heading_1",
   h2: "heading_2",
@@ -221,7 +221,7 @@ const NOSION_TO_NOTION_TYPE: Record<string, string> = {
   button: "paragraph", // graceful degrade — Notion has no public button block
 };
 
-const NOTION_TO_NOSION_TYPE: Record<string, string> = {
+const NOTION_TO_LAPIS_TYPE: Record<string, string> = {
   paragraph: "paragraph",
   heading_1: "h1",
   heading_2: "h2",
@@ -244,10 +244,10 @@ const NOTION_TO_NOSION_TYPE: Record<string, string> = {
   embed: "embed",
 };
 
-/** Nosion block → Notion block. Recurses through `children` and
+/** Lapis block → Notion block. Recurses through `children` and
  *  `columns` to emit nested column blocks. */
 export function blockToNotion(b: BlockLike): NotionBlock {
-  const ntype = NOSION_TO_NOTION_TYPE[b.type ?? "paragraph"] ?? "paragraph";
+  const ntype = LAPIS_TO_NOTION_TYPE[b.type ?? "paragraph"] ?? "paragraph";
   const out: NotionBlock = { object: "block", id: b.id, type: ntype, has_children: false };
   const rt = (s?: string) => inlineMdToRichText(s ?? "");
 
@@ -335,11 +335,11 @@ export function blockToNotion(b: BlockLike): NotionBlock {
   return out;
 }
 
-/** Notion block → Nosion block. Foreign block types collapse to
+/** Notion block → Lapis block. Foreign block types collapse to
  *  paragraph with empty text — preserves position, drops content. */
 export function blockFromNotion(n: NotionBlock): BlockLike {
   const ntype = n.type;
-  const noType = NOTION_TO_NOSION_TYPE[ntype] ?? "paragraph";
+  const noType = NOTION_TO_LAPIS_TYPE[ntype] ?? "paragraph";
   const payload = (n as Record<string, unknown>)[ntype] as Record<string, unknown> | undefined;
   const rt = payload?.rich_text as RichTextSegment[] | undefined;
   const out: BlockLike = { id: n.id, type: noType, text: richTextToInlineMd(rt) };
@@ -420,7 +420,7 @@ export interface NotionPropertySchemaEntry {
   [key: string]: unknown;
 }
 
-const NOSION_TO_NOTION_PROP_TYPE: Record<string, string> = {
+const LAPIS_TO_NOTION_PROP_TYPE: Record<string, string> = {
   text: "rich_text",
   number: "number",
   select: "select",
@@ -450,10 +450,10 @@ const NOSION_TO_NOTION_PROP_TYPE: Record<string, string> = {
   ai_custom: "ai_custom",
 };
 
-/** Convert a Nosion Property → Notion property-schema entry payload
+/** Convert a Lapis Property → Notion property-schema entry payload
  *  (the value side of `properties: { name → entry }`). */
 export function propertyToNotionSchema(p: PropertyLike): NotionPropertySchemaEntry {
-  const ntype = NOSION_TO_NOTION_PROP_TYPE[p.type ?? "text"] ?? "rich_text";
+  const ntype = LAPIS_TO_NOTION_PROP_TYPE[p.type ?? "text"] ?? "rich_text";
   const out: NotionPropertySchemaEntry = {
     id: p.id,
     name: p.name ?? "",
@@ -506,7 +506,7 @@ export function propertyToNotionSchema(p: PropertyLike): NotionPropertySchemaEnt
 }
 
 /** Notion `number.format` is one enum (`"number" | "percent" | "dollar"
- *  | "yen" | …`). Nosion splits format vs ISO 4217 currency code. */
+ *  | "yen" | …`). Lapis splits format vs ISO 4217 currency code. */
 function notionNumberFormat(format: string | undefined, currency: string | undefined): string {
   if (format === "percent") return "percent";
   if (format !== "currency") return format ?? "number";
@@ -525,7 +525,7 @@ function notionNumberFormat(format: string | undefined, currency: string | undef
   }
 }
 
-/** Nosion stores properties as an ORDERED ARRAY (display order
+/** Lapis stores properties as an ORDERED ARRAY (display order
  *  matters); Notion stores them as a NAME-KEYED MAP. Caller picks
  *  which side they want at the boundary. */
 export function propertiesArrayToMap(props: PropertyLike[]): Record<string, NotionPropertySchemaEntry> {
@@ -536,7 +536,7 @@ export function propertiesArrayToMap(props: PropertyLike[]): Record<string, Noti
 
 // ─── Property values (rowProps) ───────────────────────────────────
 
-export type NosionPropertyValue =
+export type LapisPropertyValue =
   | string | number | boolean | null
   | string[] | { date?: string }
   | { verified: boolean; by?: string; at?: number };
@@ -547,10 +547,10 @@ export interface NotionPropertyValue {
   [key: string]: unknown;
 }
 
-/** Nosion stores raw values (`"selectedOptionId"`, `["a","b"]`,
+/** Lapis stores raw values (`"selectedOptionId"`, `["a","b"]`,
  *  `42`, `true`); Notion wraps every value in a typed envelope. */
-export function valueToNotion(value: NosionPropertyValue, prop: PropertyLike): NotionPropertyValue {
-  const ntype = NOSION_TO_NOTION_PROP_TYPE[prop.type ?? "text"] ?? "rich_text";
+export function valueToNotion(value: LapisPropertyValue, prop: PropertyLike): NotionPropertyValue {
+  const ntype = LAPIS_TO_NOTION_PROP_TYPE[prop.type ?? "text"] ?? "rich_text";
   const out: NotionPropertyValue = { id: prop.id, type: ntype };
   switch (ntype) {
     case "rich_text":
@@ -622,8 +622,8 @@ export function valueToNotion(value: NosionPropertyValue, prop: PropertyLike): N
   return out;
 }
 
-/** Strip the Notion envelope down to a Nosion raw value. */
-export function valueFromNotion(nv: NotionPropertyValue, prop: PropertyLike): NosionPropertyValue {
+/** Strip the Notion envelope down to a Lapis raw value. */
+export function valueFromNotion(nv: NotionPropertyValue, prop: PropertyLike): LapisPropertyValue {
   const ntype = nv.type;
   switch (ntype) {
     case "rich_text":

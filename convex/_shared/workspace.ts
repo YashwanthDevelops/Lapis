@@ -4,8 +4,8 @@ import { requireAuth } from "./auth";
 import { COUNT_CAPS } from "./limits";
 import { seedWelcomeContent } from "./seedWelcomeContent";
 
-const FORBIDDEN = "Tidak berwenang";
-const NOT_FOUND = "Tidak ditemukan";
+const FORBIDDEN = "Forbidden";
+const NOT_FOUND = "Not found";
 
 /** Slugify a workspace name into url-safe form. Falls back to "workspace"
  *  if the result would be empty. Caller is responsible for collision

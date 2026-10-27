@@ -32,7 +32,7 @@ the direct Anthropic call with OpenRouter + auth gate + rate limit.
 ```ts
 {
   messages: { role: "user" | "assistant" | "system"; content: string }[];
-  system?: string;            // optional system prompt; default Nosion blurb
+  system?: string;            // optional system prompt; default Lapis blurb
   model?: string;             // OpenRouter model id; default anthropic/claude-haiku-4.5
   maxTokens?: number;         // capped at 4 096
 }
@@ -40,7 +40,7 @@ the direct Anthropic call with OpenRouter + auth gate + rate limit.
 
 ### Auth + caps
 
-- `getAuthUserId(ctx)` — anonymous → throws "Belum login"
+- `getAuthUserId(ctx)` — anonymous → throws "Not signed in"
 - `ctx.runMutation(internal.ai.internal.checkRateLimit)` — **20 / hour**
 - Input size: total chars across `messages[]` + `system` ≤ 60 000
   (`MAX_INPUT_CHARS`)
@@ -48,8 +48,8 @@ the direct Anthropic call with OpenRouter + auth gate + rate limit.
 
 ### Errors
 
-- `"Belum login"` — no auth
-- `"OPENROUTER_API_KEY tidak diset di Convex env"` — missing env (deploy bug)
+- `"Not signed in"` — no auth
+- `"OPENROUTER_API_KEY is not set in the Convex environment"` — missing env (deploy bug)
 - `"Pesan kosong"` — empty messages array
 - `"Input terlalu besar (X > 60000 chars)"` — over the input budget
 - `"OpenRouter <status>: <body slice>"` — upstream failure (raw body
@@ -62,8 +62,8 @@ the direct Anthropic call with OpenRouter + auth gate + rate limit.
 | name | required | default | purpose |
 |---|---|---|---|
 | `OPENROUTER_API_KEY` | **yes** | — | server credential |
-| `OPENROUTER_REFERER` | no | `https://silong.rahmanef.com` | analytics tag for OpenRouter |
-| `OPENROUTER_APP_NAME` | no | `Nosion` | analytics tag |
+| `OPENROUTER_REFERER` | no | unset (or your `SITE_URL`) | analytics tag for OpenRouter |
+| `OPENROUTER_APP_NAME` | no | `Lapis` | analytics tag |
 
 `ANTHROPIC_API_KEY` is no longer read (cycle-2). Don't set it.
 
@@ -82,7 +82,7 @@ preset actions:
 | `shorter` | shorten while preserving meaning |
 | `longer` | expand with relevant detail |
 | `grammar` | correct grammar/spelling, preserve voice |
-| `translate` | translate to English (or Indonesian if already English) |
+| `translate` | translate to English while preserving text that is already in English |
 
 Each preset calls `complete({messages: [{role: "user", content: selectedText}], system, maxTokens: 1024})`,
 then in-place replaces the selection with the response.

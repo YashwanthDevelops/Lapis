@@ -1,57 +1,51 @@
-# Contributing to open-silong
+# Contributing to Lapis
 
 Thanks for considering a contribution — bug reports, feature ideas,
 docs fixes, and code PRs are all welcome.
 
 ## How this repo actually works
 
-Being straight with you, because the two halves of this differ:
-
-- **The maintainer pushes directly to `main`.** Solo dev, conventional
-  commits, no self-review theatre. So `main` moves without PRs and you
-  will not see an internal review queue.
-- **Contributions from everyone else come as pull requests**, and they
-  get reviewed and CI-checked before merge. That is the only path in for
-  outside code, and it is a real one — the checks below are the same ones
-  the maintainer runs locally before pushing.
-
-Practical consequences: rebase on `main` before you open a PR (it may
-have moved), and open an issue first for anything larger than a bug fix
-so you do not build something that collides with work in flight.
+The contribution workflow is managed by the repository where you host your
+Lapis copy. For larger changes, open an issue or discussion first; for code,
+work on a branch and submit a pull request so the change can be reviewed.
 
 ## Quick links
 
-- **Looking for something to work on?** [`ROADMAP.md`](./ROADMAP.md) has
-  a "Good first issues" list — real, verified, small tasks with file
-  paths.
+- **Looking for something to work on?** Start with [`ROADMAP.md`](./ROADMAP.md)
+  and the project analysis in [`docs/project-analysis.md`](./docs/project-analysis.md).
 - **Got a bug?** Open an issue with the bug template — a small repro
   helps most.
-- **Want to discuss before coding?** Open a GitHub Discussion (or an
-  issue with the feature template).
+- **Want to discuss before coding?** Open a GitHub Discussion or issue in
+  the repository where you host Lapis.
 - **Tiny doc fix?** Just open a PR.
 
 ## Dev setup
 
 ### Prerequisites
 
-- Node 20+ (LTS)
-- Bun 1.3+ (the repo pins `packageManager: bun@1.3.14`)
+- Node.js 22 or 24 (Convex-supported runtimes for server actions)
+- Bun 1.4.2+ (the repository pins `packageManager: bun@1.4.2`)
 - Docker + Docker Compose (for self-hosted Convex lane)
 - A Convex Cloud account (for the cloud lane)
 
 ### Local install
 
 ```bash
-git clone https://github.com/rahmanef63/open-silong.git
-cd open-silong
 bun install
 cp .env.example .env.local
-# Pick your Convex lane — see DEPLOY.md
+# Terminal 1
+bunx convex dev
+```
+
+In a second terminal:
+
+```bash
+# Terminal 2
 bun run dev
 ```
 
 Hot-reload Next at `http://localhost:3000`. The Convex dev backend
-streams logs in the terminal you ran `bun run convex:dev` in.
+streams logs in the terminal where you ran `bunx convex dev`.
 
 ### Useful scripts
 
@@ -65,7 +59,7 @@ bun run convex:dev        # Convex dev backend (cloud lane)
 bun run convex:deploy     # push functions to your Convex backend
 ```
 
-**Bun, not npm/pnpm.** The repo migrated in v1.1.0 (`bun.lock`, no
+**Bun, not npm/pnpm.** The project uses `bun.lock`, no
 `pnpm-lock.yaml`). One exception: **tests run on vitest** — use
 `bun run test` or `bunx vitest run`. Never `bun test`; its runner claims
 the same file globs and breaks the convex-test/jsdom suite.

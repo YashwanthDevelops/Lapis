@@ -59,7 +59,7 @@ export default function Home() {
       <div className="text-center">
         <div className="mx-auto mb-4 size-10 animate-spin rounded-full border-2 border-border border-t-foreground" />
         <p className="text-sm text-muted-foreground">
-          {IS_DEMO ? "Menyiapkan workspace demo…" : "Membuka workspace…"}
+          {IS_DEMO ? "Preparing the demo workspace…" : "Opening your workspace…"}
         </p>
       </div>
     </main>

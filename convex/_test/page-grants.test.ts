@@ -4,8 +4,8 @@
 // convex/_shared/pageGrants.ts (canReadPage / requirePageWritable) + the
 // grant-management gate in convex/pageGrants.ts (grant / revoke / list).
 //
-// Error strings are the gate literals: "Tidak berwenang" (FORBIDDEN — can
-// read but not write) and "Tidak ditemukan" (NOT_FOUND — hidden / non-member).
+// Error strings are the gate literals: "Forbidden" (FORBIDDEN — can
+// read but not write) and "Not found" (NOT_FOUND — hidden / non-member).
 import { expect, test } from "vitest";
 import { api } from "../_generated/api";
 import { testCtx, seedUser } from "../testHarness.test";
@@ -37,7 +37,7 @@ test("viewer grant reads the page via getById but cannot update it", async () =>
   // But a viewer grant is read-only → update rejects with FORBIDDEN.
   await expect(
     grantee.asUser.mutation(api.pages.update, { pageId, patch: { title: "hijacked" } }),
-  ).rejects.toThrow(/Tidak berwenang/);
+  ).rejects.toThrow(/Forbidden/);
 
   // State unchanged — the write never landed.
   expect((await owner.asUser.query(api.pages.getById, { id: pageId }))?.title).toBe("Shared Doc");
@@ -81,17 +81,17 @@ test("editor grant reads + updates content but cannot trash/permanentlyDelete/gr
   // workspace-only (grant-blind gate → grantee is not a member → NOT_FOUND).
   await expect(
     grantee.asUser.mutation(api.pages.trash, { pageId }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
   await expect(
     grantee.asUser.mutation(api.pages.permanentlyDelete, { pageId }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
   await expect(
     grantee.asUser.mutation(api.pageGrants.grant, {
       pageId,
       email: "third@example.com",
       role: "viewer",
     }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
 
   // Page still alive + not trashed after the rejected lifecycle calls.
   const after = await owner.asUser.query(api.pages.getById, { id: pageId });
@@ -120,7 +120,7 @@ test("revoke removes the grantee's read + write access", async () => {
   expect(await grantee.asUser.query(api.pages.getById, { id: pageId })).toBeNull();
   await expect(
     grantee.asUser.mutation(api.pages.update, { pageId, patch: { title: "x" } }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
 });
 
 // ---------------------------------------------------------------------------
@@ -136,7 +136,7 @@ test("a non-grantee non-member is denied read and write", async () => {
   expect(await stranger.asUser.query(api.pages.getById, { id: pageId })).toBeNull();
   await expect(
     stranger.asUser.mutation(api.pages.update, { pageId, patch: { title: "x" } }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
 });
 
 // ---------------------------------------------------------------------------
@@ -158,7 +158,7 @@ test("only owner/workspace-writable can grant; strangers and grantees cannot", a
       email: "victim@example.com",
       role: "editor",
     }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
 
   // Owner can — and list reflects the single grant with the grantee email.
   await owner.asUser.mutation(api.pageGrants.grant, { pageId, email: "victim@example.com", role: "viewer" });
@@ -170,7 +170,7 @@ test("only owner/workspace-writable can grant; strangers and grantees cannot", a
   // A stranger cannot even list.
   await expect(
     stranger.asUser.query(api.pageGrants.list, { pageId }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
 });
 
 // ---------------------------------------------------------------------------
@@ -231,7 +231,7 @@ test("re-granting the same user upserts the role (viewer -> editor)", async () =
   await owner.asUser.mutation(api.pageGrants.grant, { pageId, email: "user@example.com", role: "viewer" });
   await expect(
     grantee.asUser.mutation(api.pages.update, { pageId, patch: { title: "nope" } }),
-  ).rejects.toThrow(/Tidak berwenang/);
+  ).rejects.toThrow(/Forbidden/);
 
   // Re-grant as editor — upsert, no duplicate row, now writable.
   const res = await owner.asUser.mutation(api.pageGrants.grant, { pageId, email: "user@example.com", role: "editor" });

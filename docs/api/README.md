@@ -1,6 +1,6 @@
 # API documentation
 
-Reference for downstream features building on open-silong's page + database
+Reference for downstream features building on Lapis's page + database
 core. Read in order:
 
 | Doc | Audience |

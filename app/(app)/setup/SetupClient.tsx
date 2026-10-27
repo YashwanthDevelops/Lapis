@@ -34,7 +34,7 @@ export function SetupClient() {
     try {
       await claim();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Klaim gagal — coba lagi.");
+      setError(e instanceof Error ? e.message : "Could not claim ownership. Try again.");
     } finally {
       setClaiming(false);
     }
@@ -47,11 +47,11 @@ export function SetupClient() {
       const res = await seedAll({});
       setSeedNote(
         res.alreadySeeded
-          ? `Galeri template di-sync ulang (${res.gallery.updated} template).`
-          : `${res.gallery.inserted} template + workspace contoh (${res.showcase?.insertedPages ?? 0} halaman, ${res.showcase?.insertedDatabases ?? 0} database) terpasang.`,
+          ? `Template gallery refreshed (${res.gallery.updated} templates).`
+          : `${res.gallery.inserted} templates and a sample workspace (${res.showcase?.insertedPages ?? 0} pages, ${res.showcase?.insertedDatabases ?? 0} databases) were added.`,
       );
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Seed gagal — coba lagi.");
+      setError(e instanceof Error ? e.message : "Could not load sample data. Try again.");
     } finally {
       setSeeding(false);
     }
@@ -65,75 +65,75 @@ export function SetupClient() {
     <div className="space-y-6">
       {setupStatus?.authReady === false && (
         <div className="rounded-xl border border-amber-500/40 bg-amber-500/5 p-4 text-sm">
-          <p className="font-medium">Kunci login belum terpasang</p>
+          <p className="font-medium">Authentication keys are not configured</p>
           <p className="mt-1 text-muted-foreground">
-            Deploy key kamu tidak punya izin menulis env Convex
-            (<code>WriteEnvironmentVariables</code>) — pendaftaran akan gagal
-            sampai ini dibereskan:
+            The Convex backend needs a JWT signing key before email sign-up can
+            work. For Convex Cloud, make sure your deploy key can write
+            environment variables and redeploy:
           </p>
           <ol className="mt-2 list-decimal space-y-1 pl-4 text-muted-foreground">
             <li>
               <a className="underline" href="https://dashboard.convex.dev" target="_blank" rel="noreferrer">dashboard.convex.dev</a>{" "}
-              → project kamu → <b>Production</b> → Settings → Deploy Keys →
-              generate key dengan capability <b>deploy + env:view + env:write</b>{" "}
-              (atau full access), pakai akun admin team.
+              → your project → <b>Production</b> → Settings → Deploy Keys →
+              create a key with <b>deploy + env:view + env:write</b> capabilities{" "}
+              (or full access) using a team admin account.
             </li>
-            <li>Vercel → Settings → Environment Variables → ganti <b>CONVEX_DEPLOY_KEY</b>.</li>
-            <li><b>Redeploy</b> — kunci login dibuat otomatis saat build.</li>
+            <li>In Vercel, replace <b>CONVEX_DEPLOY_KEY</b> under Settings → Environment Variables.</li>
+            <li><b>Redeploy</b> to provision the authentication keys during the build.</li>
           </ol>
         </div>
       )}
       <ol className="space-y-4">
-        <Step done={step1Done} title="1. Buat akun">
+        <Step done={step1Done} title="1. Create an account">
           <p className="text-sm text-muted-foreground">
-            Daftar dengan email + password (atau Google bila dikonfigurasi).
+            Sign up with an email and password, or Google if it is configured.
           </p>
           {!step1Done && (
             <Button asChild size="sm" className="mt-1 gap-2">
-              <Link href="/auth"><UserPlus className="size-4" /> Daftar / Masuk</Link>
+              <Link href="/auth"><UserPlus className="size-4" /> Sign up / Sign in</Link>
             </Button>
           )}
         </Step>
 
-        <Step done={step2Done} title="2. Klaim jadi pemilik">
+        <Step done={step2Done} title="2. Claim ownership">
           <p className="text-sm text-muted-foreground">
-            Pengunjung pertama jadi superadmin — kontrol penuh workspace ini.
+            The first visitor becomes the superadmin and gets full control of this workspace.
           </p>
           {signedIn && claimableSuperAdmin && (
             <Button size="sm" onClick={onClaim} disabled={claiming} className="mt-1 gap-2">
               <Crown className="size-4" />
-              {claiming ? "Mengklaim…" : "Klaim sekarang"}
+              {claiming ? "Claiming…" : "Claim ownership"}
             </Button>
           )}
           {claimedByOther && (
             <p className="text-sm text-amber-600">
-              Workspace ini sudah ada pemiliknya — minta akses dari superadmin.
+              This workspace already has an owner. Ask the superadmin for access.
             </p>
           )}
         </Step>
 
-        <Step done={step3Done} title="3. Isi data contoh">
+        <Step done={step3Done} title="3. Add sample data">
           <p className="text-sm text-muted-foreground">
-            Galeri 26+ template (CRM, sprint, budget, …) + workspace contoh
-            lengkap — halaman, database, semua tipe view. Sekali klik.
+            Add 26+ templates (CRM, sprint planning, budgets, and more) plus a
+            sample workspace with pages, databases, and every view type.
           </p>
           {step2Done && !step3Done && (
             <Button size="sm" onClick={onSeed} disabled={seeding} className="mt-1 gap-2">
               <Database className="size-4" />
-              {seeding ? "Mengisi data…" : "Isi data contoh"}
+              {seeding ? "Adding sample data…" : "Add sample data"}
             </Button>
           )}
           {!step2Done && !step3Done && (
             <p className="text-xs text-muted-foreground">
-              Klaim kepemilikan dulu — hanya pemilik/admin yang bisa seed.
+              Claim ownership first. Only the owner or an admin can add sample data.
             </p>
           )}
           {seedNote && <p className="text-sm text-green-600">{seedNote}</p>}
         </Step>
 
-        <Step done={step2Done && step3Done} title="4. Masuk workspace">
+        <Step done={step2Done && step3Done} title="4. Open your workspace">
           <p className="text-sm text-muted-foreground">
-            Block editor, database, sharing — semua siap dipakai.
+            Your block editor, databases, and sharing tools are ready to use.
           </p>
         </Step>
       </ol>
@@ -142,13 +142,13 @@ export function SetupClient() {
         <Button
           variant={step2Done ? "default" : "outline"}
           className="gap-2"
-          onClick={() => router.push(step2Done ? "/dashboard/admin" : "/dashboard")}
+          onClick={() => router.push("/dashboard")}
         >
-          <Rocket className="size-4" /> Buka workspace
+          <Rocket className="size-4" /> Open workspace
         </Button>
         {!signedIn && (
           <Button asChild variant="ghost" className="gap-2">
-            <Link href="/auth"><LogIn className="size-4" /> Sudah punya akun</Link>
+            <Link href="/auth"><LogIn className="size-4" /> I already have an account</Link>
           </Button>
         )}
       </div>

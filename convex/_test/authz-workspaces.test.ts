@@ -17,7 +17,7 @@
 // Denials assert stored state is unchanged, so a handler that throws after
 // writing still fails.
 //
-// Note the two deny SHAPES here: mutations throw ("Tidak ditemukan" = not a
+// Note the two deny SHAPES here: mutations throw ("Not found" = not a
 // member; "Only owner can …" = member, role too low), while the roster/invite
 // QUERIES return [] instead of throwing. The assertions track what each
 // handler actually does — an empty array from `members` is the deny.
@@ -141,7 +141,7 @@ test("setIcon: owner-only — an editor member and a stranger are both refused",
   ).rejects.toThrow(/Only owner can set icon/);
   await expect(
     stranger.asUser.mutation(api.workspaces.setIcon, { workspaceId, emoji: "💀" }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
   await expect(
     t.mutation(api.workspaces.setIcon, { workspaceId, emoji: "💀" }),
   ).rejects.toThrow();
@@ -175,7 +175,7 @@ test("setTheme: editor allowed, viewer refused, stranger hidden", async () => {
   ).rejects.toThrow(/owner or editor/);
   await expect(
     stranger.asUser.mutation(api.workspaces.setTheme, { workspaceId, themePresetId: "hijack" }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
   // (c) unauthenticated.
   await expect(
     t.mutation(api.workspaces.setTheme, { workspaceId, themePresetId: "hijack" }),
@@ -201,7 +201,7 @@ test("remove: owner-only, and the personal workspace can never be deleted", asyn
   ).rejects.toThrow(/Only owner can delete/);
   await expect(
     stranger.asUser.mutation(api.workspaces.remove, { workspaceId }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
   // (c) unauthenticated.
   await expect(t.mutation(api.workspaces.remove, { workspaceId })).rejects.toThrow();
   expect(await t.run(async (ctx) => ctx.db.get(workspaceId))).not.toBeNull();
@@ -237,7 +237,7 @@ test("leave: a member drops only their own membership; owner and outsiders canno
   // member's row is touched.
   await expect(
     stranger.asUser.mutation(api.workspaces.leave, { workspaceId }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
   // (c) unauthenticated.
   await expect(t.mutation(api.workspaces.leave, { workspaceId })).rejects.toThrow();
   expect(await memberRow(t, workspaceId, editor.userId)).not.toBeNull();
@@ -296,7 +296,7 @@ test("invites.create: owner-only — editor member, stranger and anonymous refus
   ).rejects.toThrow(/Only owner can invite/);
   await expect(
     stranger.asUser.mutation(api.invites.create, { workspaceId, role: "editor" }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
   // (c) unauthenticated.
   await expect(
     t.mutation(api.invites.create, { workspaceId, role: "editor" }),
@@ -351,7 +351,7 @@ test("invites.revoke: owner-only; a member cannot revoke and the invite survives
   ).rejects.toThrow(/Only owner can revoke/);
   await expect(
     stranger.asUser.mutation(api.invites.revoke, { inviteId }),
-  ).rejects.toThrow(/Tidak ditemukan/);
+  ).rejects.toThrow(/Not found/);
   await expect(t.mutation(api.invites.revoke, { inviteId })).rejects.toThrow();
   expect(await t.run(async (ctx) => ctx.db.get(inviteId))).not.toBeNull();
 

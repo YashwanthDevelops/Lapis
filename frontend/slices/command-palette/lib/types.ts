@@ -1,9 +1,9 @@
 /** Generic, renderless command-palette contract.
  *
  * The palette and its sub-groups consume `CommandGroup[]` plus a label bag.
- * Consumer-side adapters (e.g. `adapters/nosion.tsx`) translate domain
+ * Consumer-side adapters (e.g. `adapters/lapis.tsx`) translate domain
  * state (pages, databases, …) into this shape. Keeps the kitab slice
- * free of Nosion-specific imports.
+ * free of Lapis-specific imports.
  */
 
 import type { ReactNode } from "react";

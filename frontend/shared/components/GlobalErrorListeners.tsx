@@ -5,7 +5,7 @@ import { isChunkLoadError } from "./ChunkErrorBoundary";
 import { hardReload } from "./VersionWatcher";
 import { logError } from "@/shared/lib/error";
 
-const RELOAD_FLAG = "nosion:chunk-reloaded-at";
+const RELOAD_FLAG = "lapis:chunk-reloaded-at";
 const RELOAD_COOLDOWN_MS = 60_000;
 
 /** Catches chunk-load failures that escape the React tree — async

@@ -90,7 +90,7 @@ export const fetchPage = internalQuery({
     if (!doc || doc.userId !== args.userId) return null;
     // Splice blocks back in from `pageBlocks` (falls back to legacy
     // doc.blocks). MCP callers that render a page's content — jsonrpc
-    // `pages_get`, http `nosion-fetch` — read `.blocks` off this shape,
+    // `pages_get`, http `lapis-fetch` — read `.blocks` off this shape,
     // so the block-split read lives here (mirrors `pages.getById`).
     return { ...doc, blocks: (await readPageBlocks(ctx, doc)) as typeof doc.blocks };
   },
@@ -190,7 +190,7 @@ export const updatePage = internalMutation({
   },
   handler: async (ctx, args) => {
     const doc = await ctx.db.get(args.pageId as Id<"pages">);
-    if (!doc || doc.userId !== args.userId) throw new Error("Tidak ditemukan");
+    if (!doc || doc.userId !== args.userId) throw new Error("Not found");
     const allowed = ["title", "icon", "cover", "blocks", "favorite", "parentId", "font", "smallText", "fullWidth", "locked", "rowProps"];
     const patch: Record<string, unknown> = {};
     for (const k of allowed) {
@@ -245,7 +245,7 @@ export const movePage = internalMutation({
   args: { userId: v.id("users"), pageId: v.string(), parentId: v.union(v.string(), v.null()) },
   handler: async (ctx, args) => {
     const doc = await ctx.db.get(args.pageId as Id<"pages">);
-    if (!doc || doc.userId !== args.userId) throw new Error("Tidak ditemukan");
+    if (!doc || doc.userId !== args.userId) throw new Error("Not found");
 
     // Same reparent validation `pages.update` performs. It was missing here,
     // so the REST surface (which has dispatched movePage all along) could
@@ -257,10 +257,10 @@ export const movePage = internalMutation({
       const target = await ctx.db.get(newParentId);
       // Not-found-vs-forbidden collapse, as everywhere else in this module.
       if (!target || target.trashed || target.userId !== args.userId) {
-        throw new Error("Tidak ditemukan");
+        throw new Error("Not found");
       }
       if ((target.workspaceId ?? null) !== (doc.workspaceId ?? null)) {
-        throw new Error("Tidak ditemukan");
+        throw new Error("Not found");
       }
       const subtree = await collectDescendantIds(ctx, args.pageId as Id<"pages">, args.userId, doc.workspaceId);
       if (subtree.includes(newParentId)) {
@@ -277,7 +277,7 @@ export const trashPage = internalMutation({
   args: { userId: v.id("users"), pageId: v.string() },
   handler: async (ctx, args) => {
     const doc = await ctx.db.get(args.pageId as Id<"pages">);
-    if (!doc || doc.userId !== args.userId) throw new Error("Tidak ditemukan");
+    if (!doc || doc.userId !== args.userId) throw new Error("Not found");
     await ctx.db.patch(args.pageId as Id<"pages">, { trashed: true, updatedAt: Date.now() });
     return { ok: true };
   },
@@ -287,7 +287,7 @@ export const duplicatePage = internalMutation({
   args: { userId: v.id("users"), pageId: v.string() },
   handler: async (ctx, args) => {
     const src = await ctx.db.get(args.pageId as Id<"pages">);
-    if (!src || src.userId !== args.userId) throw new Error("Tidak ditemukan");
+    if (!src || src.userId !== args.userId) throw new Error("Not found");
     const now = Date.now();
     const srcBlocks = await readPageBlocks(ctx, src);
     const cloned = structuredClone(srcBlocks) as BlockLike[];
@@ -350,7 +350,7 @@ export const updateDatabase = internalMutation({
   args: { userId: v.id("users"), dbId: v.string(), patch: v.any() },
   handler: async (ctx, args) => {
     const doc = await ctx.db.get(args.dbId as Id<"databases">);
-    if (!doc || doc.userId !== args.userId) throw new Error("Tidak ditemukan");
+    if (!doc || doc.userId !== args.userId) throw new Error("Not found");
     await ctx.db.patch(args.dbId as Id<"databases">, { ...args.patch, updatedAt: Date.now() });
     return { ok: true };
   },
@@ -365,7 +365,7 @@ export const createRow = internalMutation({
   },
   handler: async (ctx, args) => {
     const db = await ctx.db.get(args.dbId as Id<"databases">);
-    if (!db || db.userId !== args.userId) throw new Error("Tidak ditemukan");
+    if (!db || db.userId !== args.userId) throw new Error("Not found");
     const now = Date.now();
     const ws = await getActiveWorkspaceMutation(ctx, args.userId);
     const blocks = [{ id: uid(), type: "paragraph", text: "" }];
@@ -398,7 +398,7 @@ export const updateRow = internalMutation({
   args: { userId: v.id("users"), rowPageId: v.string(), rowProps: v.any() },
   handler: async (ctx, args) => {
     const doc = await ctx.db.get(args.rowPageId as Id<"pages">);
-    if (!doc || doc.userId !== args.userId) throw new Error("Tidak ditemukan");
+    if (!doc || doc.userId !== args.userId) throw new Error("Not found");
     const merged = { ...(doc.rowProps ?? {}), ...(args.rowProps ?? {}) };
     await ctx.db.patch(args.rowPageId as Id<"pages">, { rowProps: merged, updatedAt: Date.now() });
     return { ok: true };
@@ -414,7 +414,7 @@ export const appendMarkdownAs = internalMutation({
   args: { userId: v.id("users"), pageId: v.string(), markdown: v.string() },
   handler: async (ctx, args) => {
     const page = await ctx.db.get(args.pageId as Id<"pages">);
-    if (!page || page.userId !== args.userId) throw new Error("Tidak ditemukan");
+    if (!page || page.userId !== args.userId) throw new Error("Not found");
     const parsed = markdownToBlocks(args.markdown);
     const cur = (await readPageBlocks(ctx, page)) as Array<{ id: string; type?: string; text?: string }>;
     const trimmed = cur.length === 1 && cur[0].type === "paragraph" && cur[0].text === ""
@@ -436,7 +436,7 @@ export const setTitleAs = internalMutation({
   args: { userId: v.id("users"), pageId: v.string(), title: v.string() },
   handler: async (ctx, args) => {
     const page = await ctx.db.get(args.pageId as Id<"pages">);
-    if (!page || page.userId !== args.userId) throw new Error("Tidak ditemukan");
+    if (!page || page.userId !== args.userId) throw new Error("Not found");
     if (args.title.length > CHAR_CAPS.pageTitle) throw new Error("Title too long");
     // Title-only change — rebuild searchText from the stored blocks, but a
     // plain patch keeps `pageBlocks` untouched (don't empty content here).
@@ -457,9 +457,9 @@ export const embedDatabaseAs = internalMutation({
   args: { userId: v.id("users"), pageId: v.string(), dbId: v.string() },
   handler: async (ctx, args) => {
     const page = await ctx.db.get(args.pageId as Id<"pages">);
-    if (!page || page.userId !== args.userId) throw new Error("Page tidak ditemukan");
+    if (!page || page.userId !== args.userId) throw new Error("Page not found");
     const db = await ctx.db.get(args.dbId as Id<"databases">);
-    if (!db || db.userId !== args.userId) throw new Error("Database tidak ditemukan");
+    if (!db || db.userId !== args.userId) throw new Error("Database not found");
     const cur = (await readPageBlocks(ctx, page)) as Array<{ id: string; type?: string; text?: string }>;
     // Drop the stub empty paragraph that new pages ship with so the
     // embed renders flush with the page top.
@@ -493,7 +493,7 @@ export const appendColumnsAs = internalMutation({
       throw new Error("columns must be 2..4 entries");
     }
     const page = await ctx.db.get(args.pageId as Id<"pages">);
-    if (!page || page.userId !== args.userId) throw new Error("Page tidak ditemukan");
+    if (!page || page.userId !== args.userId) throw new Error("Page not found");
     const layoutId = uid();
     const newLayout = {
       id: layoutId,
@@ -531,7 +531,7 @@ export const setIconAs = internalMutation({
   args: { userId: v.id("users"), pageId: v.string(), icon: v.string() },
   handler: async (ctx, args) => {
     const page = await ctx.db.get(args.pageId as Id<"pages">);
-    if (!page || page.userId !== args.userId) throw new Error("Tidak ditemukan");
+    if (!page || page.userId !== args.userId) throw new Error("Not found");
     const icon = args.icon.trim().slice(0, 8) || "📄";
     await ctx.db.patch(args.pageId as Id<"pages">, { icon, updatedAt: Date.now() });
     return { ok: true };
@@ -914,7 +914,7 @@ export const addLink = internalMutation({
   },
   handler: async (ctx, args) => {
     const page = await ctx.db.get(args.fromPageId as Id<"pages">);
-    if (!page || page.userId !== args.userId) throw new Error("Tidak ditemukan");
+    if (!page || page.userId !== args.userId) throw new Error("Not found");
 
     let title = stripWikiBrackets(args.to);
     const maybeId = ctx.db.normalizeId("pages", args.to);
@@ -948,7 +948,7 @@ export const addTag = internalMutation({
   args: { userId: v.id("users"), pageId: v.string(), tag: v.string() },
   handler: async (ctx, args) => {
     const page = await ctx.db.get(args.pageId as Id<"pages">);
-    if (!page || page.userId !== args.userId) throw new Error("Tidak ditemukan");
+    if (!page || page.userId !== args.userId) throw new Error("Not found");
     const tag = normalizeTag(args.tag);
     if (!tag) throw new Error("Invalid tag");
     if ((page.tags ?? []).includes(tag)) {
@@ -990,7 +990,7 @@ export const addTag = internalMutation({
 //
 // The cross-project case this exists for: another system (konglo-os,
 // CareerPack, …) owns a body of best-practice structure and wants to
-// publish it INTO an open-silong workspace, repeatedly, as its own source
+// publish it INTO an Lapis workspace, repeatedly, as its own source
 // evolves. The per-node tools (`pages_create` + `pages_append_markdown`)
 // can express that, but only as N round-trips with no identity — a second
 // send duplicates the whole tree.
@@ -1116,7 +1116,7 @@ export const structureUpsert = internalMutation({
     const rootParent = args.parentId ? (args.parentId as Id<"pages">) : null;
     if (rootParent) {
       const parent = await ctx.db.get(rootParent);
-      if (!parent || parent.userId !== args.userId) throw new Error("Tidak ditemukan");
+      if (!parent || parent.userId !== args.userId) throw new Error("Not found");
     }
     await walk(args.nodes as StructureNode[], rootParent, 1);
 
@@ -1139,7 +1139,7 @@ export const restorePage = internalMutation({
   args: { userId: v.id("users"), pageId: v.string() },
   handler: async (ctx, args) => {
     const doc = await ctx.db.get(args.pageId as Id<"pages">);
-    if (!doc || doc.userId !== args.userId) throw new Error("Tidak ditemukan");
+    if (!doc || doc.userId !== args.userId) throw new Error("Not found");
     await ctx.db.patch(args.pageId as Id<"pages">, { trashed: false, updatedAt: Date.now() });
     return { ok: true, pageId: args.pageId, title: doc.title };
   },
@@ -1156,7 +1156,7 @@ export const permanentlyDeletePage = internalMutation({
   args: { userId: v.id("users"), pageId: v.string() },
   handler: async (ctx, args) => {
     const page = await ctx.db.get(args.pageId as Id<"pages">);
-    if (!page || page.userId !== args.userId) throw new Error("Tidak ditemukan");
+    if (!page || page.userId !== args.userId) throw new Error("Not found");
     if (!page.trashed) {
       throw new Error("Page must be trashed before it can be permanently deleted — call pages_trash first");
     }
@@ -1204,7 +1204,7 @@ export const setFavorite = internalMutation({
   args: { userId: v.id("users"), pageId: v.string(), favorite: v.boolean() },
   handler: async (ctx, args) => {
     const doc = await ctx.db.get(args.pageId as Id<"pages">);
-    if (!doc || doc.userId !== args.userId) throw new Error("Tidak ditemukan");
+    if (!doc || doc.userId !== args.userId) throw new Error("Not found");
     await ctx.db.patch(args.pageId as Id<"pages">, { favorite: args.favorite, updatedAt: Date.now() });
     return { ok: true, favorite: args.favorite };
   },
@@ -1216,7 +1216,7 @@ export const restoreDatabase = internalMutation({
   args: { userId: v.id("users"), dbId: v.string() },
   handler: async (ctx, args) => {
     const doc = await ctx.db.get(args.dbId as Id<"databases">);
-    if (!doc || doc.userId !== args.userId) throw new Error("Tidak ditemukan");
+    if (!doc || doc.userId !== args.userId) throw new Error("Not found");
     await ctx.db.patch(args.dbId as Id<"databases">, { trashed: false, updatedAt: Date.now() });
     return { ok: true, dbId: args.dbId, name: doc.name };
   },
@@ -1246,9 +1246,9 @@ async function requirePage(ctx: QueryCtx, userId: Id<"users">, pageId: string) {
   try {
     doc = await ctx.db.get(pageId as Id<"pages">);
   } catch {
-    throw new Error("Tidak ditemukan");
+    throw new Error("Not found");
   }
-  if (!doc || doc.userId !== userId) throw new Error("Tidak ditemukan");
+  if (!doc || doc.userId !== userId) throw new Error("Not found");
   return doc;
 }
 
@@ -1315,7 +1315,7 @@ export const setCommentResolved = internalMutation({
   args: { userId: v.id("users"), commentId: v.string(), resolved: v.boolean() },
   handler: async (ctx, args) => {
     const c = await ctx.db.get(args.commentId as Id<"comments">);
-    if (!c) throw new Error("Tidak ditemukan");
+    if (!c) throw new Error("Not found");
     // Author OR page owner, matching the UI's moderation rule.
     if (c.userId !== args.userId) await requirePage(ctx, args.userId, c.pageId);
     await ctx.db.patch(c._id, { resolved: args.resolved, updatedAt: Date.now() });
@@ -1327,7 +1327,7 @@ export const deleteComment = internalMutation({
   args: { userId: v.id("users"), commentId: v.string() },
   handler: async (ctx, args) => {
     const c = await ctx.db.get(args.commentId as Id<"comments">);
-    if (!c) throw new Error("Tidak ditemukan");
+    if (!c) throw new Error("Not found");
     if (c.userId !== args.userId) await requirePage(ctx, args.userId, c.pageId);
     await ctx.db.delete(c._id);
     return { ok: true, commentId: args.commentId };
@@ -1417,9 +1417,9 @@ export const restoreSnapshot = internalMutation({
     try {
       snap = await ctx.db.get(args.snapshotId as Id<"snapshots">);
     } catch {
-      throw new Error("Tidak ditemukan");
+      throw new Error("Not found");
     }
-    if (!snap || snap.userId !== args.userId) throw new Error("Tidak ditemukan");
+    if (!snap || snap.userId !== args.userId) throw new Error("Not found");
     const page = await requirePage(ctx, args.userId, snap.pageId);
 
     await captureSnapshot(ctx, page, "before restore");

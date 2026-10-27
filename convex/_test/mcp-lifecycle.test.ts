@@ -119,6 +119,6 @@ test("every lifecycle mutation refuses another user's page", async () => {
     () => t.mutation(internal.mcp.internal.setFavorite, { userId: strangerId, pageId, favorite: true }),
     () => t.mutation(internal.mcp.internal.movePage, { userId: strangerId, pageId, parentId: null }),
   ]) {
-    await expect(call()).rejects.toThrow(/Tidak ditemukan/);
+    await expect(call()).rejects.toThrow(/Not found/);
   }
 });

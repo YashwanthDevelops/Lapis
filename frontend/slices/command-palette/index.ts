@@ -1,7 +1,7 @@
 // Renderless kitab-portable core (consume with explicit `groups` prop).
 export { CommandPalette as CommandPaletteCore } from "./components/CommandPalette";
-// Nosion-bound consumer wrapper — back-compat default for the dashboard mount.
-export { NosionCommandPalette as CommandPalette } from "./adapters/NosionCommandPalette";
+// Lapis-bound consumer wrapper — back-compat default for the dashboard mount.
+export { LapisCommandPalette as CommandPalette } from "./adapters/LapisCommandPalette";
 export { ShortcutsDialog } from "./components/ShortcutsDialog";
 export type {
   CommandGroup,

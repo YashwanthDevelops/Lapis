@@ -43,16 +43,16 @@
   - [x] Mention
   - [ ] Permission (granular, per-page)
   - [ ] Activity log
-- [x] Relasi
-  - [ ] Workspace ↔ banyak members (single-user saat ini)
-  - [x] Workspace ↔ banyak pages
-  - [x] Page ↔ banyak blocks
-  - [x] Block punya children
-  - [x] Page bisa jadi database row
-  - [x] Database punya schema properties
-  - [x] Database row punya property values
-  - [x] Page punya parent page
-  - [ ] Page punya backlinks (data ada via mentions, panel display belum)
+- [x] Relationships
+  - [ ] Workspace ↔ multiple members (single-user for now)
+  - [x] Workspace ↔ multiple pages
+  - [x] Page ↔ multiple blocks
+  - [x] Blocks can have children
+  - [x] Pages can be database rows
+  - [x] Databases have schema properties
+  - [x] Database rows have property values
+  - [x] Pages can have parent pages
+  - [ ] Pages can have backlinks (data is available through mentions; the panel is not displayed yet)
 
 ## 0.3 Technical Architecture
 

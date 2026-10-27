@@ -13,9 +13,9 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
         // key no sign-in can ever succeed — fail with a pointer to /setup
         // instead of a half-created account. Mirrors
         // template-personal-brand-os c85c66a.
-        if (!process.env.JWT_PRIVATE_KEY) {
+        if (!process.env.JWT_PRIVATE_KEY || !process.env.JWKS) {
           throw new ConvexError(
-            "Kunci login belum terpasang di backend. Buka /setup di situs ini untuk panduan perbaikannya.",
+            "Authentication signing keys are missing from the backend. Open /setup on this site for instructions.",
           );
         }
         return { email: params.email as string };

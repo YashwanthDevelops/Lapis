@@ -5,7 +5,7 @@
  *  blocks only, no databases / no embedded media — so the seed is
  *  self-contained and won't drift if block-renderer plumbing changes.
  *
- *  Skipped entirely when the env var SILONG_DISABLE_SEED is "1" — lets
+ *  Skipped when LAPIS_DISABLE_SEED is "1" — lets
  *  self-hosters opt out without forking. */
 
 import type { MutationCtx } from "../_generated/server";
@@ -24,10 +24,10 @@ function divider(): Block { return { id: uid(), type: "divider", text: "" }; }
 
 const SEED_PAGES: Array<{ title: string; icon: string; blocks: Block[] }> = [
   {
-    title: "👋 Welcome to Silong",
+    title: "👋 Welcome to Lapis",
     icon: "👋",
     blocks: [
-      p("Silong is an open-source collaborative workspace — your notes, your server, your rules. Built with Next 16, React 19, and Convex 1.36."),
+      p("Lapis is your flexible workspace for notes, plans, and shared knowledge. Shape it around the way you think and work."),
       h2("What you can do here"),
       bullet("**Write** pages with rich blocks — headings, lists, quotes, code, math, callouts."),
       bullet("**Organise** with nested sub-pages + drag-and-drop reorder."),
@@ -62,18 +62,17 @@ const SEED_PAGES: Array<{ title: string; icon: string; blocks: Block[] }> = [
     title: "🚀 Self-hosting & next steps",
     icon: "🚀",
     blocks: [
-      p("Silong is MIT-licensed. Fork it, deploy it, contribute back."),
+      p("Make this workspace yours. Organise your work, adjust your setup, and invite people when you are ready."),
       h2("Three deployment lanes"),
       bullet("**Convex Cloud** — fastest, free tier covers small teams."),
       bullet("**Self-hosted Docker** — your VPS + Postgres + S3 (optional)."),
-      bullet("**Public demo** — the upstream demo at silong-os.vercel.app."),
-      p("Full instructions: `DEPLOY.md` in the repo."),
+      bullet("**Your Lapis deployment** — use Convex Cloud or self-host with Docker."),
+      p("Setup instructions: `DEPLOY.md` in the project repository."),
       h2("Get involved"),
-      bullet("Source: github.com/rahmanef63/open-silong"),
-      bullet("Issues + feature requests welcome — see CONTRIBUTING.md."),
-      bullet("Security disclosures: SECURITY.md (private email + GitHub Advisory)."),
+      bullet("Help and contribution guidance: see `CONTRIBUTING.md` in the project repository."),
+      bullet("For security disclosures, follow the private reporting instructions in `SECURITY.md`."),
       h2("Looking for the UI primitives only?"),
-      p("The Notion-style wrappers + 6 database views ship as a separate npm-installable rr slice: `npx rr add notion-shell`. Use that when you only need to embed the editor in another project — no Convex required."),
+      p("Lapis can exchange workspace content with Notion when you need to move existing work."),
     ],
   },
 ];
@@ -85,7 +84,7 @@ export async function seedWelcomeContent(
 ): Promise<void> {
   // Opt-out env var lets self-hosters disable the seed without forking.
   // Convex env vars are env-injected via `bunx convex env set`.
-  if (process.env.SILONG_DISABLE_SEED === "1") return;
+  if (process.env.LAPIS_DISABLE_SEED === "1" || process.env.SILONG_DISABLE_SEED === "1") return;
 
   const now = Date.now();
   for (const page of SEED_PAGES) {

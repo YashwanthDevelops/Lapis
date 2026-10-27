@@ -9,10 +9,9 @@ export async function sha256Hex(input: string): Promise<string> {
 }
 
 /** Cryptographically random 32-byte token, base64url-encoded with the
- *  `nsn_` prefix so the http surface can route plaintext tokens to the
- *  per-user lookup branch (env-baked tokens lack the prefix). */
+ *  `lps_` prefix so the http surface can route it to the per-user lookup. */
 export function generateMcpToken(): string {
   const bytes = new Uint8Array(32);
   crypto.getRandomValues(bytes);
-  return `nsn_${toBase64Url(bytes)}`;
+  return `lps_${toBase64Url(bytes)}`;
 }

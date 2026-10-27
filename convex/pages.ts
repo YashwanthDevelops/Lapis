@@ -452,9 +452,9 @@ export const update = mutation({
       const target = await ctx.db.get(newParentId);
       // Same not-found-vs-forbidden split the rest of this module uses: a
       // stranger must not learn that the page exists.
-      if (!target || target.trashed) throw new Error("Tidak ditemukan");
+      if (!target || target.trashed) throw new Error("Not found");
       if ((target.workspaceId ?? null) !== (page.workspaceId ?? null)) {
-        throw new Error("Tidak ditemukan");
+        throw new Error("Not found");
       }
       await requirePageWritable(ctx, newParentId);
       // Cycle guard: reparenting under own descendant detaches the subtree from

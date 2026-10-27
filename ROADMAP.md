@@ -1,6 +1,8 @@
-# Roadmap
+# Lapis roadmap — inherited baseline
 
-Where open-silong actually is, as of **2026-08-30** (v1.2.0). Derived from
+This records the feature state inherited from upstream **as of 2026-08-30**
+(v1.2.0), before the Lapis customization. Use it as a codebase inventory; the
+product-specific priorities still need to be set. Derived from
 `CHANGELOG.md`, the current audit
 (`docs/audit/2026-08-30-svelte-migration-plan.md`) and the pre-open-source backlog
 now archived at `docs/archive/notion-clone/`.
@@ -70,11 +72,10 @@ Real problems, deliberately not fixed yet. Reasoning in
   that missed slices documented under a different name, and `editor` is
   covered by `blocks.md` / `block-controls.md` / `inline-decorator.md` while
   `admin-panel` is covered by `admin.md`.)
-- **Legacy `Nosion` identifiers** remain across the code: storage keys
-  (`nosion:theme-preset`), the `nosion://sync/` URL scheme, the
-  `X-Nosion-Signature` webhook header. These are **persisted data and public
-  contracts** — renaming them breaks existing installs, so they need a
-  migration, not a find-and-replace.
+- **Legacy integration identifiers** remain as compatibility aliases. Lapis
+  migrates browser preferences, accepts old `nosion://sync/` references and
+  `nsn_` tokens, and continues sending the legacy webhook headers alongside
+  their Lapis equivalents so existing installs keep working.
 
 ## Out of scope
 

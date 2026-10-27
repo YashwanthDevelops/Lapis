@@ -1,6 +1,6 @@
 /** notion — kitab mega-slice.
  *
- *  Single public-API surface for consumers who want the full Nosion
+ *  Single public-API surface for consumers who want the full Lapis
  *  experience (block editor + Notion-style databases + templates +
  *  export/import + sharing + comments + …) as one drop-in.
  *

@@ -4,7 +4,7 @@ import Script from "next/script";
 import { usePathname } from "next/navigation";
 import { isPrivateRoute } from "./AnalyticsBeacon";
 
-const GA_ID = "G-82JXWGW4GM";
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 /** GA4 loader gated to PUBLIC routes only (/, /share/*, /site/*, /forms/*).
  *  The signed-in dashboard shouldn't ship or execute a third-party analytics
@@ -13,7 +13,7 @@ const GA_ID = "G-82JXWGW4GM";
  *  isPrivateRoute so the two stay in sync. */
 export function GoogleAnalytics() {
   const pathname = usePathname();
-  if (!pathname || isPrivateRoute(pathname)) return null;
+  if (!GA_ID || !pathname || isPrivateRoute(pathname)) return null;
   return (
     <>
       <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />

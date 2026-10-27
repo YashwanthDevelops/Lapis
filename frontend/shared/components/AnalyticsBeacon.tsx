@@ -11,8 +11,8 @@ import { usePathname } from "next/navigation";
 // signed-in dashboard + non-page routes so only public marketing/share/site
 // traffic is counted. Mounted once in the root layout (app/layout.tsx).
 
-const SESSION_ID_KEY = "silong_sid";
-const UTM_KEY = "silong_utm";
+const SESSION_ID_KEY = "lapis_sid";
+const UTM_KEY = "lapis_utm";
 const UTM_FIELDS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"] as const;
 type UtmKey = (typeof UTM_FIELDS)[number];
 type UtmBag = Partial<Record<UtmKey, string>>;

@@ -3,24 +3,18 @@
 // Credentials come from ENV — never hard-code them, never paste them in a
 // chat. Run it in YOUR terminal:
 //
-//   SILONG_EMAIL='you@example.com' SILONG_PASSWORD='••••••' \
+//   LAPIS_EMAIL='you@example.com' LAPIS_PASSWORD='••••••' \
 //     node scripts/capture-screenshots.mjs
 //
 // Env:
-//   SILONG_EMAIL / SILONG_PASSWORD   required — a seeded (superadmin) account
-//   SILONG_URL       base URL     (default https://silong-os.vercel.app)
-//   SILONG_HEADLESS  '0' to watch (default headless)
-//   SILONG_OUT       output dir   (default docs/media)
+//   LAPIS_EMAIL / LAPIS_PASSWORD   required — a seeded (superadmin) account
+//   LAPIS_URL       base URL     (default http://localhost:3000)
+//   LAPIS_HEADLESS  '0' to watch (default headless)
+//   LAPIS_OUT       output dir   (default docs/media)
+// Legacy SILONG_* variable names are still accepted for existing scripts.
 //
-// Emits every image README.md embeds, plus library.png and the two graph
-// shots. Keep this list and README in sync — a shot that lands here but is
-// referenced nowhere is dead weight, and a README image this cannot
-// regenerate goes stale the first time the UI moves.
-//
-//   README: admin · command-palette · dashboard · dashboard-dark ·
-//           database · database-board · editor · mobile-home · setup ·
-//           templates
-//   extra:  graph · graph-controls · library
+// Emits optional product walkthrough images into docs/media/. Captures are
+// deployment-specific and should be reviewed before adding them to docs.
 //
 // ponytail: one flat script, no page-object framework. Each shot is wrapped so
 // one failure never aborts the rest.
@@ -31,14 +25,14 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const BASE = (process.env.SILONG_URL || "https://silong-os.vercel.app").replace(/\/$/, "");
-const OUT = resolve(ROOT, process.env.SILONG_OUT || "docs/media");
-const EMAIL = process.env.SILONG_EMAIL;
-const PASSWORD = process.env.SILONG_PASSWORD;
-const HEADLESS = process.env.SILONG_HEADLESS !== "0";
+const BASE = (process.env.LAPIS_URL || process.env.SILONG_URL || "http://localhost:3000").replace(/\/$/, "");
+const OUT = resolve(ROOT, process.env.LAPIS_OUT || process.env.SILONG_OUT || "docs/media");
+const EMAIL = process.env.LAPIS_EMAIL || process.env.SILONG_EMAIL;
+const PASSWORD = process.env.LAPIS_PASSWORD || process.env.SILONG_PASSWORD;
+const HEADLESS = (process.env.LAPIS_HEADLESS || process.env.SILONG_HEADLESS) !== "0";
 
 if (!EMAIL || !PASSWORD) {
-  console.error("✗ Set SILONG_EMAIL and SILONG_PASSWORD in your environment (not in code).");
+  console.error("✗ Set LAPIS_EMAIL and LAPIS_PASSWORD in your environment (not in code).");
   process.exit(1);
 }
 

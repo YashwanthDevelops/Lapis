@@ -1,4 +1,4 @@
-/** AI prompt generator for Nosion templates.
+/** AI prompt generator for Lapis templates.
  *
  *  Produces a fully-formed prompt — schema spec + few-shot example +
  *  user intent — that any top-tier LLM (GPT-4/5, Claude, Grok,
@@ -27,7 +27,7 @@ export const AI_PROVIDERS: Array<{
   { id: "gemini", label: "Gemini", url: "https://gemini.google.com/", emoji: "🟣", hint: "Strong on Google-stack integrations." },
 ];
 
-const SCHEMA_SPEC = `# Silong TemplateJson schema
+const SCHEMA_SPEC = `# Lapis TemplateJson schema
 
 Top-level (required): { version: 1, name, icon (emoji), category, description?, page }
 
@@ -175,7 +175,7 @@ const RULES = `# Rules
 /** Build a single, fully-formed prompt the user can paste into any
  *  LLM web UI. Includes schema, few-shot, rules, and the user's intent. */
 export function buildAiPrompt(userIntent: string): string {
-  return `You are an expert at designing block-based workspace templates for open-silong (a Notion-inspired collaborative workspace).
+  return `You are an expert at designing useful workspace templates for Lapis, a flexible productivity workspace for notes, planning, and shared knowledge.
 Generate a single \`TemplateJson\` for the user's intent below.
 
 ${SCHEMA_SPEC}

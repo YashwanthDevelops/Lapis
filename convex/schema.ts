@@ -26,8 +26,9 @@ export default defineSchema({
     isPersonal: v.optional(v.boolean()),     // true for the user's auto-created workspace
     createdAt: v.optional(v.number()),
     // Per-workspace theme — applied on workspace activation. User's
-    // per-device localStorage override (next-themes "silong-theme" +
-    // tweakcn "nosion:theme-preset" keys) wins if explicitly set
+    // per-device localStorage override (next-themes "lapis-theme" +
+    // tweakcn "lapis:theme-preset" keys) wins if explicitly set. Previous
+    // Silong/Nosion keys migrate in the app shell before preferences load.
     // AFTER activation. Workspace admins set these via Settings →
     // Workspace → Appearance.
     themePresetId: v.optional(v.string()),   // matches a tweakcn registry preset name

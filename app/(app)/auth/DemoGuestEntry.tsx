@@ -39,12 +39,12 @@ export function DemoGuestEntry() {
         }}
       >
         <Sparkles className="size-4" />
-        {busy ? "Menyiapkan workspace…" : "Coba demo tanpa daftar"}
+        {busy ? "Preparing your workspace…" : "Try the demo without signing up"}
       </Button>
       <div className="flex items-center gap-3">
         <div className="h-px flex-1 bg-border" />
         <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
-          atau masuk
+          or sign in
         </span>
         <div className="h-px flex-1 bg-border" />
       </div>

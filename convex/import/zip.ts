@@ -51,12 +51,12 @@ export const importZip = action({
   },
   handler: async (ctx, { storageId, parentId }): Promise<ImportSummary> => {
     const userId = await getAuthUserId(ctx);
-    if (!userId) throw new Error("Belum login");
+    if (!userId) throw new Error("Not signed in");
 
     const blob = await ctx.storage.get(storageId);
-    if (!blob) throw new Error("File ZIP tidak ditemukan di storage");
+    if (!blob) throw new Error("ZIP file not found in storage");
     if (blob.size > MAX_ZIP_BYTES) {
-      throw new Error(`ZIP terlalu besar (${blob.size} > ${MAX_ZIP_BYTES} bytes)`);
+      throw new Error(`ZIP file is too large (${blob.size} > ${MAX_ZIP_BYTES} bytes)`);
     }
 
     let u8 = new Uint8Array(await blob.arrayBuffer());
@@ -74,7 +74,7 @@ export const importZip = action({
         u8 = new Uint8Array(inflated.buffer, inflated.byteOffset, inflated.byteLength);
         wasGzipWrapped = true;
       } catch (e) {
-        throw new Error(`Gagal gunzip wrapper: ${(e as Error).message.slice(0, 120)}`);
+        throw new Error(`Could not decompress the gzip wrapper: ${(e as Error).message.slice(0, 120)}`);
       }
     }
 
@@ -87,8 +87,8 @@ export const importZip = action({
         (u8[2] === 0x05 && u8[3] === 0x06));
     if (!isZipMagic) {
       throw new Error(
-        `File bukan ZIP. ${blobBytes} bytes, head=${firstBytesHex}` +
-          (wasGzipWrapped ? " (sudah di-gunzip)" : ""),
+        `File is not a ZIP archive. ${blobBytes} bytes, header=${firstBytesHex}` +
+          (wasGzipWrapped ? " (decompressed from gzip)" : ""),
       );
     }
 
@@ -96,7 +96,7 @@ export const importZip = action({
     try {
       zip = await JSZip.loadAsync(u8);
     } catch (e) {
-      throw new Error(`JSZip load gagal: ${(e as Error).message.slice(0, 200)}`);
+      throw new Error(`JSZip could not load the archive: ${(e as Error).message.slice(0, 200)}`);
     }
 
     // Notion's "Export workspace" sometimes ships an outer zip that contains

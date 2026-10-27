@@ -1,6 +1,6 @@
 # Formula language reference
 
-open-silong's formula engine is a portable, Notion-style expression
+Lapis's formula engine is a portable, Notion-style expression
 evaluator. It powers `formula` database columns and (via the same engine)
 filtering/sorting on computed columns.
 
@@ -171,7 +171,7 @@ EngineHost<TProp, TVal, TPage, TDb>   // the consumer adapter
 evalFormulaCore(src, ctx)             // generic entry point
 ```
 
-- open-silong's adapter: `lib/formula.ts::silongHost`.
+- Lapis's adapter: `lib/formula.ts::lapisHost`.
 - A second Convex-`Doc`-shape adapter (`lib/convexHost.ts`) is parity-
   tested against it.
 - The engine is being extracted to the `rahman-shared` npm package

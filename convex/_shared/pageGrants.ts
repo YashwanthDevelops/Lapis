@@ -17,8 +17,8 @@ import type { Doc, Id } from "../_generated/dataModel";
 import { requireAuth } from "./auth";
 import { COUNT_CAPS } from "./limits";
 
-const FORBIDDEN = "Tidak berwenang";
-const NOT_FOUND = "Tidak ditemukan";
+const FORBIDDEN = "Forbidden";
+const NOT_FOUND = "Not found";
 
 /** O(1) grant probe via `by_page_user`. Returns the grant row or null. */
 export async function readPageGrant(

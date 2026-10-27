@@ -30,7 +30,7 @@ interface CommandPaletteProps {
   query?: string;
   onQueryChange?: (q: string) => void;
   /** Labels (placeholder, empty, recent-commands heading). Defaults
-   *  preserve the legacy Nosion strings for back-compat. */
+   *  preserve the legacy Lapis strings for back-compat. */
   labels?: CommandPaletteLabels;
   /** Custom placeholder. Shortcut for `labels.placeholder`. */
   placeholder?: string;
@@ -43,8 +43,8 @@ interface CommandPaletteProps {
 
 /** Renderless command palette. Renders `groups`, the cmdk shell, and the
  *  MRU history group. Domain wiring (which groups exist, what each item
- *  does on select) is the consumer's job — see `adapters/nosion.tsx` for
- *  the Nosion-flavoured wiring used in this repo.
+ *  does on select) is the consumer's job — see `adapters/lapis.tsx` for
+ *  the Lapis-flavoured wiring used in this repo.
  */
 export function CommandPalette({
   groups,

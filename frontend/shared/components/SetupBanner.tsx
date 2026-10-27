@@ -15,16 +15,17 @@ const IS_DEMO = process.env.NEXT_PUBLIC_DEMO === "1";
 
 export function SetupBanner() {
   const status = useQuery(api.setup.status);
+
   if (IS_DEMO || !status || status.ownerClaimed) return null;
   return (
     <div className="fixed inset-x-0 top-2 z-50 flex justify-center px-4 print:hidden">
       <div className="flex items-center gap-3 rounded-full border border-amber-300/60 bg-amber-50 py-1.5 pl-4 pr-1.5 text-sm shadow-md dark:border-amber-400/30 dark:bg-amber-950/80">
         <span className="text-amber-900 dark:text-amber-100">
-          Workspace ini belum ada pemiliknya
+          This workspace does not have an owner yet
         </span>
         <Button asChild size="sm" className="h-7 gap-1.5 rounded-full">
           <Link href="/setup">
-            <Crown className="size-3.5" /> Selesaikan setup
+            <Crown className="size-3.5" /> Finish setup
           </Link>
         </Button>
       </div>

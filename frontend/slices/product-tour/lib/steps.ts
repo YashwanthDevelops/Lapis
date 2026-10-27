@@ -32,7 +32,7 @@ export interface TourStep {
 export const TOUR_STEPS: TourStep[] = [
   {
     icon: Compass,
-    title: "Welcome to open-silong",
+    title: "Welcome to Lapis",
     body: "An open-source workspace that blends Notion-style docs and databases with an Obsidian-style knowledge graph. This tour opens each feature as we go — your data always stays yours, exportable to JSON or Markdown anytime.",
   },
   {

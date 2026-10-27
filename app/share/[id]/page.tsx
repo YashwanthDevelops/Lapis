@@ -25,10 +25,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const title = page.title || "Untitled";
   return {
     title,
-    description: `${page.icon ?? "📄"} ${title} — shared on Silong`,
+    description: `${page.icon ?? "📄"} ${title} — shared on Lapis`,
     openGraph: {
       title,
-      description: `Shared on Silong`,
+      description: `Shared on Lapis`,
       type: "article",
     },
     twitter: { card: "summary_large_image", title },

@@ -185,7 +185,7 @@ ZIP parsing.
 - Folders preserved as parent pages so the sidebar tree mirrors
   the ZIP structure
 
-**Auth**: `getAuthUserId` (anonymous → throws "Belum login"). Each
+**Auth**: `getAuthUserId` (anonymous → throws "Not signed in"). Each
 internal mutation call (`createPage`, `appendBlocks`, etc.) verifies
 ownership of the storage blob too.
 

@@ -18,7 +18,7 @@ table below is the index.
 | [backlinks](#backlinks) | `<BacklinksPanel/>`, `useBacklinks()` | `convex/features/graph/` | — |
 | [block-selection](#block-selection) | `<BlockSelectionProvider/>`, `<SelectionToolbar/>`, `<MarqueeOverlay/>` | n/a (local state) | — |
 | [code-block](#code-block) | `<CodeBlock/>`, `CODE_LANGUAGES`, `normalizeLang()` | n/a | — |
-| [command-palette](#command-palette) | `<CommandPalette/>` (Nosion-bound), `CommandPaletteCore` (renderless) | n/a | — |
+| [command-palette](#command-palette) | `<CommandPalette/>` (Lapis-bound), `CommandPaletteCore` (renderless) | n/a | — |
 | [comments](#comments) | `CommentsProvider`, `useCommentsCore()`, `<PageCommentsPanel/>`, `<BlockCommentsPopover/>`, `<ThreadPopover/>` | `convex/features/comments/` | [comments.md](./comments.md) |
 | [cover](#cover) | `<CoverBanner/>`, `<CoverPicker/>`, `<AddCoverButton/>`, `parseCover()` | n/a | — |
 | [dashboard](#dashboard) | `<Dashboard/>` (route shell) | n/a | — |
@@ -109,7 +109,7 @@ normalises legacy / alias values (e.g. `js` → `javascript`).
 
 - `CommandPaletteCore` — renderless, kitab-portable. Consumer feeds
   pre-resolved `groups`. Use this in downstream projects.
-- `CommandPalette` (default export) — the Nosion-bound wrapper that
+- `CommandPalette` (default export) — the Lapis-bound wrapper that
   pulls navigation + page-search + DB-row search groups from the
   store. Used by the dashboard mount.
 
@@ -302,7 +302,7 @@ Visual theme presets. Two layers:
   registry JSON and applies the same way. `<ThemeColorSync/>` keeps
   Tailwind colour vars in sync with the active preset.
 
-Both persist to `localStorage` under `nosion:theme-preset`.
+Both persist to `localStorage` under `lapis:theme-preset`. Existing `nosion:` preferences migrate on the first visit.
 
 ## trash
 

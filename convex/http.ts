@@ -9,11 +9,11 @@ import { inboundEmail } from "./email/inbound";
 const http = httpRouter();
 auth.addHttpRoutes(http);
 
-// Nosion MCP (legacy) — Notion-canonical JSON over Bearer-token HTTPS.
+// Lapis MCP (legacy) — Notion-canonical JSON over Bearer-token HTTPS.
 // {tool, args} body shape; used by scripts.
 http.route({ path: "/mcp/v1", method: "POST", handler: mcpHandler });
 
-// Nosion MCP (spec-compliant JSON-RPC 2.0) — for ChatGPT custom apps
+// Lapis MCP (spec-compliant JSON-RPC 2.0) — for ChatGPT custom apps
 // and any client speaking the Model Context Protocol. Phase 1: bearer
 // only (Phase 2 will wrap with OAuth 2.1 + PKCE).
 http.route({ path: "/mcp", method: "POST", handler: mcpRpcHandler });

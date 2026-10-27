@@ -1,4 +1,4 @@
-/** Root page — landing dashboard that exercises EVERY Nosion block type
+/** Root page — landing dashboard that exercises EVERY Lapis block type
  *  at least once. Sub-pages get linked via `page` block refs. */
 
 import type { TplPageT } from "../../../lib/validate";

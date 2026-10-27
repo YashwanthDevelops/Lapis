@@ -3,7 +3,7 @@ import { SetupClient } from "./SetupClient";
 import { SetupGate } from "./SetupGate";
 
 export const metadata: Metadata = {
-  title: "Setup — Silong",
+  title: "Setup — Lapis",
   description: "First-run setup: create the owner account for this workspace.",
   robots: { index: false, follow: false },
 };
@@ -15,8 +15,7 @@ export default function SetupPage() {
         <div className="space-y-2 pb-6">
           <h1 className="text-2xl font-semibold tracking-tight">Setup workspace</h1>
           <p className="text-sm text-muted-foreground">
-            Instance Silong baru. Empat langkah dan workspace ini milikmu —
-            lengkap dengan data contoh.
+            Set up your new Lapis workspace in four steps, with sample data ready to explore.
           </p>
         </div>
         <SetupGate>

@@ -1,7 +1,7 @@
 "use client";
 
-/** Nosion-bound page-level comments panel. CONSUMER ONLY — wires the
- *  Nosion store viewer + Convex create-args shape into the renderless
+/** Lapis-bound page-level comments panel. CONSUMER ONLY — wires the
+ *  Lapis store viewer + Convex create-args shape into the renderless
  *  CommentItem + CommentComposer primitives. Excluded from kitab UP-sync. */
 
 import { MessageSquare } from "lucide-react";

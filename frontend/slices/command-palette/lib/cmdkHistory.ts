@@ -12,7 +12,7 @@ export interface HistoryEntry {
   label: string;
 }
 
-export const HISTORY_KEY = "nosion.cmdk.history";
+export const HISTORY_KEY = "lapis.cmdk.history";
 export const HISTORY_MAX = 5;
 
 export function loadHistory(storage?: Storage | null): HistoryEntry[] {

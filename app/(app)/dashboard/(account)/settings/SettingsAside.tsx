@@ -22,32 +22,29 @@ type AsideContent = {
   links?: { label: string; href: string; external?: boolean }[];
 };
 
-// Docs live with the project, not on any one deployment's domain.
-const SITE_DOCS = "https://github.com/rahmanef63/open-silong";
-
 const ASIDE: Record<SettingsKey, AsideContent> = {
   workspace: {
-    title: "Tentang workspace",
-    blurb: "Workspace = boundary kolaborasi. Tiap user dapat 1 personal workspace + bisa join workspace lain via invite.",
+    title: "About workspaces",
+    blurb: "Workspaces are collaboration boundaries. Each user gets a personal workspace and can join others by invitation.",
     tips: [
-      { icon: User, label: "Slug workspace muncul di share URL" },
-      { icon: ShieldCheck, label: "Owner role pegang transfer + delete" },
+      { icon: User, label: "The workspace slug appears in share URLs" },
+      { icon: ShieldCheck, label: "Owners can transfer or delete a workspace" },
     ],
   },
   appearance: {
-    title: "Tema + density",
-    blurb: "Tema dipakai untuk seluruh dashboard. Density mempengaruhi tinggi baris sidebar + list view.",
+    title: "Theme and density",
+    blurb: "The theme applies across the dashboard. Density controls row height in the sidebar and list views.",
     tips: [
-      { icon: Palette, label: "System mode follow OS preference" },
+      { icon: Palette, label: "System mode follows your operating system preference" },
     ],
   },
   ai: {
     title: "Bring your own AI keys",
-    blurb: "Kalau admin key kehabisan quota atau kamu mau pakai model premium, daftar key kamu di sini. Personal key cuma untuk kamu; workspace key di-share ke member.",
+    blurb: "Add your own key here if the admin key runs out of quota or you want a premium model. Personal keys are private; workspace keys are shared with members.",
     tips: [
-      { icon: KeyRound, label: "Plaintext key di-encrypt sebelum disimpan (AES-GCM-256)" },
-      { icon: Bot, label: "Resolver order: personal preferOwn → workspace shared → admin fallback" },
-      { icon: ShieldCheck, label: "Workspace key butuh role owner / editor" },
+      { icon: KeyRound, label: "Plain-text keys are encrypted before storage (AES-GCM-256)" },
+      { icon: Bot, label: "Key priority: personal preferOwn → shared workspace → admin fallback" },
+      { icon: ShieldCheck, label: "Workspace keys require the owner or editor role" },
     ],
     links: [
       { label: "OpenRouter API keys", href: "https://openrouter.ai/keys", external: true },
@@ -56,25 +53,25 @@ const ASIDE: Record<SettingsKey, AsideContent> = {
     ],
   },
   pages: {
-    title: "Editor + sort defaults",
-    blurb: "Defaults baru muncul di page yang kamu buat setelahnya. Existing page tidak diubah.",
+    title: "Editor and sort defaults",
+    blurb: "New defaults apply to pages you create from now on. Existing pages are unchanged.",
     tips: [
-      { icon: FileText, label: "Sort default cuma untuk side-nav, bukan database view" },
+      { icon: FileText, label: "Default sorting applies to the side navigation, not database views" },
     ],
   },
   backup: {
     title: "Export + import",
-    blurb: "JSON export berisi semua page + database + view kamu (snapshot + share-slug + wiki ikut). Import remap id otomatis.",
+    blurb: "JSON exports include your pages, databases, views, snapshots, share links, and wiki data. Imports remap IDs automatically.",
     tips: [
-      { icon: Save, label: "Import diulang aman — slug collision di-drop, sisanya passthrough" },
-      { icon: ShieldCheck, label: "Max 8 MB JSON / 50 MB ZIP / 3 import per menit" },
+      { icon: Save, label: "Imports are safe to repeat. Conflicting slugs are skipped; other data is preserved." },
+      { icon: ShieldCheck, label: "Limits: 8 MB JSON, 50 MB ZIP, and 3 imports per minute" },
     ],
   },
   "mcp-apps": {
     title: "MCP — Model Context Protocol",
-    blurb: "Standard buat agentic AI client (ChatGPT / Claude / Cursor / dll) ngomong sama workspace kamu. OAuth 2.1 + PKCE atau static bearer.",
+    blurb: "Connect AI clients such as ChatGPT, Claude, and Cursor to your workspace with OAuth 2.1 + PKCE or a static bearer token.",
     tips: [
-      { icon: ShieldCheck, label: "Token scoped per-user — client cuma akses page kamu" },
+      { icon: ShieldCheck, label: "Tokens are scoped per user; clients can only access your pages" },
       { icon: Sparkles, label: "Tools: pages_list, pages_search, pages_get, pages_create, pages_append_markdown" },
     ],
     links: [
@@ -84,11 +81,11 @@ const ASIDE: Record<SettingsKey, AsideContent> = {
     ],
   },
   mcp: {
-    title: "Script tokens (nsn_)",
-    blurb: "Bearer token plain-text yang dipakai dari script / Claude Desktop / Cursor. Plain shown SEKALI di mint — store aman.",
+    title: "Script tokens (lps_)",
+    blurb: "Use bearer tokens with scripts, Claude Desktop, or Cursor. The plain-text token is shown only once when created, so store it securely.",
     tips: [
       { icon: KeyRound, label: "Max 10 token aktif per user" },
-      { icon: ShieldCheck, label: "Hash SHA-256 disimpan; revoke any time" },
+      { icon: ShieldCheck, label: "Only the SHA-256 hash is stored; revoke tokens anytime" },
     ],
     links: [
       { label: "MCP server URL", href: mcpUrl() ?? "#", external: true },
@@ -96,7 +93,7 @@ const ASIDE: Record<SettingsKey, AsideContent> = {
   },
   webhooks: {
     title: "Outbound webhooks",
-    blurb: "POST event ke URL kamu (HMAC-SHA256 signature). Cocok buat sync data ke external system.",
+    blurb: "Send events to your URL as signed HMAC-SHA256 POST requests to sync data with external systems.",
     tips: [
       { icon: Webhook, label: "Events: page.created / page.updated / page.deleted" },
       { icon: ShieldCheck, label: "Delivery log retain 30 hari" },
@@ -104,7 +101,7 @@ const ASIDE: Record<SettingsKey, AsideContent> = {
   },
   tickets: {
     title: "Bug + feature requests",
-    blurb: "Tiket masuk ke admin queue. Reply admin muncul inline di sini.",
+    blurb: "Tickets go to the admin queue. Admin replies appear here.",
     tips: [
       { icon: LifeBuoy, label: "Priority low/med/high — admin override on review" },
     ],

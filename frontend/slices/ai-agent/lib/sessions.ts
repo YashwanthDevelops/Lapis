@@ -19,7 +19,7 @@ export interface ChatSession {
   updatedAt: number;
 }
 
-const STORAGE_KEY = "nosion.ai.sessions.v1";
+const STORAGE_KEY = "lapis.ai.sessions.v1";
 const MAX_SESSIONS = 50;
 const MAX_TITLE_LEN = 60;
 

@@ -2,7 +2,8 @@
  *  successful state changes — e.g. `pages.create` → `deliver({
  *  ownerId, event: "page.created", payload: { ... } })`.
  *
- *  HMAC-SHA256 signature emitted as `X-Nosion-Signature: sha256=<hex>`
+ *  HMAC-SHA256 signature emitted as `X-Lapis-Signature: sha256=<hex>`.
+ *  Legacy X-Nosion-* headers ship alongside it for existing consumers.
  *  over the JSON-serialised body, keyed by the endpoint's secret. Each
  *  attempt logged to `webhookDeliveries`. Failures DO NOT block the
  *  triggering mutation — best-effort fan-out.
@@ -57,6 +58,8 @@ export const run = internalAction({
           method: "POST",
           headers: {
             "content-type": "application/json",
+            "x-lapis-event": event,
+            "x-lapis-signature": `sha256=${sig}`,
             "x-nosion-event": event,
             "x-nosion-signature": `sha256=${sig}`,
           },

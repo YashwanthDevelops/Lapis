@@ -1,7 +1,7 @@
 # Trademarks, inspiration & legal clarification
 
 > **This document is not legal advice.** It is a good-faith, plain-language
-> explanation of how `open-silong` positions itself with respect to the
+> explanation of how Lapis positions itself with respect to the
 > products that inspired it. Trademark and copyright law is **territorial**
 > and fact-specific; for binding guidance about your own use, deployment, or
 > fork, consult a qualified attorney in your jurisdiction. The maintainers
@@ -11,7 +11,7 @@
 
 ## TL;DR
 
-- `open-silong` is an **independent, open-source (MIT)** project.
+- Lapis is a **customized fork** of the open-source (MIT) [open-silong project](https://github.com/rahmanef63/open-silong). The original license and notices remain in this repository.
 - It is **inspired by** [Notion](https://notion.so) (block editor + lightweight
   databases) and [Obsidian](https://obsidian.md) (the local-first knowledge
   graph). "Inspired by" is a factual statement, not a claim of affiliation.
@@ -21,8 +21,8 @@
   icons, or confidential material** from either product. It is a clean-room
   reimplementation built on public technologies (Convex, Next.js, React,
   Tailwind, shadcn/ui).
-- The product name (`open-silong`), logo, and domains are **original** and do
-  not incorporate any third-party trademark.
+- The Lapis product name, gemstone mark, wordmark, and palette were created
+  for this customization and do not incorporate a third-party trademark.
 
 ---
 
@@ -31,7 +31,7 @@
 Naming this openly is both honest and legally safer than pretending otherwise —
 inspiration is not infringement.
 
-| Surface in open-silong | Inspired by | Nature of the inspiration |
+| Surface in Lapis | Inspired by | Nature of the inspiration |
 |---|---|---|
 | Block editor, slash menu, nested blocks, `/`-commands | **Notion** | A UI *concept* / interaction pattern |
 | Lightweight databases with views (table/board/gallery/calendar…) | **Notion** | A functional *idea* |
@@ -59,9 +59,9 @@ functional concepts — only the specific creative expression of them.
   (without copying its code) does not infringe.
 
 So: implementing a *block editor* or a *graph view* from scratch is
-reimplementing an idea/functionality, which is permitted. Copying Notion's or
-Obsidian's **source code or design assets** would not be — and open-silong does
-neither.
+reimplementing an idea/functionality, which is permitted. Lapis carries forward
+the upstream project's documented Notion and Obsidian interoperability and its
+MIT-licensed source; this customization contributes a separate visual identity.
 
 ### 2. Trademarks are used nominatively / descriptively only
 
@@ -80,8 +80,8 @@ consumers about the source** of a product. It does **not** stop you from
 
 ### 3. Trade dress: no confusing look-alike branding
 
-open-silong ships its **own** visual identity (theme tokens, shadcn/ui
-primitives, original colours, original name/logo). It does not copy the
+Lapis ships its **own** visual identity (theme tokens, original colours,
+name, gemstone mark, and wordmark). It does not copy the
 distinctive branding, marketing look, or logo of Notion or Obsidian, so there
 is no "trade dress" confusion.
 
@@ -111,17 +111,17 @@ Directive. See [`NOTICE`](./NOTICE).
 
 **We do:**
 
-- Keep an original name, logo, and domains.
+- Keep the distinct Lapis name, logo, and colour palette.
 - Say "inspired by," never "a Notion" / "an Obsidian" / "official."
-- Reimplement functionality from scratch on public tech.
+- Preserve the upstream MIT license and third-party notices.
 - Target only public, documented file formats for interoperability.
 - Carry these disclaimers in the [`README`](./README.md), [`NOTICE`](./NOTICE),
   and this file.
 
 **We never:**
 
-- Copy source code, design files, Figma/Sketch assets, fonts, or icon sets from
-  Notion or Obsidian.
+- Copy proprietary source code, design files, Figma/Sketch assets, fonts, or
+  icon sets from Notion or Obsidian.
 - Use their names or logos in our branding, package name, or marketing.
 - Claim affiliation, partnership, or endorsement.
 - Scrape or redistribute their proprietary content or templates.
@@ -137,9 +137,9 @@ licence text).
 
 If you represent **Notion Labs, Inc.**, **Dynalist Inc.**, or any other rights
 holder referenced here and have a good-faith concern about naming, wording, or
-any surface of this project, please reach the maintainers via the address in
-[`SECURITY.md`](./SECURITY.md). We will consider adjustments — naming, labels,
-disclaimers, or removal of specific references — promptly and in good faith.
+any surface of this project, use the private reporting channel described in
+[`SECURITY.md`](./SECURITY.md). The repository owner will consider adjustments
+to naming, labels, disclaimers, or specific references in good faith.
 
 ---
 

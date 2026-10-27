@@ -7,7 +7,7 @@ import { useSyncExternalStore } from "react";
  *  event). 24 slots is enough for "I picked it last week" recall without
  *  pushing meaningful categories off-screen. */
 
-const KEY = "nosion:iconRecents";
+const KEY = "lapis:iconRecents";
 const MAX = 24;
 
 let cache: string[] = [];

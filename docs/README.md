@@ -1,6 +1,4 @@
-# open-silong documentation
-
-Live demo: <https://silong-os.vercel.app>
+# Lapis documentation
 
 Everything listed below is **current**. Anything under
 [`archive/`](./archive/) is a point-in-time record kept for provenance —
@@ -10,6 +8,7 @@ see [`archive/README.md`](./archive/README.md).
 
 | If you want to… | Read |
 |---|---|
+| Review this checkout and plan the customized productivity app | [`project-analysis.md`](./project-analysis.md) |
 | Understand the system in one screen | [`architecture/diagrams.md`](./architecture/diagrams.md) |
 | Find a feature and where it lives | [`api/slices.md`](./api/slices.md) |
 | Add or change a Convex function | [`api/conventions.md`](./api/conventions.md) |
@@ -56,7 +55,7 @@ Per-surface contracts. [`api/README.md`](./api/README.md) is the index.
 | Doc | Covers |
 |---|---|
 | [`extending.md`](./extending.md) | add a block type, property type, view type, or import shape |
-| [`export-to-notion.md`](./export-to-notion.md) | moving content between open-silong and Notion |
+| [`export-to-notion.md`](./export-to-notion.md) | moving content between Lapis and Notion |
 | [`notion-mega-slice.md`](./notion-mega-slice.md) | embedding the editor + databases bundle in another React app |
 | [`FORMULA-ENGINE-API.md`](./FORMULA-ENGINE-API.md) | formula engine API + the plan to publish it standalone |
 

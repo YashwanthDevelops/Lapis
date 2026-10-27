@@ -3,7 +3,7 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { hardReload } from "./VersionWatcher";
 
-const RELOAD_FLAG = "nosion:chunk-reloaded-at";
+const RELOAD_FLAG = "lapis:chunk-reloaded-at";
 const RELOAD_COOLDOWN_MS = 60_000; // 1 minute
 
 interface Props {

@@ -1,9 +1,25 @@
 /** @type {import('next').NextConfig} */
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://silong.rahmanef.com";
-const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL ?? "https://api-silong.rahmanef.com";
-const convexHost = (() => {
-  try { return new URL(convexUrl).hostname; } catch { return "api-silong.rahmanef.com"; }
+const deploymentHost = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ??
+  (deploymentHost ? `https://${deploymentHost}` : "http://localhost:3000");
+const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL ?? "http://127.0.0.1:3210";
+const { convexHost, convexProtocol, convexOrigin } = (() => {
+  try {
+    const parsed = new URL(convexUrl);
+    return {
+      convexHost: parsed.hostname,
+      convexProtocol: parsed.protocol.slice(0, -1),
+      convexOrigin: parsed.origin,
+    };
+  } catch {
+    return {
+      convexHost: "127.0.0.1",
+      convexProtocol: "http",
+      convexOrigin: "http://127.0.0.1:3210",
+    };
+  }
 })();
+const convexWsOrigin = convexOrigin.replace(/^http:/, "ws:").replace(/^https:/, "wss:");
 
 // Stable per-deploy build id. CI sets GITHUB_SHA / DOKPLOY_COMMIT_SHA;
 // fallback timestamp keeps dev unique. Exposed to the client as
@@ -35,7 +51,7 @@ const nextConfig = {
     // render storage blobs. User-pasted external URLs (ImageBlock,
     // GalleryView) still use `unoptimized` because the URL space is open.
     remotePatterns: [
-      { protocol: "https", hostname: convexHost, pathname: "/api/storage/**" },
+      { protocol: convexProtocol, hostname: convexHost, pathname: "/api/storage/**" },
       // Common cover/avatar hosts users paste — kept narrow on purpose.
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "avatars.githubusercontent.com" },
@@ -75,25 +91,8 @@ const nextConfig = {
   },
   turbopack: {},
   async redirects() {
-    // Legacy hostnames that pre-date the silong.rahmanef.com rebrand.
-    // 301-redirect to the canonical host, preserving full path + query.
-    // Both legacy domains still resolve to this same Dokploy app; the
-    // Host header is what triggers the redirect. SEO ranks transfer
-    // via permanent: true.
-    const legacyHosts = [
-      "nosion.rahmanef.com",
-      "notion-page-clone.rahmanef.com",
-    ];
-    const legacyRedirects = legacyHosts.map((host) => ({
-      source: "/:path*",
-      has: [{ type: "host", value: host }],
-      destination: "https://silong.rahmanef.com/:path*",
-      permanent: true,
-    }));
-
     // Pre-/dashboard URLs from before the app was moved under a route prefix.
     return [
-      ...legacyRedirects,
       { source: "/p/:id", destination: "/dashboard/p/:id", permanent: true },
       { source: "/inbox", destination: "/dashboard/inbox", permanent: true },
       { source: "/trash", destination: "/dashboard/trash", permanent: true },
@@ -120,7 +119,7 @@ const nextConfig = {
       // still go through next/image which has its own remotePatterns gate.
       `img-src 'self' data: blob: https:`,
       "font-src 'self' data:",
-      `connect-src 'self' https://${convexHost} wss://${convexHost} https://www.google-analytics.com https://accounts.google.com`,
+      `connect-src 'self' ${convexOrigin} ${convexWsOrigin} https://www.google-analytics.com https://accounts.google.com`,
       "frame-src 'self' https://accounts.google.com",
       "manifest-src 'self'",
       "worker-src 'self' blob:",

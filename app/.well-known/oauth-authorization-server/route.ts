@@ -8,7 +8,7 @@ import { requestOrigin } from "@/shared/lib/siteUrl.server";
  *  implemented — `registration_endpoint` is omitted. */
 
 // Per-host, NOT prerendered. `issuer` must equal the origin the client
-// actually reached or the connector rejects it, and open-silong is cloned to
+// actually reached or the connector rejects it, and Lapis is cloned to
 // arbitrary domains — a baked-in issuer is wrong by construction.
 // No `export const dynamic`: that segment config is rejected under
 // `cacheComponents`. Reading headers() in requestOrigin() is what opts this

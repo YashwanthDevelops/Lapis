@@ -1,6 +1,6 @@
 /** MCP HTTP surface — Notion-shape JSON over HTTPS, dispatched by
  *  tool name in the request body. Single endpoint pattern keeps the
- *  router config minimal; the tool dispatcher handles every Nosion
+ *  router config minimal; the tool dispatcher handles every Lapis
  *  MCP verb.
  *
  *  Auth: Bearer token in `Authorization` header, compared against
@@ -40,7 +40,7 @@ const err = (status: number, message: string): Response =>
 /** Validate Bearer token, resolve to userId.
  *
  *  Order:
- *  1. Per-user tokens — plaintext starts with `nsn_`. Look up sha256
+ *  1. Per-user tokens — plaintext starts with `lps_` (or legacy `nsn_`). Look up sha256
  *     hash via internal query; return user id + token id (for lastUsedAt
  *     touch).
  *  2. Env-baked single-tenant token — fallback for legacy/dev setups.
@@ -54,7 +54,7 @@ async function authenticate(
   const token = auth.slice("Bearer ".length).trim();
   if (!token) return { error: err(401, "Empty token") };
 
-  if (token.startsWith("nsn_")) {
+  if (token.startsWith("lps_") || token.startsWith("nsn_")) {
     const tokenHash = await sha256Hex(token);
     const found = await ctx.runQuery(internal.mcp.tokens.lookupByHash, { tokenHash });
     if (!found) return { error: err(401, "Invalid or revoked token") };
@@ -155,6 +155,9 @@ export const mcpHandler = httpAction(async (ctx, req) => {
   try { body = (await req.json()) as ToolBody; } catch { return err(400, "Invalid JSON body"); }
   if (!body.tool) return err(400, "Missing `tool`");
   const params = body.params ?? {};
+  const routedTool = body.tool.startsWith("nosion-")
+    ? `lapis-${body.tool.slice("nosion-".length)}`
+    : body.tool;
   const { userId, tokenId } = auth;
   if (tokenId) {
     // Fire-and-forget; never block the response on the timestamp write.
@@ -162,9 +165,9 @@ export const mcpHandler = httpAction(async (ctx, req) => {
   }
 
   try {
-    switch (body.tool) {
+    switch (routedTool) {
       // ─── Read ────────────────────────────────────────────────
-      case "nosion-search": {
+      case "lapis-search": {
         const items = await ctx.runQuery(internal.mcp.internal.searchPages, {
           userId,
           query: String(params.query ?? ""),
@@ -178,7 +181,7 @@ export const mcpHandler = httpAction(async (ctx, req) => {
         });
       }
 
-      case "nosion-list-pages": {
+      case "lapis-list-pages": {
         const res = await ctx.runQuery(internal.mcp.internal.listPages, {
           userId,
           cursor: typeof params.cursor === "number" ? params.cursor : undefined,
@@ -195,7 +198,7 @@ export const mcpHandler = httpAction(async (ctx, req) => {
         });
       }
 
-      case "nosion-list-databases": {
+      case "lapis-list-databases": {
         const items = await ctx.runQuery(internal.mcp.internal.listDatabases, { userId });
         return ok({
           object: "list",
@@ -205,7 +208,7 @@ export const mcpHandler = httpAction(async (ctx, req) => {
         });
       }
 
-      case "nosion-fetch": {
+      case "lapis-fetch": {
         const id = String(params.id ?? "");
         if (!id) return err(400, "Missing `id`");
         // Try database first then page (cheapest probe order). MCP
@@ -218,7 +221,7 @@ export const mcpHandler = httpAction(async (ctx, req) => {
         return ok({ ...pageToNotionPage(page), blocks });
       }
 
-      case "nosion-list-rows": {
+      case "lapis-list-rows": {
         const dbId = String(params.database_id ?? "");
         if (!dbId) return err(400, "Missing `database_id`");
         const db = await ctx.runQuery(internal.mcp.internal.fetchDatabase, { userId, dbId });
@@ -238,7 +241,7 @@ export const mcpHandler = httpAction(async (ctx, req) => {
       }
 
       // ─── Write ───────────────────────────────────────────────
-      case "nosion-create-page": {
+      case "lapis-create-page": {
         // Accepts Notion-shape blocks[] in `children`.
         const incoming = Array.isArray(params.children) ? (params.children as any[]) : [];
         const blocks = incoming.map(blockFromNotion);
@@ -253,7 +256,7 @@ export const mcpHandler = httpAction(async (ctx, req) => {
         return ok(pageToNotionPage(page));
       }
 
-      case "nosion-update-page": {
+      case "lapis-update-page": {
         const pageId = String(params.page_id ?? "");
         if (!pageId) return err(400, "Missing `page_id`");
         const patch: Record<string, unknown> = {};
@@ -271,7 +274,7 @@ export const mcpHandler = httpAction(async (ctx, req) => {
         return ok(pageToNotionPage(page));
       }
 
-      case "nosion-move-page": {
+      case "lapis-move-page": {
         const pageId = String(params.page_id ?? "");
         if (!pageId) return err(400, "Missing `page_id`");
         const parentId = (params.parent_id as string) ?? null;
@@ -279,14 +282,14 @@ export const mcpHandler = httpAction(async (ctx, req) => {
         return ok({ id: pageId, parent_id: parentId });
       }
 
-      case "nosion-trash-page": {
+      case "lapis-trash-page": {
         const pageId = String(params.page_id ?? "");
         if (!pageId) return err(400, "Missing `page_id`");
         await ctx.runMutation(internal.mcp.internal.trashPage, { userId, pageId });
         return ok({ id: pageId, archived: true });
       }
 
-      case "nosion-duplicate-page": {
+      case "lapis-duplicate-page": {
         const pageId = String(params.page_id ?? "");
         if (!pageId) return err(400, "Missing `page_id`");
         const newId = await ctx.runMutation(internal.mcp.internal.duplicatePage, { userId, pageId });
@@ -294,7 +297,7 @@ export const mcpHandler = httpAction(async (ctx, req) => {
         return ok(pageToNotionPage(page));
       }
 
-      case "nosion-create-database": {
+      case "lapis-create-database": {
         const id = await ctx.runMutation(internal.mcp.internal.createDatabase, {
           userId,
           name: params.title as string | undefined,
@@ -304,7 +307,7 @@ export const mcpHandler = httpAction(async (ctx, req) => {
         return ok(databaseToNotionDatabase(db));
       }
 
-      case "nosion-update-database": {
+      case "lapis-update-database": {
         const dbId = String(params.database_id ?? "");
         if (!dbId) return err(400, "Missing `database_id`");
         const patch: Record<string, unknown> = {};
@@ -319,7 +322,7 @@ export const mcpHandler = httpAction(async (ctx, req) => {
         return ok(databaseToNotionDatabase(db));
       }
 
-      case "nosion-create-row": {
+      case "lapis-create-row": {
         const dbId = String(params.database_id ?? "");
         if (!dbId) return err(400, "Missing `database_id`");
         const db = await ctx.runQuery(internal.mcp.internal.fetchDatabase, { userId, dbId });
@@ -334,7 +337,7 @@ export const mcpHandler = httpAction(async (ctx, req) => {
         return ok(rowToNotionPage(row, db));
       }
 
-      case "nosion-update-row": {
+      case "lapis-update-row": {
         const rowPageId = String(params.page_id ?? "");
         if (!rowPageId) return err(400, "Missing `page_id`");
         const row = await ctx.runQuery(internal.mcp.internal.fetchPage, { userId, pageId: rowPageId });
@@ -352,14 +355,14 @@ export const mcpHandler = httpAction(async (ctx, req) => {
     }
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Unknown error";
-    // Convex auth errors look like "Tidak ditemukan" / "Belum login"
-    if (/Tidak ditemukan|not found/i.test(msg)) return err(404, msg);
+    // Missing or inaccessible resources are deliberately reported as not found.
+    if (/not found/i.test(msg)) return err(404, msg);
     return err(500, msg.length > 200 ? msg.slice(0, 200) : msg);
   }
 });
 
 /** Notion `properties` is a name-keyed map of typed envelopes; convert
- *  to Nosion's flat `propId → raw value` map. Properties not on the
+ *  to Lapis's flat `propId → raw value` map. Properties not on the
  *  target db schema are silently dropped. */
 function mapNotionPropsToRaw(
   notionProps: Record<string, any> | undefined,
